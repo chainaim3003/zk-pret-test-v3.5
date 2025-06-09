@@ -22,7 +22,7 @@ async function main() {
         const proof = await getGLEIFOptimVerificationWithSignUtils(companyName, typeOfNet);
         console.log('\n🎯 Proof generated successfully!');
         // Uncomment the line below if you want to see the full proof JSON
-        // console.log('📄 Proof:', proof.toJSON());
+         console.log('📄 Proof:', proof.toJSON());
     } catch (error) {
         console.error('💥 Error:', error);
         process.exit(1);
