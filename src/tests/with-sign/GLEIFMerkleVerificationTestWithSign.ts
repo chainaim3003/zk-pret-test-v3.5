@@ -58,11 +58,13 @@ export async function getGLEIFMerkleVerificationWithSign(
          Field(0),                    // GLEIFToProve
          companyTree.root,            // Dataset root (signed by oracle)
          coreFields.witnesses[0],     // name witness
-         coreFields.witnesses[1],     // status witness
-         coreFields.witnesses[2],     // lei witness
+         coreFields.witnesses[1],     // entity_status witness
+         coreFields.witnesses[2],     // registration_status witness
+         coreFields.witnesses[3],     // lei witness
          coreFields.values[0],        // name value
-         coreFields.values[1],        // status value
-         coreFields.values[2],        // lei value
+         coreFields.values[1],        // entity_status value
+         coreFields.values[2],        // registration_status value
+         coreFields.values[3],        // lei value
          oracleSignature              // Oracle signature
       );
       
@@ -122,17 +124,19 @@ export async function getGLEIFExtendedMerkleVerification(companyName: string, ty
          Field(0),
          companyTree.root,
          extendedFields.witnesses[0], // name
-         extendedFields.witnesses[1], // status
-         extendedFields.witnesses[2], // lei
-         extendedFields.witnesses[3], // country
-         extendedFields.witnesses[4], // city
-         extendedFields.witnesses[5], // jurisdiction
+         extendedFields.witnesses[1], // entity_status
+         extendedFields.witnesses[2], // registration_status
+         extendedFields.witnesses[3], // lei
+         extendedFields.witnesses[4], // country
+         extendedFields.witnesses[5], // city
+         extendedFields.witnesses[6], // jurisdiction
          extendedFields.values[0],    // name value
-         extendedFields.values[1],    // status value
-         extendedFields.values[2],    // lei value
-         extendedFields.values[3],    // country value
-         extendedFields.values[4],    // city value
-         extendedFields.values[5],    // jurisdiction value
+         extendedFields.values[1],    // entity_status value
+         extendedFields.values[2],    // registration_status value
+         extendedFields.values[3],    // lei value
+         extendedFields.values[4],    // country value
+         extendedFields.values[5],    // city value
+         extendedFields.values[6],    // jurisdiction value
          oracleSignature
       );
 

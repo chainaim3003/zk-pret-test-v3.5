@@ -54,15 +54,17 @@ export const GLEIFMerkleVerifier = ZkProgram({
    publicOutput: GLEIFMerklePublicOutput,
 
    methods: {
-      // Core selective compliance proof (3 fields: name, status, lei)
+      // Core selective compliance proof (4 fields: name, entity_status, registration_status, lei)
       proveSelectiveCompliance: {
          privateInputs: [
             Field,              // Dataset root (signed by oracle)
             MerkleWitness9,     // Witness for name field
-            MerkleWitness9,     // Witness for status field
+            MerkleWitness9,     // Witness for entity_status field
+            MerkleWitness9,     // Witness for registration_status field
             MerkleWitness9,     // Witness for LEI field
             CircuitString,      // Actual name value
-            CircuitString,      // Actual status value  
+            CircuitString,      // Actual entity_status value
+            CircuitString,      // Actual registration_status value  
             CircuitString,      // Actual LEI value
             Signature           // Oracle signature on root
          ],
@@ -71,10 +73,12 @@ export const GLEIFMerkleVerifier = ZkProgram({
             GLEIFToProve: Field,
             datasetRoot: Field,
             nameWitness: MerkleWitness9,
-            statusWitness: MerkleWitness9,
+            entityStatusWitness: MerkleWitness9,
+            registrationStatusWitness: MerkleWitness9,
             leiWitness: MerkleWitness9,
             name: CircuitString,
-            status: CircuitString,
+            entityStatus: CircuitString,
+            registrationStatus: CircuitString,
             lei: CircuitString,
             oracleSignature: Signature
          ): Promise<GLEIFMerklePublicOutput> {
@@ -89,50 +93,58 @@ export const GLEIFMerkleVerifier = ZkProgram({
             const nameRoot = nameWitness.calculateRoot(nameHash);
             nameRoot.assertEquals(datasetRoot);
 
-            const statusHash = Poseidon.hash(status.values.map(c => c.toField()));
-            const statusRoot = statusWitness.calculateRoot(statusHash);
-            statusRoot.assertEquals(datasetRoot);
+            const entityStatusHash = Poseidon.hash(entityStatus.values.map(c => c.toField()));
+            const entityStatusRoot = entityStatusWitness.calculateRoot(entityStatusHash);
+            entityStatusRoot.assertEquals(datasetRoot);
+
+            const registrationStatusHash = Poseidon.hash(registrationStatus.values.map(c => c.toField()));
+            const registrationStatusRoot = registrationStatusWitness.calculateRoot(registrationStatusHash);
+            registrationStatusRoot.assertEquals(datasetRoot);
 
             const leiHash = Poseidon.hash(lei.values.map(c => c.toField()));
             const leiRoot = leiWitness.calculateRoot(leiHash);
             leiRoot.assertEquals(datasetRoot);
 
-            // 3. Verify compliance status (same logic as original)
-            const activeHash = CircuitString.fromString("ACTIVE").hash();
-            const inactiveHash = CircuitString.fromString("Inactive").hash();
-            const currentStatusHash = status.hash();
+            // 3. Verify compliance status (both entity_status and registration_status)
+            const activeStatus = CircuitString.fromString("ACTIVE");
+            const issuedStatus = CircuitString.fromString("ISSUED");
             
-            // Ensure status is not inactive
-            currentStatusHash.assertNotEquals(inactiveHash);
+            // Check entity_status = "ACTIVE"
+            const isEntityActive = entityStatus.equals(activeStatus);
             
-            // Check if status is active
-            const isActive = currentStatusHash.equals(activeHash);
-            const complianceFlag = Provable.if(isActive, Field(1), Field(0));
+            // Check registration_status = "ISSUED"  
+            const isRegistrationIssued = registrationStatus.equals(issuedStatus);
+            
+            // Basic compliance requires BOTH conditions
+            const complianceFlag = isEntityActive.and(isRegistrationIssued);
+            const complianceValue = Provable.if(complianceFlag, Field(1), Field(0));
 
             // 4. Return selective disclosure with proof of integrity
             return new GLEIFMerklePublicOutput({
                name: name,
-               registration_status: status,
+               registration_status: registrationStatus,
                lei: lei,
                datasetRoot: datasetRoot,
-               companyVerified: complianceFlag,
-               fieldsRevealed: Field(3)
+               companyVerified: complianceValue,
+               fieldsRevealed: Field(4)
             });
          }
       },
 
-      // Extended compliance proof (6 fields including address info)
+      // Extended compliance proof (7 fields including address info and both status fields)
       proveExtendedCompliance: {
          privateInputs: [
             Field,              // Dataset root
             MerkleWitness9,     // name witness
-            MerkleWitness9,     // status witness  
+            MerkleWitness9,     // entity_status witness
+            MerkleWitness9,     // registration_status witness  
             MerkleWitness9,     // lei witness
             MerkleWitness9,     // country witness
             MerkleWitness9,     // city witness
             MerkleWitness9,     // jurisdiction witness
             CircuitString,      // name value
-            CircuitString,      // status value
+            CircuitString,      // entity_status value
+            CircuitString,      // registration_status value
             CircuitString,      // lei value
             CircuitString,      // country value
             CircuitString,      // city value
@@ -144,13 +156,15 @@ export const GLEIFMerkleVerifier = ZkProgram({
             GLEIFToProve: Field,
             datasetRoot: Field,
             nameWitness: MerkleWitness9,
-            statusWitness: MerkleWitness9,
+            entityStatusWitness: MerkleWitness9,
+            registrationStatusWitness: MerkleWitness9,
             leiWitness: MerkleWitness9,
             countryWitness: MerkleWitness9,
             cityWitness: MerkleWitness9,
             jurisdictionWitness: MerkleWitness9,
             name: CircuitString,
-            status: CircuitString,
+            entityStatus: CircuitString,
+            registrationStatus: CircuitString,
             lei: CircuitString,
             country: CircuitString,
             city: CircuitString,
@@ -165,7 +179,8 @@ export const GLEIFMerkleVerifier = ZkProgram({
             // Verify all fields belong to signed dataset
             const fields = [
                { witness: nameWitness, value: name },
-               { witness: statusWitness, value: status },
+               { witness: entityStatusWitness, value: entityStatus },
+               { witness: registrationStatusWitness, value: registrationStatus },
                { witness: leiWitness, value: lei },
                { witness: countryWitness, value: country },
                { witness: cityWitness, value: city },
@@ -177,21 +192,25 @@ export const GLEIFMerkleVerifier = ZkProgram({
                field.witness.calculateRoot(fieldHash).assertEquals(datasetRoot);
             });
 
-            // Verify compliance
-            const activeHash = CircuitString.fromString("ACTIVE").hash();
-            const isActive = status.hash().equals(activeHash);
-            const complianceFlag = Provable.if(isActive, Field(1), Field(0));
+            // Verify compliance (both entity_status and registration_status)
+            const activeStatus = CircuitString.fromString("ACTIVE");
+            const issuedStatus = CircuitString.fromString("ISSUED");
+            
+            const isEntityActive = entityStatus.equals(activeStatus);
+            const isRegistrationIssued = registrationStatus.equals(issuedStatus);
+            const complianceFlag = isEntityActive.and(isRegistrationIssued);
+            const complianceValue = Provable.if(complianceFlag, Field(1), Field(0));
 
             return new GLEIFExtendedPublicOutput({
                name,
-               registration_status: status,
+               registration_status: registrationStatus,
                lei,
                legalAddress_country: country,
                legalAddress_city: city,
                jurisdiction,
                datasetRoot,
-               companyVerified: complianceFlag,
-               fieldsRevealed: Field(6)
+               companyVerified: complianceValue,
+               fieldsRevealed: Field(7)
             });
          }
       }

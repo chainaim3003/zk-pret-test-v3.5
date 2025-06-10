@@ -410,7 +410,7 @@ export class GLEIFMerkleUtils {
     witnesses: MerkleWitness9[],
     values: CircuitString[]
   } {
-    const coreFields = ['name', 'registration_status', 'lei'];
+    const coreFields = ['name', 'entity_status', 'registration_status', 'lei'];
     return {
       witnesses: this.getFieldWitnesses(tree, coreFields),
       values: this.getFieldValues(tree, coreFields)
@@ -424,7 +424,7 @@ export class GLEIFMerkleUtils {
     fieldNames: string[]
   } {
     const extendedFields = [
-      'name', 'registration_status', 'lei', 
+      'name', 'entity_status', 'registration_status', 'lei', 
       'legalAddress_country', 'legalAddress_city', 
       'jurisdiction'
     ];
