@@ -6,6 +6,28 @@ dotenv.config();
  * Enhanced GLEIF Utils with complete JSON printing and ZK optimization analysis
  */
 
+// =================================== Type Definitions ===================================
+export interface GLEIFAPIResponse {
+  data?: any;
+  [key: string]: any;
+}
+
+export interface GLEIFComplianceAnalysis {
+  isCompliant: boolean;
+  complianceScore: number;
+  issues: string[];
+  summary: string;
+}
+
+export interface GLEIFDataSummary {
+  legalName: string;
+  lei: string;
+  entityStatus: string;
+  jurisdiction: string;
+  legalForm: string;
+  complianceScore: number;
+}
+
 /**
  * Fetch company data from GLEIF API with complete JSON printing
  */
@@ -25,9 +47,9 @@ export async function fetchGLEIFCompanyDataWithFullDetails(companyName: string, 
     BASEURL = process.env.GLEIF_URL_SANDBOX;
     url = `${BASEURL}?filter[entity.legalName]=${encodeURIComponent(companyName)}`;
   } else if (typeOfNet === 'LOCAL') {
-    console.log('------------------------------------------------in mock--------------------------------------------------');
-    BASEURL = process.env.GLEIF_URL_MOCK;
-    url = `${BASEURL}/${companyName}`;
+    console.log('------------------------------------------------using live GLEIF API--------------------------------------------------');
+    BASEURL = process.env.GLEIF_URL_SANDBOX; // Use live GLEIF API for LOCAL too
+    url = `${BASEURL}?filter[entity.legalName]=${encodeURIComponent(companyName)}`;
   } else {
     console.log('///////////////////////////////////////////////in prod//////////////////////////////////////////////');
     BASEURL = process.env.GLEIF_URL_PROD;
@@ -364,8 +386,57 @@ async function main() {
   }
 }
 
+/**
+ * Missing export aliases for backward compatibility
+ */
+export async function fetchGLEIFDataWithFullLogging(companyName: string, typeOfNet: string): Promise<GLEIFAPIResponse> {
+  return await fetchGLEIFCompanyDataWithFullDetails(companyName, typeOfNet);
+}
+
+export function extractGLEIFSummary(apiResponse: GLEIFAPIResponse): GLEIFDataSummary {
+  let firstRecord;
+  if (Array.isArray(apiResponse.data)) {
+    firstRecord = apiResponse.data[0];
+  } else if (apiResponse.data) {
+    firstRecord = apiResponse.data;
+  }
+
+  const attributes = firstRecord?.attributes;
+  const entity = attributes?.entity;
+  
+  return {
+    legalName: entity?.legalName?.name || '',
+    lei: attributes?.lei || firstRecord?.id || '',
+    entityStatus: entity?.status || '',
+    jurisdiction: entity?.jurisdiction || '',
+    legalForm: entity?.legalForm?.id || '',
+    complianceScore: entity?.status === 'ACTIVE' ? 100 : 0
+  };
+}
+
+export function analyzeGLEIFCompliance(apiResponse: GLEIFAPIResponse, typeOfNet?: string): GLEIFComplianceAnalysis {
+  const summary = extractGLEIFSummary(apiResponse);
+  const issues: string[] = [];
+  
+  // Check compliance criteria
+  if (!summary.legalName) issues.push('Missing legal name');
+  if (!summary.lei) issues.push('Missing LEI');
+  if (summary.entityStatus !== 'ACTIVE') issues.push('Entity status is not ACTIVE');
+  if (!summary.jurisdiction) issues.push('Missing jurisdiction');
+  
+  const isCompliant = issues.length === 0;
+  const complianceScore = isCompliant ? 100 : Math.max(0, 100 - (issues.length * 25));
+  
+  return {
+    isCompliant,
+    complianceScore,
+    issues,
+    summary: `Company ${summary.legalName} has ${isCompliant ? 'passed' : 'failed'} GLEIF compliance check`
+  };
+}
+
 // Only run main if this file is executed directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(err => {
     console.error('Error:', err);
     process.exit(1);

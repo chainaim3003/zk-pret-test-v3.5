@@ -21,9 +21,9 @@ export async function fetchEXIMCompanyData(companyName: string, typeOfNet: strin
         }
         url = `${BASEURL}/${companyName}`;
    } else if (typeOfNet === 'LOCAL') {
-    //
-        console.log('------------------------------------------------in mock--------------------------------------------------');
-        BASEURL = process.env.EXIM_URL_MOCK_INDIA;
+        console.log('------------------------------------------------using live API for LOCAL--------------------------------------------------');
+        // Changed: LOCAL now uses live production API instead of mock
+        BASEURL = process.env.EXIM_URL_PROD_INDIA;
         if (!BASEURL) {
         throw new Error('BASEURL is not set in the environment variables.');
         }

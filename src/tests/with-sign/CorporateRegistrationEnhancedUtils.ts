@@ -59,6 +59,7 @@ interface CorporateRegistrationAPIResponse {
       last_bs_date?: string;
       last_annual_return_date?: string;
       listing_status?: string;
+      whether_listed_or_not?: string;
       suspended_at_stock_exchange?: string;
       market_cap?: string;
       share_capital_details?: string;
@@ -116,139 +117,110 @@ export function printCorporateRegistrationResponse(
   console.log(`📅 Timestamp: ${new Date().toISOString()}`);
   console.log(`🔄 API Response Structure Analysis:`);
   
-  if (typeOfNet === 'LOCAL') {
-    // Handle LOCAL mock data structure
-    console.log(`📋 LOCAL Mock Data Response:`);
-    console.log(`  Response Type: Mock/Test Data`);
-    console.log(`  Available Fields: ${Object.keys(response).length}`);
-    
-    // Print key fields if available
-    if (response['CIN']) {
-      console.log(`  🆔 CIN: ${response['CIN']}`);
-    }
-    if (response['Company Name']) {
-      console.log(`  🏢 Company Name: ${response['Company Name']}`);
-    }
-    if (response['Active Compliance']) {
-      console.log(`  ✅ Active Compliance: ${response['Active Compliance']}`);
-    }
-    
-    // Print all available fields
-    console.log(`\n📊 All Available Fields in Mock Response:`);
-    Object.keys(response).forEach((key, index) => {
-      const value = response[key];
-      const truncatedValue = typeof value === 'string' && value.length > 50 
-        ? value.substring(0, 50) + '...' 
-        : value;
-      console.log(`  ${index + 1}. ${key}: ${truncatedValue}`);
-    });
-    
-  } else {
-    // Handle SANDBOX/PROD API structure
-    console.log(`📋 Production API Response:`);
-    console.log(`  Success: ${response.success || 'unknown'}`);
-    console.log(`  Has Data: ${!!response.data}`);
-    console.log(`  Has Company Master Data: ${!!response.data?.company_master_data}`);
-    
-    if (response.error) {
-      console.log(`  ❌ Error: ${response.error}`);
-    }
-    
-    if (response.message) {
-      console.log(`  💬 Message: ${response.message}`);
-    }
+  // Since LOCAL now uses live API, treat it the same as TESTNET/MAINNET for all environments
+  console.log(`📋 Production API Response:`);
+  console.log(`  Success: ${response.success || 'unknown'}`);
+  console.log(`  Has Data: ${!!response.data}`);
+  console.log(`  Has Company Master Data: ${!!response.data?.company_master_data}`);
+  
+  if (response.error) {
+    console.log(`  ❌ Error: ${response.error}`);
+  }
+  
+  if (response.message) {
+    console.log(`  💬 Message: ${response.message}`);
+  }
     
     const masterData = response.data?.company_master_data;
     if (masterData) {
-      console.log(`\n🏢 Company Master Data Analysis:`);
-      console.log(`  Total Fields Available: ${Object.keys(masterData).length}`);
-      
-      // Core identification fields
-      console.log(`\n🆔 Core Identification:`);
-      console.log(`  CIN: ${masterData.cin || 'N/A'}`);
-      console.log(`  Company Name: ${masterData.company_name || 'N/A'}`);
-      console.log(`  Registration Number: ${masterData.registration_number || 'N/A'}`);
-      console.log(`  Company Status: ${masterData.company_status || masterData['company_status(for_efiling)'] || 'N/A'}`);
-      console.log(`  Date of Incorporation: ${masterData.date_of_incorporation || 'N/A'}`);
-      
-      // Business classification
-      console.log(`\n📊 Business Classification:`);
-      console.log(`  Company Type: ${masterData.company_type || 'N/A'}`);
-      console.log(`  Company Category: ${masterData.company_category || 'N/A'}`);
-      console.log(`  Company Subcategory: ${masterData.company_subcategory || 'N/A'}`);
-      console.log(`  Class of Company: ${masterData.class_of_company || 'N/A'}`);
-      console.log(`  Number of Partners: ${masterData.number_of_partners || 'N/A'}`);
-      
-      // Market and regulatory status
-      console.log(`\n📈 Market & Regulatory Status:`);
-      console.log(`  Listing Status: ${masterData.listing_status || 'N/A'}`);
-      console.log(`  Suspended at Stock Exchange: ${masterData.suspended_at_stock_exchange || 'N/A'}`);
-      console.log(`  Compliance Status: ${masterData.compliance_status || 'N/A'}`);
-      console.log(`  Filing Status: ${masterData.filing_status || 'N/A'}`);
-      
-      // Financial information
-      console.log(`\n💰 Financial Information:`);
-      console.log(`  Authorized Capital: ${masterData.authorized_capital || 'N/A'}`);
-      console.log(`  Paid Up Capital: ${masterData.paid_up_capital || 'N/A'}`);
-      console.log(`  Number of Members: ${masterData.number_of_members || 'N/A'}`);
-      console.log(`  Number of Directors: ${masterData.number_of_directors || 'N/A'}`);
-      
-      // Address information
-      console.log(`\n🏠 Address Information:`);
-      console.log(`  Registered Address: ${[
-        masterData.registered_address_line1,
-        masterData.registered_address_line2,
-        masterData.registered_city,
-        masterData.registered_state,
-        masterData.registered_pincode
-      ].filter(Boolean).join(', ') || 'N/A'}`);
-      
-      console.log(`  Corporate Address: ${[
-        masterData.corporate_address_line1,
-        masterData.corporate_address_line2,
-        masterData.corporate_city,
-        masterData.corporate_state,
-        masterData.corporate_pincode
-      ].filter(Boolean).join(', ') || 'N/A'}`);
-      
-      // Contact information
-      console.log(`\n📞 Contact Information:`);
-      console.log(`  Email: ${masterData.email || 'N/A'}`);
-      console.log(`  Phone: ${masterData.phone || 'N/A'}`);
-      console.log(`  Website: ${masterData.website || 'N/A'}`);
-      
-      // Regulatory details
-      console.log(`\n⚖️ Regulatory Details:`);
-      console.log(`  ROC Code: ${masterData.roc_code || 'N/A'}`);
-      console.log(`  Registrar of Companies: ${masterData.registrar_of_companies || 'N/A'}`);
-      console.log(`  MCA ID: ${masterData.mca_id || 'N/A'}`);
-      console.log(`  Jurisdiction: ${masterData.jurisdiction || 'N/A'}`);
-      console.log(`  Legal Form: ${masterData.legal_form || 'N/A'}`);
-      
-      // Activity and business details
-      console.log(`\n🏭 Business Activity:`);
-      console.log(`  Activity Description: ${masterData.activity_description || 'N/A'}`);
-      console.log(`  Company Activity Code: ${masterData.company_activity_code || 'N/A'}`);
-      console.log(`  Industrial Class: ${masterData.industrial_class || 'N/A'}`);
-      
-      // Dates and temporal information
-      console.log(`\n📅 Important Dates:`);
-      console.log(`  Date of Incorporation: ${masterData.date_of_incorporation || 'N/A'}`);
-      console.log(`  Last AGM Date: ${masterData.last_agm_date || 'N/A'}`);
-      console.log(`  Last BS Date: ${masterData.last_bs_date || 'N/A'}`);
-      console.log(`  Last Annual Return Date: ${masterData.last_annual_return_date || 'N/A'}`);
-      
-      // Complete field inventory
-      console.log(`\n📋 Complete Field Inventory (All ${Object.keys(masterData).length} fields):`);
-      Object.keys(masterData).sort().forEach((key, index) => {
-        const value = masterData[key as keyof typeof masterData];
-        const truncatedValue = typeof value === 'string' && value.length > 80 
-          ? value.substring(0, 80) + '...' 
-          : value;
-        console.log(`  ${index + 1}. ${key}: ${truncatedValue || 'null'}`);
-      });
+    console.log(`\n🏢 Company Master Data Analysis:`);
+    console.log(`  Total Fields Available: ${Object.keys(masterData).length}`);
+    
+    // Core identification fields
+    console.log(`\n🆔 Core Identification:`);
+    console.log(`  CIN: ${masterData.cin || 'N/A'}`);
+    console.log(`  Company Name: ${masterData.company_name || 'N/A'}`);
+    console.log(`  Registration Number: ${masterData.registration_number || 'N/A'}`);
+    console.log(`  Company Status: ${masterData.company_status || masterData['company_status(for_efiling)'] || 'N/A'}`);
+    console.log(`  Date of Incorporation: ${masterData.date_of_incorporation || 'N/A'}`);
+    
+    // Business classification
+    console.log(`\n📊 Business Classification:`);
+    console.log(`  Company Type: ${masterData.company_type || 'N/A'}`);
+    console.log(`  Company Category: ${masterData.company_category || 'N/A'}`);
+    console.log(`  Company Subcategory: ${masterData.company_subcategory || 'N/A'}`);
+    console.log(`  Class of Company: ${masterData.class_of_company || 'N/A'}`);
+    console.log(`  Number of Partners: ${masterData.number_of_partners || 'N/A'}`);
+    
+    // Market and regulatory status
+    console.log(`\n📈 Market & Regulatory Status:`);
+    console.log(`  Listing Status: ${masterData.listing_status || 'N/A'}`);
+    console.log(`  Suspended at Stock Exchange: ${masterData.suspended_at_stock_exchange || 'N/A'}`);
+    console.log(`  Compliance Status: ${masterData.compliance_status || 'N/A'}`);
+    console.log(`  Filing Status: ${masterData.filing_status || 'N/A'}`);
+    
+    // Financial information
+    console.log(`\n💰 Financial Information:`);
+    console.log(`  Authorized Capital: ${masterData.authorized_capital || 'N/A'}`);
+    console.log(`  Paid Up Capital: ${masterData.paid_up_capital || 'N/A'}`);
+    console.log(`  Number of Members: ${masterData.number_of_members || 'N/A'}`);
+    console.log(`  Number of Directors: ${masterData.number_of_directors || 'N/A'}`);
+    
+    // Address information
+    console.log(`\n🏠 Address Information:`);
+    console.log(`  Registered Address: ${[
+    masterData.registered_address_line1,
+    masterData.registered_address_line2,
+    masterData.registered_city,
+    masterData.registered_state,
+    masterData.registered_pincode
+    ].filter(Boolean).join(', ') || 'N/A'}`);
+    
+    console.log(`  Corporate Address: ${[
+    masterData.corporate_address_line1,
+    masterData.corporate_address_line2,
+    masterData.corporate_city,
+    masterData.corporate_state,
+    masterData.corporate_pincode
+    ].filter(Boolean).join(', ') || 'N/A'}`);
+    
+    // Contact information
+    console.log(`\n📞 Contact Information:`);
+    console.log(`  Email: ${masterData.email || 'N/A'}`);
+    console.log(`  Phone: ${masterData.phone || 'N/A'}`);
+    console.log(`  Website: ${masterData.website || 'N/A'}`);
+    
+    // Regulatory details
+    console.log(`\n⚖️ Regulatory Details:`);
+    console.log(`  ROC Code: ${masterData.roc_code || 'N/A'}`);
+    console.log(`  Registrar of Companies: ${masterData.registrar_of_companies || 'N/A'}`);
+    console.log(`  MCA ID: ${masterData.mca_id || 'N/A'}`);
+    console.log(`  Jurisdiction: ${masterData.jurisdiction || 'N/A'}`);
+    console.log(`  Legal Form: ${masterData.legal_form || 'N/A'}`);
+    
+    // Activity and business details
+    console.log(`\n🏭 Business Activity:`);
+    console.log(`  Activity Description: ${masterData.activity_description || 'N/A'}`);
+    console.log(`  Company Activity Code: ${masterData.company_activity_code || 'N/A'}`);
+    console.log(`  Industrial Class: ${masterData.industrial_class || 'N/A'}`);
+    
+    // Dates and temporal information
+    console.log(`\n📅 Important Dates:`);
+    console.log(`  Date of Incorporation: ${masterData.date_of_incorporation || 'N/A'}`);
+    console.log(`  Last AGM Date: ${masterData.last_agm_date || 'N/A'}`);
+    console.log(`  Last BS Date: ${masterData.last_bs_date || 'N/A'}`);
+    console.log(`  Last Annual Return Date: ${masterData.last_annual_return_date || 'N/A'}`);
+    
+    // Complete field inventory
+    console.log(`\n📋 Complete Field Inventory (All ${Object.keys(masterData).length} fields):`);
+    Object.keys(masterData).sort().forEach((key, index) => {
+    const value = masterData[key as keyof typeof masterData];
+    const truncatedValue = typeof value === 'string' && value.length > 80 
+    ? value.substring(0, 80) + '...' 
+    : value;
+    console.log(`  ${index + 1}. ${key}: ${truncatedValue || 'null'}`);
+    });
     }
-  }
   
   console.log(`\n✅ Corporate Registration Response Analysis Complete`);
   console.log(`==========================================\n`);
@@ -315,34 +287,22 @@ export function extractCorporateRegistrationSummary(
   listed: string;
   suspended: string;
 } {
-  if (typeOfNet === 'LOCAL') {
-    return {
-      companyName: response['Company Name'] || 'UNKNOWN',
-      cin: response['CIN'] || 'UNKNOWN',
-      status: response['Active Compliance'] || 'UNKNOWN',
-      registrationNumber: response['Registration Number'] || 'UNKNOWN',
-      dateOfIncorporation: response['Date of Incorporation'] || 'UNKNOWN',
-      category: response['Category'] || 'UNKNOWN',
-      classOfCompany: response['Class of Company'] || 'UNKNOWN',
-      numberOfPartners: response['Number of Partners'] || 'UNKNOWN',
-      listed: response['Listed'] || 'UNKNOWN',
-      suspended: response['Suspended'] || 'UNKNOWN'
-    };
-  } else {
-    const masterData = response.data?.company_master_data || {};
-    return {
-      companyName: masterData.company_name || 'UNKNOWN',
-      cin: masterData.cin || 'UNKNOWN',
-      status: masterData.company_status || masterData['company_status(for_efiling)'] || 'UNKNOWN',
-      registrationNumber: masterData.registration_number || 'UNKNOWN',
-      dateOfIncorporation: masterData.date_of_incorporation || 'UNKNOWN',
-      category: masterData.company_category || 'UNKNOWN',
-      classOfCompany: masterData.class_of_company || 'UNKNOWN',
-      numberOfPartners: masterData.number_of_partners || 'UNKNOWN',
-      listed: masterData.listing_status || 'UNKNOWN',
-      suspended: masterData.suspended_at_stock_exchange || 'UNKNOWN'
-    };
-  }
+  // Since LOCAL now uses live API, all environments use the same structure
+  const masterData = response.data?.company_master_data || {};
+  return {
+    companyName: masterData.company_name || 'UNKNOWN',
+    cin: masterData.cin || 'UNKNOWN',
+    // Fix: Use correct field name for company status
+    status: masterData['company_status(for_efiling)'] || masterData.company_status || 'UNKNOWN',
+    registrationNumber: masterData.registration_number || 'UNKNOWN',
+    dateOfIncorporation: masterData.date_of_incorporation || 'UNKNOWN',
+    category: masterData.company_category || 'UNKNOWN',
+    classOfCompany: masterData.class_of_company || 'UNKNOWN',
+    numberOfPartners: masterData.number_of_partners ? String(masterData.number_of_partners) : 'UNKNOWN',
+    // Fix: Use correct field name for listing status  
+    listed: masterData.whether_listed_or_not || 'UNKNOWN',
+    suspended: masterData.suspended_at_stock_exchange || 'UNKNOWN'
+  };
 }
 
 /**

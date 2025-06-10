@@ -66,46 +66,18 @@ export function printEXIMResponse(
   console.log(`📅 Timestamp: ${new Date().toISOString()}`);
   console.log(`🔄 API Response Structure Analysis:`);
   
-  if (typeOfNet === 'LOCAL') {
-    // Handle LOCAL mock data structure
-    console.log(`📋 LOCAL Mock Data Response:`);
-    console.log(`  Response Type: Mock/Test Data`);
-    console.log(`  Available Fields: ${Object.keys(response).length}`);
-    
-    // Print key fields if available
-    if (response['iec']) {
-      console.log(`  🆔 IEC: ${response['iec']}`);
-    }
-    if (response['entityName']) {
-      console.log(`  🏢 Entity Name: ${response['entityName']}`);
-    }
-    if (response['iecStatus']) {
-      console.log(`  ✅ IEC Status: ${response['iecStatus']}`);
-    }
-    
-    // Print all available fields
-    console.log(`\n📊 All Available Fields in Mock Response:`);
-    Object.keys(response).forEach((key, index) => {
-      const value = response[key];
-      const truncatedValue = typeof value === 'string' && value.length > 50 
-        ? value.substring(0, 50) + '...' 
-        : value;
-      console.log(`  ${index + 1}. ${key}: ${truncatedValue}`);
-    });
-    
-  } else {
-    // Handle SANDBOX/PROD API structure
-    console.log(`📋 Production API Response:`);
-    console.log(`  Success: ${response.success || 'unknown'}`);
-    console.log(`  Has Data: ${!!response.data}`);
-    
-    if (response.error) {
-      console.log(`  ❌ Error: ${response.error}`);
-    }
-    
-    if (response.message) {
-      console.log(`  💬 Message: ${response.message}`);
-    }
+  // Since LOCAL now uses live API, treat it the same as TESTNET/MAINNET for all environments
+  console.log(`📋 Production API Response:`);
+  console.log(`  Success: ${response.success || 'unknown'}`);
+  console.log(`  Has Data: ${!!response.data}`);
+  
+  if (response.error) {
+    console.log(`  ❌ Error: ${response.error}`);
+  }
+  
+  if (response.message) {
+    console.log(`  💬 Message: ${response.message}`);
+  }
     
     const data = response.data;
     if (data) {
@@ -182,7 +154,6 @@ export function printEXIMResponse(
         }
       });
     }
-  }
   
   console.log(`\n✅ EXIM Response Analysis Complete`);
   console.log(`==========================================\n`);
@@ -245,28 +216,17 @@ export function extractEXIMSummary(
   iecModificationDate: string;
   dataAsOn: string;
 } {
-  if (typeOfNet === 'LOCAL') {
-    return {
-      iec: response['iec'] || 'UNKNOWN',
-      entityName: response['entityName'] || 'UNKNOWN',
-      iecIssueDate: response['iecIssueDate'] || 'UNKNOWN',
-      PAN: response['PAN'] || 'UNKNOWN',
-      iecStatus: response['iecStatus'] !== undefined ? response['iecStatus'] : -1,
-      iecModificationDate: response['iecModificationDate'] || 'UNKNOWN',
-      dataAsOn: response['dataAsOn'] || 'UNKNOWN'
-    };
-  } else {
-    const data = response.data || {};
-    return {
-      iec: data.iec || 'UNKNOWN',
-      entityName: data.entityName || 'UNKNOWN',
-      iecIssueDate: data.iecIssueDate || 'UNKNOWN',
-      PAN: data.PAN || 'UNKNOWN',
-      iecStatus: data.iecStatus !== undefined ? data.iecStatus : -1,
-      iecModificationDate: data.iecModificationDate || 'UNKNOWN',
-      dataAsOn: data.dataAsOn || 'UNKNOWN'
-    };
-  }
+  // Since LOCAL now uses live API, all environments use the same structure
+  const data = response.data || {};
+  return {
+    iec: data.iec || 'UNKNOWN',
+    entityName: data.entityName || 'UNKNOWN',
+    iecIssueDate: data.iecIssueDate || 'UNKNOWN',
+    PAN: data.PAN || 'UNKNOWN',
+    iecStatus: data.iecStatus !== undefined ? data.iecStatus : -1,
+    iecModificationDate: data.iecModificationDate || 'UNKNOWN',
+    dataAsOn: data.dataAsOn || 'UNKNOWN'
+  };
 }
 
 /**

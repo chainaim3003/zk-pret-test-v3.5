@@ -1,0 +1,1 @@
+export declare function getEXIMVerificationWithSignUtils(companyName: string, typeOfNet: string): Promise<import("o1js/dist/node/lib/proof-system/zkprogram.js").Proof<import("o1js/dist/node/lib/provable/field.js").Field, import("../../zk-programs/with-sign/EXIMZKProgramWithSign.js").EXIMPublicOutput>>;
