@@ -12,6 +12,7 @@ async function main() {
         console.error('❌ Error: Company name is required');
         console.log('📖 Usage: node EXIMOptimSingleCompanyVerificationTestWithSign.js "COMPANY NAME" [TESTNET|MAINNET]');
         console.log('📝 Example: node EXIMOptimSingleCompanyVerificationTestWithSign.js "SREE PALANI ANDAVAR AGROS PRIVATE LIMITED" "TESTNET"');
+        console.log('🔍 Features: Individual company tracking, name-based queries, same capabilities as MultiCompany contract');
         process.exit(1);
     }
     

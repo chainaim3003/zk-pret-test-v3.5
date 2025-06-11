@@ -304,6 +304,25 @@ export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(company
     console.log(`  • Last Verification: ${new Date(Number(verificationStats.lastVerificationTime.toString())).toISOString()}`);
     console.log(`  • Has Been Verified: ${verificationStats.hasBeenVerified.toJSON()}`);
 
+    // =================================== Test Company Name-based Queries (New Feature) ===================================
+    console.log(`\n🏢 Testing company name-based compliance queries...`);
+    const companyNameCircuit = CircuitString.fromString(companyName);
+    
+    // Test if company is tracked by name
+    const isTrackedByName = zkApp.isTrackingCompanyByName(companyNameCircuit);
+    console.log(`  • Is ${companyName} tracked: ${isTrackedByName.toJSON()}`);
+    
+    // Test EXIM compliance by company name
+    const isEXIMCompliantByName = zkApp.isCompanyEXIMCompliant(companyNameCircuit);
+    console.log(`  • Is ${companyName} EXIM compliant: ${isEXIMCompliantByName.toJSON()}`);
+    
+    // Test comprehensive company info by name
+    const complianceByName = zkApp.getCompanyComplianceByName(companyNameCircuit);
+    console.log(`  • Company tracked by name: ${complianceByName.isTracked.toJSON()}`);
+    console.log(`  • Company compliant by name: ${complianceByName.isCompliant.toJSON()}`);
+    console.log(`  • Compliance score by name: ${complianceByName.complianceScore.toJSON()}`);
+    console.log(`  • Verification count by name: ${complianceByName.verificationCount.toJSON()}`);
+
     // =================================== Summary ===================================
     console.log('\n🎉 EXIM Single Company Verification Completed Successfully!');
     console.log('📈 Summary:');
@@ -318,6 +337,17 @@ export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(company
     console.log(`  • Company Identity Locked: ✅`);
     console.log(`  • Historical Tracking: ✅`);
     console.log(`  • Multiple Verifications Support: ✅`);
+    console.log(`  • Company Name-based Queries: ✅`);
+    console.log(`  • Individual Company Detail Tracking: ✅`);
+    
+    console.log('\n📋 Enhanced Features Demonstrated:');
+    console.log(`  • Individual Company Info Retrieval: ✅`);
+    console.log(`  • Current Compliance Status: ✅`);
+    console.log(`  • Verification Statistics: ✅`);
+    console.log(`  • Company Name-based Compliance Queries: ✅`);
+    console.log(`  • Identity-based Company Tracking: ✅`);
+    console.log(`  • Administrative Functions: ✅`);
+    console.log(`  • Complete Audit Trail: ✅`);
 
 
     return proof;

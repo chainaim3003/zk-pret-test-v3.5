@@ -211,6 +211,78 @@ export class EXIMOptimSingleCompanySmartContract extends SmartContract {
       return hasCompany.and(currentCompanyIdHash.equals(expectedCompanyIdHash));
    }
 
+   // =================================== Company Name-Based Query Methods (Same as MultiCompany) ===================================
+   
+   /**
+    * Check if a specific company is tracked by this contract (using company name)
+    */
+   isTrackingCompanyByName(companyName: CircuitString): Bool {
+      // Add required state preconditions
+      this.companyNameHash.requireEquals(this.companyNameHash.get());
+      this.totalVerifications.requireEquals(this.totalVerifications.get());
+      
+      // Check if the provided company name hash matches the stored hash
+      const providedNameHash = companyName.hash();
+      const storedNameHash = this.companyNameHash.get();
+      const emptyHash = Field(0);
+      
+      // Contract must have a company set (not empty) and name must match
+      const hasCompany = storedNameHash.equals(emptyHash).not();
+      const nameMatches = storedNameHash.equals(providedNameHash);
+      
+      return hasCompany.and(nameMatches);
+   }
+
+   /**
+    * Check if a specific company is EXIM compliant by company name
+    */
+   isCompanyEXIMCompliant(companyName: CircuitString): Bool {
+      // Add required state preconditions
+      this.companyNameHash.requireEquals(this.companyNameHash.get());
+      this.eximCompliant.requireEquals(this.eximCompliant.get());
+      
+      // Verify the company name matches the stored company
+      const providedNameHash = companyName.hash();
+      const storedNameHash = this.companyNameHash.get();
+      providedNameHash.assertEquals(storedNameHash, 'Company name does not match the tracked company');
+      
+      // Return the compliance status
+      return this.eximCompliant.get();
+   }
+
+   /**
+    * Get company compliance info by name
+    */
+   getCompanyComplianceByName(companyName: CircuitString): {
+      isTracked: Bool;
+      isCompliant: Bool;
+      complianceScore: Field;
+      verificationCount: Field;
+   } {
+      // Add required state preconditions
+      this.companyNameHash.requireEquals(this.companyNameHash.get());
+      this.eximCompliant.requireEquals(this.eximCompliant.get());
+      this.currentComplianceScore.requireEquals(this.currentComplianceScore.get());
+      this.totalVerifications.requireEquals(this.totalVerifications.get());
+      
+      // Check if the provided company name hash matches the stored hash
+      const providedNameHash = companyName.hash();
+      const storedNameHash = this.companyNameHash.get();
+      const emptyHash = Field(0);
+      
+      // Contract must have a company set (not empty) and name must match
+      const hasCompany = storedNameHash.equals(emptyHash).not();
+      const nameMatches = storedNameHash.equals(providedNameHash);
+      const isTracked = hasCompany.and(nameMatches);
+      
+      return {
+         isTracked,
+         isCompliant: this.eximCompliant.get(),
+         complianceScore: this.currentComplianceScore.get(),
+         verificationCount: this.totalVerifications.get(),
+      };
+   }
+
    // =================================== Administrative Methods ===================================
    
    /**

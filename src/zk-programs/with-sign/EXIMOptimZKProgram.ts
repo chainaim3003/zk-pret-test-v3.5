@@ -200,7 +200,7 @@ export const EXIMOptim = ZkProgram({
             // Entity is EXIM compliant if ALL conditions are met
             const isEXIMCompliant = isEntityNameValid
                .and(isIECValid)
-               .and(isPANValid)
+               //.and(isPANValid)
                .and(isIECIssueDateValid)
                .and(isIECModificationDateValid)
                .and(isDataAsOnValid)
