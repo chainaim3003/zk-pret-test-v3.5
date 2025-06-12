@@ -124,7 +124,6 @@ class CompanyRegistry {
  */
 function createComprehensiveGLEIFMerkleTree(
   apiResponse: GLEIFAPIResponse,
-  typeOfNet: string
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -293,11 +292,10 @@ function createCompanyRecord(
 
 export async function getGLEIFOptimMultiCompanyVerificationWithSignUtils(
   companyNames: string[], 
-  typeOfNet: string
 ) {
   console.log(`\n🚀 GLEIF Multi-Company Verification Test Started`);
   console.log(`🏢 Companies: ${companyNames.join(', ')}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📊 Total Companies: ${companyNames.length}`);
 
   try {
@@ -350,12 +348,12 @@ export async function getGLEIFOptimMultiCompanyVerificationWithSignUtils(
       try {
         // =================================== Fetch GLEIF Data ===================================
         console.log(`\n📡 Fetching GLEIF data for ${companyName}...`);
-        const apiResponse: GLEIFAPIResponse = await fetchGLEIFDataWithFullLogging(companyName, typeOfNet);
+        const apiResponse: GLEIFAPIResponse = await fetchGLEIFDataWithFullLogging(companyName);
         console.log(`✅ GLEIF data fetched successfully for ${companyName}`);
 
         // =================================== Analyze Compliance ===================================
         console.log(`\n🔍 Analyzing compliance for ${companyName}...`);
-        const complianceAnalysis = analyzeGLEIFCompliance(apiResponse, typeOfNet);
+        const complianceAnalysis = analyzeGLEIFCompliance(apiResponse);
         console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
         console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
         
@@ -368,7 +366,7 @@ export async function getGLEIFOptimMultiCompanyVerificationWithSignUtils(
 
         // =================================== Create Comprehensive Merkle Tree ===================================
         console.log(`\n🌳 Creating comprehensive Merkle tree for ${companyName}...`);
-        const { tree, extractedData, fieldCount } = createComprehensiveGLEIFMerkleTree(apiResponse, typeOfNet);
+        const { tree, extractedData, fieldCount } = createComprehensiveGLEIFMerkleTree(apiResponse);
         console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
         // =================================== Prepare ZK Proof Data ===================================
@@ -539,8 +537,7 @@ export async function getGLEIFOptimMultiCompanyVerificationWithSignUtils(
  * Helper function to verify a single company in an existing multi-company contract
  */
 export async function verifySingleCompanyInMultiContract(
-  companyName: string, 
-  typeOfNet: string,
+  companyName: string,
   zkApp: GLEIFOptimMultiCompanySmartContract,
   companyRegistry: CompanyRegistry
 ) {

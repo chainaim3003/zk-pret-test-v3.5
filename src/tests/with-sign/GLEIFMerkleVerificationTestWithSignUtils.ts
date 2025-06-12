@@ -13,13 +13,13 @@ import { GLEIFdeployerAccount, GLEIFsenderAccount, GLEIFdeployerKey, GLEIFsender
  */
 export async function getGLEIFMerkleVerificationUtils(
    companyName: string, 
-   typeOfNet: string,
    fieldsToReveal: string[] = ['name', 'registration_status', 'lei']
 ) {
    console.log('🚀 GLEIF Merkle Utils - Starting verification');
    console.log(`📋 Company: ${companyName}`);
-   console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
+   //console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
 
+   let typeOfNet = process.env.BUILD_ENV; // Get network type from command line argument
    try {
       // Set default network type
       if (!typeOfNet) {
@@ -33,7 +33,7 @@ export async function getGLEIFMerkleVerificationUtils(
 
       // 2. Create Merkle tree from GLEIF API data (uses existing fetchGLEIFCompanyData)
       console.log('\n🌳 Creating Merkle tree from GLEIF data...');
-      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName, typeOfNet);
+      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName);
       
       // Display tree information
       console.log(`📊 Tree created with ${companyTree.values.length} fields`);
@@ -128,7 +128,7 @@ export async function getGLEIFExtendedMerkleVerificationUtils(companyName: strin
       await GLEIFMerkleVerifier.compile();
 
       // Create tree
-      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName, typeOfNet);
+      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName);
 
       // Get extended fields (6 fields including address information)
       const extendedFields = GLEIFMerkleUtils.getExtendedComplianceFields(companyTree);
@@ -191,13 +191,13 @@ export async function getGLEIFExtendedMerkleVerificationUtils(companyName: strin
  * This function combines Merkle tree scalability with full business logic validation
  */
 export async function getGLEIFComprehensiveMerkleVerificationUtils(
-   companyName: string, 
-   typeOfNet: string
+   companyName: string
 ) {
    console.log('🚀 GLEIF Comprehensive Merkle Utils - Starting verification with full business logic');
    console.log(`📋 Company: ${companyName}`);
-   console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
+   //console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
 
+   let typeOfNet = process.env.BUILD_ENV;
    try {
       // Set default network type
       if (!typeOfNet) {
@@ -211,7 +211,7 @@ export async function getGLEIFComprehensiveMerkleVerificationUtils(
 
       // 2. Create comprehensive Merkle tree from GLEIF API data
       console.log('\n🌳 Creating comprehensive Merkle tree from GLEIF data...');
-      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName, typeOfNet);
+      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName);
       
       // Display tree information
       console.log(`📊 Tree created with ${companyTree.values.length} fields`);
@@ -334,13 +334,13 @@ export async function getGLEIFComprehensiveMerkleVerificationUtils(
  * This provides the complete bundling of all GLEIFOptimVerificationTestWithSign capabilities
  */
 export async function getGLEIFComprehensiveWithSmartContractUtils(
-   companyName: string, 
-   typeOfNet: string
+   companyName: string
 ) {
    console.log('🚀 GLEIF Comprehensive with Smart Contract - Full bundling verification');
    console.log(`📋 Company: ${companyName}`);
-   console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
+   //console.log(`🌐 Network: ${typeOfNet || 'TESTNET'}`);
 
+   let typeOfNet = process.env.BUILD_ENV;
    try {
       // Set default network type
       if (!typeOfNet) {
@@ -390,7 +390,7 @@ export async function getGLEIFComprehensiveWithSmartContractUtils(
 
       // 4. Generate comprehensive proof (reuse the comprehensive verification)
       console.log('\n🔒 Generating comprehensive proof...');
-      const proof = await getGLEIFComprehensiveMerkleVerificationUtils(companyName, typeOfNet);
+      const proof = await getGLEIFComprehensiveMerkleVerificationUtils(companyName);
 
       // 5. Verify proof on smart contract
       console.log('\n🔍 Verifying proof on smart contract...');

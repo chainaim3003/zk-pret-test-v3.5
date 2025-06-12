@@ -25,7 +25,6 @@ import { GLEIF_FIELD_INDICES } from './GLEIFFieldIndices.js';
  */
 function createComprehensiveGLEIFMerkleTree(
   apiResponse: GLEIFAPIResponse,
-  typeOfNet: string
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -145,10 +144,10 @@ function createOptimizedGLEIFComplianceData(
 }
 
 // =================================== Main Single Company Verification Function ===================================
-export async function getGLEIFOptimSingleCompanyVerificationWithSignUtils(companyName: string, typeOfNet: string) {
+export async function getGLEIFOptimSingleCompanyVerificationWithSignUtils(companyName: string) {
   console.log(`\n🚀 GLEIF Single Company Verification Test Started`);
   console.log(`🏢 Company: ${companyName}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📡 Using LIVE API for all environments`);
 
   try {
@@ -192,7 +191,7 @@ export async function getGLEIFOptimSingleCompanyVerificationWithSignUtils(compan
     console.log('\n📡 Fetching GLEIF data...');
     let apiResponse: GLEIFAPIResponse;
     try {
-      apiResponse = await fetchGLEIFDataWithFullLogging(companyName, typeOfNet);
+      apiResponse = await fetchGLEIFDataWithFullLogging(companyName);
       console.log('✅ GLEIF data fetched successfully');
     } catch (err: any) {
       console.error('❌ Error fetching GLEIF data:', err.message);
@@ -201,7 +200,7 @@ export async function getGLEIFOptimSingleCompanyVerificationWithSignUtils(compan
 
     // =================================== Analyze Compliance ===================================
     console.log('\n🔍 Analyzing compliance...');
-    const complianceAnalysis = analyzeGLEIFCompliance(apiResponse, typeOfNet);
+    const complianceAnalysis = analyzeGLEIFCompliance(apiResponse);
     console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
     console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
     
@@ -214,7 +213,7 @@ export async function getGLEIFOptimSingleCompanyVerificationWithSignUtils(compan
 
     // =================================== Create Comprehensive Merkle Tree ===================================
     console.log('\n🌳 Creating comprehensive Merkle tree...');
-    const { tree, extractedData, fieldCount } = createComprehensiveGLEIFMerkleTree(apiResponse, typeOfNet);
+    const { tree, extractedData, fieldCount } = createComprehensiveGLEIFMerkleTree(apiResponse);
     console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
     // =================================== Prepare ZK Proof Data ===================================

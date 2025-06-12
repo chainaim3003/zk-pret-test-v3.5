@@ -8,22 +8,22 @@ import { fetchGLEIFCompanyData } from './GLEIFUtils.js';
 /**
  * Enhanced GLEIF analysis and optimization demo
  */
-async function demonstrateEnhancedGLEIFAnalysis(companyName: string, typeOfNet: string = 'TESTNET') {
+async function demonstrateEnhancedGLEIFAnalysis(companyName: string) {
   console.log('🚀 ENHANCED GLEIF ANALYSIS & ZK OPTIMIZATION DEMO');
   console.log('=' .repeat(80));
   console.log(`📋 Company: ${companyName}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
 
   try {
     // Step 1: Complete JSON structure analysis
     console.log('\n📊 STEP 1: COMPLETE JSON STRUCTURE ANALYSIS');
     console.log('-' .repeat(50));
-    await analyzeGLEIFCompanyData(companyName, typeOfNet);
+    await analyzeGLEIFCompanyData(companyName);
 
     // Step 2: Fetch data for Merkle tree construction
     console.log('\n🌳 STEP 2: STRUCTURED MERKLE TREE CONSTRUCTION');
     console.log('-' .repeat(50));
-    const gleifData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+    const gleifData = await fetchGLEIFCompanyData(companyName);
     
     // Step 3: Build optimized Merkle tree using JSON structure groupings
     const structuredTree = new GLEIFStructuredMerkleTree(gleifData);
@@ -147,7 +147,7 @@ async function demonstrateEnhancedGLEIFAnalysis(companyName: string, typeOfNet: 
 // Main execution
 async function main() {
   const companyName = process.argv[2];
-  const typeOfNet = process.argv[3] || 'TESTNET';
+  //const typeOfNet = process.argv[3] || 'TESTNET';
 
   if (!companyName) {
     console.error('❌ Please provide a company name');
@@ -157,7 +157,7 @@ async function main() {
     process.exit(1);
   }
 
-  await demonstrateEnhancedGLEIFAnalysis(companyName, typeOfNet);
+  await demonstrateEnhancedGLEIFAnalysis(companyName);
 }
 
 // Only run main if this file is executed directly

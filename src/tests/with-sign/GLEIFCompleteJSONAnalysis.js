@@ -10,13 +10,14 @@ dotenv.config();
 /**
  * Enhanced function to fetch and display complete GLEIF data
  */
-async function fetchGLEIFCompanyDataWithFullDetails(companyName, typeOfNet = 'TESTNET') {
+async function fetchGLEIFCompanyDataWithFullDetails(companyName) {
   let BASEURL;
   let url;
 
   console.log('Company Name:', companyName);
-  console.log('Type of Network:', typeOfNet);
+  //console.log('Type of Network:', typeOfNet);
 
+  const typeOfNet = process.env.BUILD_ENV;
   if (typeOfNet === 'TESTNET') {
     console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++in sandbox++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     BASEURL = process.env.GLEIF_URL_SANDBOX;

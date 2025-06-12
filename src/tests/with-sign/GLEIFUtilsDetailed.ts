@@ -9,10 +9,11 @@ dotenv.config();
 /**
  * Fetch company data from GLEIF API with detailed structure logging
  */
-export async function fetchGLEIFCompanyDataDetailed(companyName: string, typeOfNet: string): Promise<any> {
+export async function fetchGLEIFCompanyDataDetailed(companyName: string): Promise<any> {
   let BASEURL;
   let url;
 
+  let typeOfNet = process.env.BUILD_ENV;
   if (!typeOfNet) {
     typeOfNet = 'TESTNET';
   }
@@ -333,14 +334,14 @@ interface ZKOptimizationAnalysis {
 /**
  * Enhanced main function with full analysis
  */
-export async function analyzeGLEIFCompanyData(companyName: string, typeOfNet: string = 'TESTNET'): Promise<void> {
+export async function analyzeGLEIFCompanyData(companyName: string): Promise<void> {
   try {
     console.log('🚀 Starting Enhanced GLEIF Analysis');
     console.log(`📋 Company: ${companyName}`);
-    console.log(`🌐 Network: ${typeOfNet}`);
+    //console.log(`🌐 Network: ${typeOfNet}`);
 
     // Fetch data
-    const gleifData = await fetchGLEIFCompanyDataDetailed(companyName, typeOfNet);
+    const gleifData = await fetchGLEIFCompanyDataDetailed(companyName);
 
     // Print full JSON structure
     printFullGLEIFStructure(gleifData);
@@ -368,7 +369,7 @@ export { fetchGLEIFCompanyData, isCompanyGLEIFCompliant } from './GLEIFUtils.js'
 // Main execution function
 async function main() {
   const companyName = process.argv[2];
-  const typeOfNet = process.argv[3] || 'TESTNET';
+  //const typeOfNet = process.argv[3] || 'TESTNET';
 
   if (!companyName) {
     console.error('❌ Please provide a company name');
@@ -376,7 +377,7 @@ async function main() {
     process.exit(1);
   }
 
-  await analyzeGLEIFCompanyData(companyName, typeOfNet);
+  await analyzeGLEIFCompanyData(companyName);
 }
 
 // Only run main if this file is executed directly

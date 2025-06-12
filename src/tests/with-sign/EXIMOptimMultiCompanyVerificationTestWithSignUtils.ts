@@ -123,8 +123,7 @@ class CompanyRegistry {
  * Create a comprehensive merkle tree from EXIM API response (reused from single company)
  */
 function createComprehensiveEXIMMerkleTree(
-  apiResponse: EXIMAPIResponse,
-  typeOfNet: string
+  apiResponse: EXIMAPIResponse
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -256,12 +255,11 @@ function createCompanyRecord(
 // =================================== Main Multi-Company Verification Function ===================================
 
 export async function getEXIMOptimMultiCompanyVerificationWithSignUtils(
-  companyNames: string[], 
-  typeOfNet: string
+  companyNames: string[]
 ) {
   console.log(`\n🚀 EXIM Multi-Company Verification Test Started`);
   console.log(`🏢 Companies: ${companyNames.join(', ')}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📊 Total Companies: ${companyNames.length}`);
 
   try {
@@ -314,12 +312,12 @@ export async function getEXIMOptimMultiCompanyVerificationWithSignUtils(
       try {
         // =================================== Fetch EXIM Data ===================================
         console.log(`\n📡 Fetching EXIM data for ${companyName}...`);
-        const apiResponse: EXIMAPIResponse = await fetchEXIMDataWithFullLogging(companyName, typeOfNet);
+        const apiResponse: EXIMAPIResponse = await fetchEXIMDataWithFullLogging(companyName);
         console.log(`✅ EXIM data fetched successfully for ${companyName}`);
 
         // =================================== Analyze Compliance ===================================
         console.log(`\n🔍 Analyzing compliance for ${companyName}...`);
-        const complianceAnalysis = analyzeEXIMCompliance(apiResponse, typeOfNet);
+        const complianceAnalysis = analyzeEXIMCompliance(apiResponse);
         console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
         console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
         
@@ -332,7 +330,7 @@ export async function getEXIMOptimMultiCompanyVerificationWithSignUtils(
 
         // =================================== Create Comprehensive Merkle Tree ===================================
         console.log(`\n🌳 Creating comprehensive Merkle tree for ${companyName}...`);
-        const { tree, extractedData, fieldCount } = createComprehensiveEXIMMerkleTree(apiResponse, typeOfNet);
+        const { tree, extractedData, fieldCount } = createComprehensiveEXIMMerkleTree(apiResponse);
         console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
         // =================================== Prepare ZK Proof Data ===================================
@@ -554,8 +552,7 @@ export async function getEXIMOptimMultiCompanyVerificationWithSignUtils(
  * Helper function to verify a single company in an existing multi-company contract
  */
 export async function verifySingleCompanyInMultiContract(
-  companyName: string, 
-  typeOfNet: string,
+  companyName: string,
   zkApp: EXIMOptimMultiCompanySmartContract,
   companyRegistry: CompanyRegistry
 ) {

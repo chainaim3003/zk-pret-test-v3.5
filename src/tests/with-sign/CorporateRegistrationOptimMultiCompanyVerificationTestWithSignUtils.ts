@@ -124,7 +124,6 @@ class CompanyRegistry {
  */
 function createComprehensiveCorporateRegistrationMerkleTree(
   apiResponse: CorporateRegistrationAPIResponse,
-  typeOfNet: string
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -259,11 +258,10 @@ function createCompanyRecord(
 
 export async function getCorporateRegistrationOptimMultiCompanyVerificationWithSignUtils(
   companyNames: string[], 
-  typeOfNet: string
 ) {
   console.log(`\n🚀 Corporate Registration Multi-Company Verification Test Started`);
   console.log(`🏢 Companies: ${companyNames.join(', ')}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📊 Total Companies: ${companyNames.length}`);
 
   try {
@@ -316,12 +314,12 @@ export async function getCorporateRegistrationOptimMultiCompanyVerificationWithS
       try {
         // =================================== Fetch Corporate Registration Data ===================================
         console.log(`\n📡 Fetching Corporate Registration data for ${companyName}...`);
-        const apiResponse: CorporateRegistrationAPIResponse = await fetchCorporateRegistrationDataWithFullLogging(companyName, typeOfNet);
+        const apiResponse: CorporateRegistrationAPIResponse = await fetchCorporateRegistrationDataWithFullLogging(companyName);
         console.log(`✅ Corporate Registration data fetched successfully for ${companyName}`);
 
         // =================================== Analyze Compliance ===================================
         console.log(`\n🔍 Analyzing compliance for ${companyName}...`);
-        const complianceAnalysis = analyzeCorporateRegistrationCompliance(apiResponse, typeOfNet);
+        const complianceAnalysis = analyzeCorporateRegistrationCompliance(apiResponse);
         console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
         console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
         
@@ -334,7 +332,7 @@ export async function getCorporateRegistrationOptimMultiCompanyVerificationWithS
 
         // =================================== Create Comprehensive Merkle Tree ===================================
         console.log(`\n🌳 Creating comprehensive Merkle tree for ${companyName}...`);
-        const { tree, extractedData, fieldCount } = createComprehensiveCorporateRegistrationMerkleTree(apiResponse, typeOfNet);
+        const { tree, extractedData, fieldCount } = createComprehensiveCorporateRegistrationMerkleTree(apiResponse);
         console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
         // =================================== Prepare ZK Proof Data ===================================
@@ -510,8 +508,7 @@ export async function getCorporateRegistrationOptimMultiCompanyVerificationWithS
  * Helper function to verify a single company in an existing multi-company contract
  */
 export async function verifySingleCompanyInMultiContract(
-  companyName: string, 
-  typeOfNet: string,
+  companyName: string,
   zkApp: CorporateRegistrationOptimMultiCompanySmartContract,
   companyRegistry: CompanyRegistry
 ) {

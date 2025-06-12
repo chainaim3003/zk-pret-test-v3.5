@@ -22,15 +22,15 @@ async function main() {
     console.log('');
     
     const companyName = process.argv[2] || 'SREE PALANI ANDAVAR AGROS PRIVATE LIMITED';
-    let typeOfNet = process.argv[3] || 'TESTNET';
+    //let typeOfNet = process.argv[3] || 'TESTNET';
     
     console.log('📋 Configuration:');
     console.log(`   🏢 Company Name: ${companyName}`);
-    console.log(`   🌐 Network Type: ${typeOfNet}`);
+    //console.log(`   🌐 Network Type: ${typeOfNet}`);
     console.log('');
     
     try {
-        await runMinimalGLEIFVerification(companyName, typeOfNet);
+        await runMinimalGLEIFVerification(companyName);
         console.log('\\n🎉 Minimal GLEIF Verification Completed Successfully!');
         console.log('✅ Basic compliance verification passed');
         console.log('🔐 Oracle signature verified');
@@ -46,7 +46,7 @@ async function main() {
     }
 }
 
-async function runMinimalGLEIFVerification(companyName: string, typeOfNet: string) {
+async function runMinimalGLEIFVerification(companyName: string) {
     console.log('\\n🌟 MINIMAL GLEIF VERIFICATION');
     console.log('='.repeat(40));
     console.log('📋 BASIC GLEIF BUSINESS RULES:');
@@ -79,7 +79,7 @@ async function runMinimalGLEIFVerification(companyName: string, typeOfNet: strin
     
     let parsedData: any;
     try {
-        parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+        parsedData = await fetchGLEIFCompanyData(companyName);
         console.log('✅ GLEIF data fetched successfully');
     } catch (err: any) {
         console.error('❌ Error fetching company data:', err.message);

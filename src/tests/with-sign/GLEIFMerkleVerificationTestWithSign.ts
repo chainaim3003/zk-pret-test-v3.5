@@ -12,13 +12,12 @@ import { GLEIFdeployerAccount, GLEIFsenderAccount, GLEIFdeployerKey, GLEIFsender
  * This function demonstrates the power of Merkle trees for scalable GLEIF verification
  */
 export async function getGLEIFMerkleVerificationWithSign(
-   companyName: string, 
-   typeOfNet: string,
+   companyName: string,
    fieldsToReveal: string[] = ['name', 'registration_status', 'lei']
 ) {
    console.log('🚀 Starting GLEIF Merkle Verification');
    console.log(`📋 Company: ${companyName}`);
-   console.log(`🌐 Network: ${typeOfNet}`);
+   //console.log(`🌐 Network: ${typeOfNet}`);
    console.log(`🔍 Fields to reveal: ${fieldsToReveal.join(', ')}`);
 
    try {
@@ -29,7 +28,7 @@ export async function getGLEIFMerkleVerificationWithSign(
 
       // 2. Create Merkle tree from GLEIF API data (supports 30+ fields)
       console.log('\n🌳 Creating Merkle tree from GLEIF data...');
-      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName, typeOfNet);
+      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName);
       
       // Print tree summary to show the scale improvement
       GLEIFMerkleUtils.printTreeSummary(companyTree);
@@ -100,7 +99,7 @@ export async function getGLEIFMerkleVerificationWithSign(
 /**
  * Extended verification with more fields (6 fields including address info)
  */
-export async function getGLEIFExtendedMerkleVerification(companyName: string, typeOfNet: string) {
+export async function getGLEIFExtendedMerkleVerification(companyName: string) {
    console.log('🚀 Starting GLEIF Extended Merkle Verification (6 fields)');
 
    try {
@@ -108,7 +107,7 @@ export async function getGLEIFExtendedMerkleVerification(companyName: string, ty
       await GLEIFMerkleVerifier.compile();
 
       // Create tree
-      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName, typeOfNet);
+      const companyTree = await GLEIFMerkleUtils.createGLEIFMerkleTree(companyName);
       GLEIFMerkleUtils.printTreeSummary(companyTree);
 
       // Get extended fields
@@ -164,7 +163,7 @@ export async function getGLEIFExtendedMerkleVerification(companyName: string, ty
 /**
  * Enhanced bundling demonstration with ALL GLEIFOptimVerificationTestWithSign capabilities
  */
-export async function demonstrateComprehensiveGLEIFMerkleBundling(companyName: string, typeOfNet: string) {
+export async function demonstrateComprehensiveGLEIFMerkleBundling(companyName: string) {
    console.log('\n🎯 COMPREHENSIVE GLEIF MERKLE BUNDLING DEMONSTRATION');
    console.log('=' .repeat(70));
    console.log('🔗 Combining ALL GLEIFOptimVerificationTestWithSign capabilities with Merkle benefits');
@@ -172,19 +171,19 @@ export async function demonstrateComprehensiveGLEIFMerkleBundling(companyName: s
    try {
       // 1. Basic selective disclosure (3 fields)
       console.log('\n1️⃣ BASIC SELECTIVE DISCLOSURE (3 fields):');
-      await getGLEIFMerkleVerificationWithSign(companyName, typeOfNet);
+      await getGLEIFMerkleVerificationWithSign(companyName);
 
       // 2. Extended verification (6 fields)
       console.log('\n2️⃣ EXTENDED VERIFICATION (6 fields):');
-      await getGLEIFExtendedMerkleVerification(companyName, typeOfNet);
+      await getGLEIFExtendedMerkleVerification(companyName);
 
       // 3. Comprehensive business logic verification (10+ fields with full validation)
       console.log('\n3️⃣ COMPREHENSIVE BUSINESS LOGIC VERIFICATION:');
-      await getGLEIFComprehensiveMerkleVerificationUtils(companyName, typeOfNet);
+      await getGLEIFComprehensiveMerkleVerificationUtils(companyName);
 
       // 4. Complete bundling with smart contract integration
       console.log('\n4️⃣ COMPLETE BUNDLING WITH SMART CONTRACT:');
-      const result = await getGLEIFComprehensiveWithSmartContractUtils(companyName, typeOfNet);
+      const result = await getGLEIFComprehensiveWithSmartContractUtils(companyName);
 
       // 5. Batch verification removed (no business value for duplicate companies)
       console.log('\n5️⃣ BATCH VERIFICATION: REMOVED');
@@ -248,7 +247,7 @@ async function main() {
 
    try {
       // Run the comprehensive bundling demonstration by default
-      const result = await demonstrateComprehensiveGLEIFMerkleBundling(companyName, typeOfNet);
+      const result = await demonstrateComprehensiveGLEIFMerkleBundling(companyName);
       
       // Uncomment to run only basic verification:
       // const proof = await getGLEIFMerkleVerificationWithSign(companyName, typeOfNet);

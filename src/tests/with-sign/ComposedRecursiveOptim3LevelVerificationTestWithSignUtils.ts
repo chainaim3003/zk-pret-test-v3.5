@@ -190,13 +190,12 @@ export interface CompanyResult {
 export async function getComposedRecursiveOptim3LevelVerificationWithSignUtils(
   companyName: string,
   companyCIN: string,
-  typeOfNet: string,
   testIterations: number = 1
 ) {
   console.log(`\n🚀 Composed Recursive Optim 3-Level Verification Started`);
   console.log(`🏢 Company: ${companyName}`);
   console.log(`🆔 CIN: ${companyCIN}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`🔄 Iterations: ${testIterations}`);
   console.log(`📝 API Usage:`);
   console.log(`  - Corporate Registration: Uses CIN (${companyCIN})`);
@@ -307,7 +306,7 @@ export async function getComposedRecursiveOptim3LevelVerificationWithSignUtils(
         // Corporate Registration Proof - Use CIN
         console.log(`🏛️ Generating Corporate Registration proof with CIN: ${companyCIN}...`);
         const corpRegResult = await getCorporateRegistrationOptimSingleCompanyVerificationWithSignUtils(
-          companyCIN, typeOfNet // Use CIN for Corporate Registration
+          companyCIN // Use CIN for Corporate Registration
         );
         const corpRegProof = corpRegResult.proof;
         // Extract compliance score from proof public output or use default
@@ -316,7 +315,7 @@ export async function getComposedRecursiveOptim3LevelVerificationWithSignUtils(
         // EXIM Proof - Use Company Name  
         console.log(`🚢 Generating EXIM proof with Company Name: ${companyName}...`);
         const eximResult = await getEXIMOptimSingleCompanyVerificationWithSignUtils(
-          companyName, typeOfNet // Use Company Name for EXIM
+          companyName // Use Company Name for EXIM
         );
         const eximProof = eximResult.proof;
         // Extract compliance score from proof public output or use default
@@ -325,7 +324,7 @@ export async function getComposedRecursiveOptim3LevelVerificationWithSignUtils(
         // GLEIF Proof - Use Company Name
         console.log(`🌍 Generating GLEIF proof with Company Name: ${companyName}...`);
         const gleifResult = await getGLEIFOptimSingleCompanyVerificationWithSignUtils(
-          companyName, typeOfNet // Use Company Name for GLEIF
+          companyName // Use Company Name for GLEIF
         );
         const gleifProof = gleifResult.proof;
         // Extract compliance score from proof public output or use default

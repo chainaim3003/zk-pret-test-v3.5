@@ -45,7 +45,7 @@ async function main() {
     console.log('');
 
     const companyName = process.argv[2];
-    let typeOfNet = process.argv[3] || 'TESTNET';
+    //let typeOfNet = process.argv[3] || 'TESTNET';
     let testMode = process.argv[4] || 'FAST';
 
     if (!companyName) {
@@ -60,12 +60,12 @@ async function main() {
 
     console.log('📋 Configuration:');
     console.log(`   🏢 Company Name: ${companyName}`);
-    console.log(`   🌐 Network Type: ${typeOfNet}`);
+    //console.log(`   🌐 Network Type: ${typeOfNet}`);
     console.log(`   ⚙️ Test Mode: ${testMode.toUpperCase()}`);
     console.log('');
 
     try {
-        await runMerkleAnalysisTest(companyName, typeOfNet, testMode.toUpperCase());
+        await runMerkleAnalysisTest(companyName, testMode.toUpperCase());
         console.log('\n🎉 MerkleTree-Enhanced GLEIF Test Completed Successfully!');
     } catch (error) {
         console.error('\n❌ MerkleTree Test Failed:');
@@ -74,7 +74,7 @@ async function main() {
     }
 }
 
-async function runMerkleAnalysisTest(companyName: string, typeOfNet: string, testMode: string) {
+async function runMerkleAnalysisTest(companyName: string, testMode: string) {
     console.log('\n🌳 MERKLETREE ANALYSIS WITH EXISTING INFRASTRUCTURE');
     console.log('='.repeat(60));
 
@@ -106,7 +106,7 @@ async function runMerkleAnalysisTest(companyName: string, typeOfNet: string, tes
     
     let parsedData;
     try {
-        parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+        parsedData = await fetchGLEIFCompanyData(companyName);
         console.log('✅ GLEIF data fetched successfully');
     } catch (err) {
         console.error('❌ Error fetching company data:', (err as Error).message);

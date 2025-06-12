@@ -17,15 +17,15 @@ async function main() {
     console.log('');
 
     const companyName = process.argv[2] || 'SREE PALANI ANDAVAR AGROS PRIVATE LIMITED';
-    const typeOfNet = process.argv[3] || 'TESTNET';
+    //const typeOfNet = process.argv[3] || 'TESTNET';
 
     console.log('📋 Configuration:');
     console.log(`   🏢 Company Name: ${companyName}`);
-    console.log(`   🌐 Network Type: ${typeOfNet}`);
+    //console.log(`   🌐 Network Type: ${typeOfNet}`);
     console.log('');
 
     try {
-        await runPureMerkleAnalysis(companyName, typeOfNet);
+        await runPureMerkleAnalysis(companyName);
         console.log('\n🎉 MerkleTree Analysis Completed Successfully!');
     } catch (error) {
         console.error('\n❌ MerkleTree Analysis Failed:');
@@ -34,7 +34,7 @@ async function main() {
     }
 }
 
-async function runPureMerkleAnalysis(companyName: string, typeOfNet: string) {
+async function runPureMerkleAnalysis(companyName: string) {
     console.log('\n🌳 PURE MERKLETREE FIELD OPTIMIZATION ANALYSIS');
     console.log('='.repeat(60));
 
@@ -43,7 +43,7 @@ async function runPureMerkleAnalysis(companyName: string, typeOfNet: string) {
     
     let parsedData;
     try {
-        parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+        parsedData = await fetchGLEIFCompanyData(companyName);
         console.log('✅ GLEIF data fetched successfully');
     } catch (err) {
         console.error('❌ Error fetching company data:', (err as Error).message);

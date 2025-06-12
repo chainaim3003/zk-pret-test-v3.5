@@ -6,7 +6,7 @@ import { getEXIMOptimMultiCompanyVerificationWithSignUtils } from './EXIMOptimMu
 async function main() {
     // Get company names and network type from command line arguments
     const companyNamesArg = process.argv[2];
-    const typeOfNet = process.argv[3] || 'TESTNET';
+    //const typeOfNet = process.argv[3] || 'TESTNET';
     
     if (!companyNamesArg) {
         console.error('❌ Error: Company names are required');
@@ -31,11 +31,11 @@ async function main() {
     }
     
     console.log('🏢 Company Names:', companyNames);
-    console.log('🌐 Network Type:', typeOfNet);
+    //console.log('🌐 Network Type:', typeOfNet);
     console.log('📊 Total Companies to Process:', companyNames.length);
     
     try {
-        const result = await getEXIMOptimMultiCompanyVerificationWithSignUtils(companyNames, typeOfNet);
+        const result = await getEXIMOptimMultiCompanyVerificationWithSignUtils(companyNames);
         
         console.log('\n🎯 Multi-Company Verification completed successfully!');
         console.log('\n📊 Final Summary:');

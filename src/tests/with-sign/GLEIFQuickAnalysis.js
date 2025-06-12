@@ -7,16 +7,16 @@ import { fetchGLEIFCompanyData } from './GLEIFUtils.js';
 
 async function quickGLEIFAnalysis() {
     const companyName = process.argv[2] || "SREE PALANI ANDAVAR AGROS PRIVATE LIMITED";
-    const networkType = process.argv[3] || "TESTNET";
+    //const networkType = process.argv[3] || "TESTNET";
 
     console.log('\n🌟 GLEIF COMPLETE JSON ANALYSIS');
     console.log('='.repeat(120));
     console.log(`📋 Company: ${companyName}`);
-    console.log(`🌐 Network: ${networkType}`);
+    //console.log(`🌐 Network: ${networkType}`);
 
     try {
         // This will already print the full GLEIF API response
-        const result = await fetchGLEIFCompanyData(companyName, networkType);
+        const result = await fetchGLEIFCompanyData(companyName);
         
         // Let's print additional analysis
         if (result.data && result.data.length > 0) {

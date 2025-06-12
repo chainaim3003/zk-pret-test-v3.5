@@ -225,10 +225,10 @@ function createOptimizedComplianceData(
 }
 
 // =================================== Main Test Function ===================================
-export async function getEXIMOptimVerification(companyName: string, typeOfNet: string) {
+export async function getEXIMOptimVerification(companyName: string) {
   console.log('\n🚀 EXIM Optimized Verification Test Started');
   console.log(`🏢 Company: ${companyName}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
 
   try {
     // =================================== Compile Programs ===================================
@@ -259,7 +259,7 @@ export async function getEXIMOptimVerification(companyName: string, typeOfNet: s
     console.log('\n📡 Fetching EXIM data...');
     let apiResponse: EXIMAPIResponse;
     try {
-      const rawResponse = await fetchEXIMCompanyData(companyName, typeOfNet);
+      const rawResponse = await fetchEXIMCompanyData(companyName);
       // Convert to EXIMAPIResponse format
       apiResponse = {
         iec: rawResponse.iec,
@@ -414,13 +414,13 @@ export async function getEXIMOptimVerification(companyName: string, typeOfNet: s
 async function main() {
   const args = process.argv.slice(2);
   const companyName = args[0] || 'zenova_dgft';
-  const networkType = args[1] || 'TESTNET';
+  //const networkType = args[1] || 'TESTNET';
   
   console.log('🏢 Company Name:', companyName);
-  console.log('🌐 Network Type:', networkType);
+  //console.log('🌐 Network Type:', networkType);
   
   try {
-    const proof = await getEXIMOptimVerification(companyName, networkType);
+    const proof = await getEXIMOptimVerification(companyName);
     console.log('\n🎯 Proof generated successfully!');
     // Uncomment the line below if you want to see the full proof JSON
     // console.log('📄 Proof:', proof.toJSON());

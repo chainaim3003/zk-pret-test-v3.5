@@ -57,12 +57,11 @@ interface EXIMAPIResponse {
  */
 export function printEXIMResponse(
   response: EXIMAPIResponse,
-  companyIdentifier: string,
-  typeOfNet: string
+  companyIdentifier: string
 ): void {
   console.log(`\n🚢 ===== EXIM API RESPONSE =====`);
   console.log(`🔍 Query: ${companyIdentifier}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📅 Timestamp: ${new Date().toISOString()}`);
   console.log(`🔄 API Response Structure Analysis:`);
   
@@ -164,22 +163,21 @@ export function printEXIMResponse(
  * Compatible with existing fetchEXIMCompanyData function
  */
 export async function fetchEXIMDataWithFullLogging(
-  companyName: string, 
-  typeOfNet: string
+  companyName: string
 ): Promise<EXIMAPIResponse> {
   console.log(`\n🚀 Starting EXIM Data Fetch`);
   console.log(`🔍 Company Name: ${companyName}`);
-  console.log(`🌐 Network Type: ${typeOfNet}`);
+  //console.log(`🌐 Network Type: ${typeOfNet}`);
   
   try {
     // Import the existing utility function to avoid breaking existing code
     const { fetchEXIMCompanyData } = await import('./EXIMUtils.js');
     
     // Use the existing function to get the data
-    const response = await fetchEXIMCompanyData(companyName, typeOfNet);
+    const response = await fetchEXIMCompanyData(companyName);
     
     // Print comprehensive response analysis
-    printEXIMResponse(response, companyName, typeOfNet);
+    printEXIMResponse(response, companyName);
     
     return response;
     
@@ -205,8 +203,7 @@ export async function fetchEXIMDataWithFullLogging(
  * Extract company summary for logging
  */
 export function extractEXIMSummary(
-  response: EXIMAPIResponse,
-  typeOfNet: string
+  response: EXIMAPIResponse
 ): {
   iec: string;
   entityName: string;
@@ -241,7 +238,6 @@ export function extractEXIMSummary(
  */
 export function analyzeEXIMCompliance(
   response: EXIMAPIResponse,
-  typeOfNet: string
 ): {
   isCompliant: boolean;
   complianceScore: number;
@@ -256,7 +252,7 @@ export function analyzeEXIMCompliance(
     iecStatusCompliant: boolean;
   };
 } {
-  const summary = extractEXIMSummary(response, typeOfNet);
+  const summary = extractEXIMSummary(response);
   const issues: string[] = [];
   
   // Business rule checks based on user specification
@@ -311,19 +307,18 @@ export function analyzeEXIMCompliance(
  * Check if a company is EXIM compliant
  */
 export function isCompanyEXIMCompliant(
-  companyDataOrName: EXIMAPIResponse | string,
-  typeOfNet?: string
+  companyDataOrName: EXIMAPIResponse | string
 ): boolean | Promise<boolean> {
   if (typeof companyDataOrName === 'string') {
     // If string provided, fetch data first
-    return fetchEXIMDataWithFullLogging(companyDataOrName, typeOfNet || 'TESTNET')
+    return fetchEXIMDataWithFullLogging(companyDataOrName)
       .then(apiResponse => {
-        const analysis = analyzeEXIMCompliance(apiResponse, typeOfNet || 'TESTNET');
+        const analysis = analyzeEXIMCompliance(apiResponse);
         return analysis.isCompliant;
       });
   } else {
     // If API response provided, analyze directly
-    const analysis = analyzeEXIMCompliance(companyDataOrName, typeOfNet || 'TESTNET');
+    const analysis = analyzeEXIMCompliance(companyDataOrName);
     return analysis.isCompliant;
   }
 }

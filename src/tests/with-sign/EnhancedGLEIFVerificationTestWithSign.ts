@@ -18,7 +18,7 @@ async function main() {
     console.log('');
 
     const companyName = process.argv[2];
-    let typeOfNet = process.argv[3] || 'TESTNET';
+    //let typeOfNet = process.argv[3] || 'TESTNET';
     let testMode = process.argv[4] || 'FAST';
 
     if (!companyName) {
@@ -33,12 +33,12 @@ async function main() {
 
     console.log('📋 Configuration:');
     console.log(`   🏢 Company Name: ${companyName}`);
-    console.log(`   🌐 Network Type: ${typeOfNet}`);
+    //console.log(`   🌐 Network Type: ${typeOfNet}`);
     console.log(`   ⚙️ Test Mode: ${testMode.toUpperCase()}`);
     console.log('');
 
     try {
-        await runEnhancedGLEIFVerification(companyName, typeOfNet, testMode.toUpperCase());
+        await runEnhancedGLEIFVerification(companyName, testMode.toUpperCase());
         console.log('\n🎉 Enhanced GLEIF Verification Completed Successfully!');
     } catch (error) {
         console.error('\n❌ Enhanced GLEIF Verification Failed:');
@@ -47,7 +47,7 @@ async function main() {
     }
 }
 
-async function runEnhancedGLEIFVerification(companyName: string, typeOfNet: string, testMode: string) {
+async function runEnhancedGLEIFVerification(companyName: string, testMode: string) {
     console.log('\n🌟 ENHANCED GLEIF VERIFICATION');
     console.log('='.repeat(50));
 
@@ -80,7 +80,7 @@ async function runEnhancedGLEIFVerification(companyName: string, typeOfNet: stri
     console.log('\n📡 Fetching GLEIF API Data...');
     let parsedData;
     try {
-        parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+        parsedData = await fetchGLEIFCompanyData(companyName);
         console.log('✅ GLEIF data fetched successfully');
     } catch (err) {
         console.error('❌ Error fetching company data:', (err as Error).message);

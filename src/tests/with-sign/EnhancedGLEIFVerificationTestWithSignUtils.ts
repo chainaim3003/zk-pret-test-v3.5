@@ -42,8 +42,7 @@ import { fetchGLEIFCompanyData, fetchGLEIFFullStructure } from './GLEIFUtils.js'
  * 4. Conformity Flag ≠ "NON_CONFORMING"
  */
 export async function getEnhancedGLEIFVerificationWithSignUtils(
-   companyName: string, 
-   typeOfNet: string,
+   companyName: string,
    verificationMode: 'standard' | 'group' | 'historical' = 'standard',
    secondaryCompanyName?: string,
    historicalDays?: number
@@ -58,7 +57,7 @@ export async function getEnhancedGLEIFVerificationWithSignUtils(
    console.log('4. 🔖 Conformity Flag ≠ "NON_CONFORMING"');
    console.log('='.repeat(70));
    console.log(`📋 Primary Company: ${companyName}`);
-   console.log(`🌐 Network: ${typeOfNet}`);
+   //console.log(`🌐 Network: ${typeOfNet}`);
    console.log(`🔍 Verification Mode: ${verificationMode}`);
    
    if (verificationMode === 'group' && secondaryCompanyName) {
@@ -105,7 +104,7 @@ export async function getEnhancedGLEIFVerificationWithSignUtils(
       console.log('\n🔍 FETCHING COMPLETE GLEIF API RESPONSE:');
       console.log('='.repeat(60));
       
-      primaryParsedData = await fetchGLEIFFullStructure(companyName, typeOfNet);
+      primaryParsedData = await fetchGLEIFFullStructure(companyName);
       
       console.log('\n📄 FULL GLEIF API RESPONSE:');
       console.log('='.repeat(60));
@@ -114,7 +113,7 @@ export async function getEnhancedGLEIFVerificationWithSignUtils(
       
       if (verificationMode === 'group' && secondaryCompanyName) {
          console.log('\n🔍 FETCHING SECONDARY COMPANY DATA:');
-         secondaryParsedData = await fetchGLEIFFullStructure(secondaryCompanyName, typeOfNet);
+         secondaryParsedData = await fetchGLEIFFullStructure(secondaryCompanyName);
          console.log('\n📄 SECONDARY COMPANY FULL API RESPONSE:');
          console.log('='.repeat(60));
          console.log(JSON.stringify(secondaryParsedData, null, 2));

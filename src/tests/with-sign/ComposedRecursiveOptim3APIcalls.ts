@@ -61,14 +61,16 @@ export interface GLEIFAPIResponse {
  * Supports both CIN and company name queries
  */
 export async function fetchOptimCorporateRegistrationData(
-  companyIdentifier: string, 
-  typeOfNet: string
+  companyIdentifier: string
 ): Promise<CorporateRegistrationAPIResponse> {
   console.log(`📡 Fetching Corporate Registration data for: ${companyIdentifier}`);
   
   let baseUrl: string;
   let endpoint: string;
-  
+  let typeOfNet = process.env.BUILD_ENV;
+  if (!typeOfNet) {
+    typeOfNet = 'TESTNET';
+  }
   // Determine API endpoint based on network type and identifier format
   switch (typeOfNet.toUpperCase()) {
     case 'LOCAL':
@@ -128,14 +130,16 @@ export async function fetchOptimCorporateRegistrationData(
  * Supports company name queries
  */
 export async function fetchOptimEXIMData(
-  companyName: string, 
-  typeOfNet: string
+  companyName: string
 ): Promise<EXIMAPIResponse> {
   console.log(`📡 Fetching EXIM data for: ${companyName}`);
   
   let baseUrl: string;
   let endpoint: string;
-  
+  let typeOfNet = process.env.BUILD_ENV ;
+  if (!typeOfNet) {
+    typeOfNet = 'TESTNET';
+  }
   switch (typeOfNet.toUpperCase()) {
     case 'LOCAL':
       baseUrl = 'https://api.dgft.gov.in';
@@ -180,14 +184,16 @@ export async function fetchOptimEXIMData(
  * Supports company name queries
  */
 export async function fetchOptimGLEIFData(
-  companyName: string, 
-  typeOfNet: string
+  companyName: string
 ): Promise<GLEIFAPIResponse> {
   console.log(`📡 Fetching GLEIF data for: ${companyName}`);
   
   let baseUrl: string;
   let endpoint: string;
-  
+  let typeOfNet = process.env.BUILD_ENV;
+  if (!typeOfNet) {
+    typeOfNet = 'TESTNET';
+  }
   switch (typeOfNet.toUpperCase()) {
     case 'LOCAL':
       baseUrl = 'https://api.gleif.org';
@@ -439,9 +445,9 @@ export async function fetchAllServiceDataForCompanies(
     try {
       // Fetch data from all three services concurrently
       const [corpRegData, eximData, gleifData] = await Promise.all([
-        fetchOptimCorporateRegistrationData(companyName, typeOfNet),
-        fetchOptimEXIMData(companyName, typeOfNet),
-        fetchOptimGLEIFData(companyName, typeOfNet)
+        fetchOptimCorporateRegistrationData(companyName),
+        fetchOptimEXIMData(companyName ),
+        fetchOptimGLEIFData(companyName )
       ]);
       
       // Calculate compliance scores

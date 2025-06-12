@@ -6,7 +6,7 @@ import { getEXIMOptimSingleCompanyVerificationWithSignUtils } from './EXIMOptimS
 async function main() {
     // Get company name and network type from command line arguments
     const companyName = process.argv[2];
-    const typeOfNet = process.argv[3] || 'TESTNET';
+    //const typeOfNet = process.argv[3] || 'TESTNET';
     
     if (!companyName) {
         console.error('❌ Error: Company name is required');
@@ -17,10 +17,10 @@ async function main() {
     }
     
     console.log('🏢 Company Name:', companyName);
-    console.log('🌐 Network Type:', typeOfNet);
+    //console.log('🌐 Network Type:', typeOfNet);
     
     try {
-        const proof = await getEXIMOptimSingleCompanyVerificationWithSignUtils(companyName, typeOfNet);
+        const proof = await getEXIMOptimSingleCompanyVerificationWithSignUtils(companyName);
         console.log('\n🎯 Proof generated successfully!');
         // Uncomment the line below if you want to see the full proof JSON
         // console.log('📄 Proof:', proof.toJSON());

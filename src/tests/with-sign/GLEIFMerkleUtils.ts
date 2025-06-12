@@ -312,9 +312,9 @@ export class GLEIFMerkleUtils {
   };
 
   // Create Merkle tree from GLEIF API data
-  static async createGLEIFMerkleTree(companyName: string, typeOfNet: string): Promise<GLEIFMerkleTree> {
+  static async createGLEIFMerkleTree(companyName: string): Promise<GLEIFMerkleTree> {
     console.log(`🌳 Creating Merkle tree for company: ${companyName}`);
-    const parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+    const parsedData = await fetchGLEIFCompanyData(companyName);
     const tree = new GLEIFMerkleTree(parsedData);
     
     console.log(`✅ Merkle tree created with ${tree.values.length} fields`);
@@ -324,13 +324,13 @@ export class GLEIFMerkleUtils {
   }
 
   // Create batch tree for multiple companies
-  static async createBatchMerkleTree(companyNames: string[], typeOfNet: string): Promise<GLEIFBatchMerkleTree> {
+  static async createBatchMerkleTree(companyNames: string[]): Promise<GLEIFBatchMerkleTree> {
     console.log(`🏢 Creating batch tree for ${companyNames.length} companies`);
     
     const companiesData = await Promise.all(
       companyNames.map(async (name, index) => {
         console.log(`  📡 Fetching data for company ${index + 1}/${companyNames.length}: ${name}`);
-        return await fetchGLEIFCompanyData(name, typeOfNet);
+        return await fetchGLEIFCompanyData(name);
       })
     );
     

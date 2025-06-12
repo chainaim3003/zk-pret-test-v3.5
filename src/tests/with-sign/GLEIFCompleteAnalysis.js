@@ -12,19 +12,19 @@ const { fetchGLEIFCompanyDataWithFullDetails } = require('./GLEIFEnhancedUtils.j
 
 async function demonstrateCompleteJSONAnalysis() {
     const companyName = process.argv[2] || "SREE PALANI ANDAVAR AGROS PRIVATE LIMITED";
-    const networkType = process.argv[3] || "TESTNET";
+    //const networkType = process.argv[3] || "TESTNET";
 
     console.log('🚀 GLEIF COMPLETE JSON ANALYSIS DEMONSTRATION');
     console.log('='.repeat(100));
     console.log(`📋 Company: ${companyName}`);
-    console.log(`🌐 Network: ${networkType}`);
+    //console.log(`🌐 Network: ${networkType}`);
 
     try {
         // This will print:
         // 1. Complete JSON with all attributes, relationships, and links
         // 2. Detailed analysis of each section
         // 3. ZK optimization recommendations based on the JSON structure
-        const result = await fetchGLEIFCompanyDataWithFullDetails(companyName, networkType);
+        const result = await fetchGLEIFCompanyDataWithFullDetails(companyName);
         
         console.log('\n🎉 ANALYSIS COMPLETE!');
         console.log('\nKey Benefits Demonstrated:');

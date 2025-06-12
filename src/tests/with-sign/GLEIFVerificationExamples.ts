@@ -13,7 +13,7 @@ async function runExamples() {
     console.log('🌟 GLEIF Verification System Examples');
     console.log('=====================================\n');
 
-    const typeOfNet = 'TESTNET';
+    //const typeOfNet = 'TESTNET';
 
     try {
         // Example 1: Single Company Verification
@@ -21,7 +21,7 @@ async function runExamples() {
         console.log('-'.repeat(50));
         console.log('Testing with Apple Inc...\n');
         
-        const singleResult = await getGLEIFOptimSingleCompanyVerificationWithSignUtils('Apple Inc.', typeOfNet);
+        const singleResult = await getGLEIFOptimSingleCompanyVerificationWithSignUtils('Apple Inc.');
         console.log('✅ Single company verification completed successfully!\n');
 
         // Example 2: Multi-Company Verification
@@ -30,7 +30,7 @@ async function runExamples() {
         console.log('Testing with Apple Inc. and Microsoft Corporation...\n');
         
         const companies = ['Apple Inc.', 'Microsoft Corporation'];
-        const multiResult = await getGLEIFOptimMultiCompanyVerificationWithSignUtils(companies, typeOfNet);
+        const multiResult = await getGLEIFOptimMultiCompanyVerificationWithSignUtils(companies);
         
         console.log('✅ Multi-company verification completed successfully!\n');
 

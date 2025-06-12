@@ -26,17 +26,17 @@ async function main() {
     console.log('');
 
     const companyName = process.argv[2] || 'APPLE INC';
-    let typeOfNet = process.argv[3] || 'TESTNET';
+    //let typeOfNet = process.argv[3] || 'TESTNET';
     let testMode = process.argv[4] || 'STANDARD';
 
     console.log('📋 Configuration:');
     console.log(`   🏢 Company Name: ${companyName}`);
-    console.log(`   🌐 Network Type: ${typeOfNet}`);
+    //console.log(`   🌐 Network Type: ${typeOfNet}`);
     console.log(`   ⚙️ Test Mode: ${testMode.toUpperCase()}`);
     console.log('');
 
     try {
-        await runCompleteMerkleGLEIFVerification(companyName, typeOfNet, testMode.toUpperCase());
+        await runCompleteMerkleGLEIFVerification(companyName, testMode.toUpperCase());
         console.log('\n🎉 Complete Merkle-Enhanced GLEIF Verification Completed Successfully!');
     } catch (error) {
         console.error('\n❌ Complete Merkle-Enhanced GLEIF Verification Failed:');
@@ -46,7 +46,7 @@ async function main() {
     }
 }
 
-async function runCompleteMerkleGLEIFVerification(companyName: string, typeOfNet: string, testMode: string) {
+async function runCompleteMerkleGLEIFVerification(companyName: string, testMode: string) {
     console.log('\n🌟 COMPLETE MERKLE-ENHANCED GLEIF VERIFICATION');
     console.log('='.repeat(60));
 
@@ -56,7 +56,7 @@ async function runCompleteMerkleGLEIFVerification(companyName: string, typeOfNet
     
     let gleifAPIResponse;
     try {
-        gleifAPIResponse = await fetchGLEIFCompanyData(companyName, typeOfNet);
+        gleifAPIResponse = await fetchGLEIFCompanyData(companyName);
         console.log('✅ GLEIF API data fetched successfully');
         
         const companySummary = GLEIFCircuitConverter.extractCompanySummary(gleifAPIResponse);

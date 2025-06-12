@@ -25,7 +25,6 @@ import {
  */
 function createComprehensiveEXIMMerkleTree(
   apiResponse: EXIMAPIResponse,
-  typeOfNet: string
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -133,10 +132,10 @@ function createOptimizedEXIMComplianceData(
 }
 
 // =================================== Main Single Company Verification Function ===================================
-export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(companyName: string, typeOfNet: string) {
+export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(companyName: string) {
   console.log(`\n🚀 EXIM Single Company Verification Test Started`);
   console.log(`🏢 Company: ${companyName}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📡 Using LIVE API for all environments`);
 
   try {
@@ -180,7 +179,7 @@ export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(company
     console.log('\n📡 Fetching EXIM data...');
     let apiResponse: EXIMAPIResponse;
     try {
-      apiResponse = await fetchEXIMDataWithFullLogging(companyName, typeOfNet);
+      apiResponse = await fetchEXIMDataWithFullLogging(companyName);
       console.log('✅ EXIM data fetched successfully');
     } catch (err: any) {
       console.error('❌ Error fetching EXIM data:', err.message);
@@ -189,7 +188,7 @@ export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(company
 
     // =================================== Analyze Compliance ===================================
     console.log('\n🔍 Analyzing compliance...');
-    const complianceAnalysis = analyzeEXIMCompliance(apiResponse, typeOfNet);
+    const complianceAnalysis = analyzeEXIMCompliance(apiResponse);
     console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
     console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
     
@@ -202,7 +201,7 @@ export async function getEXIMOptimSingleCompanyVerificationWithSignUtils(company
 
     // =================================== Create Comprehensive Merkle Tree ===================================
     console.log('\n🌳 Creating comprehensive Merkle tree...');
-    const { tree, extractedData, fieldCount } = createComprehensiveEXIMMerkleTree(apiResponse, typeOfNet);
+    const { tree, extractedData, fieldCount } = createComprehensiveEXIMMerkleTree(apiResponse);
     console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
     // =================================== Prepare ZK Proof Data ===================================

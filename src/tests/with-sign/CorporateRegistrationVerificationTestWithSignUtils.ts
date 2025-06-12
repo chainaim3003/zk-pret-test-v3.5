@@ -7,7 +7,7 @@ import { getCorpRegComplianceData, ComplianceData } from './CorporateRegistratio
 
 import { MCAdeployerAccount, MCAsenderAccount, MCAdeployerKey, MCAsenderKey, getPrivateKeyFor } from '../../core/OracleRegistry.js';
 
-export async function getCorporateRegistrationVerificationTestWithSign(cin: string, typeOfNet: string) {
+export async function getCorporateRegistrationVerificationTestWithSign(cin: string) {
    // Compile programs
    await CorporateRegistration.compile();
    const { verificationKey } = await CorporateRegistrationVerifierSmartContract.compile();
@@ -29,19 +29,19 @@ export async function getCorporateRegistrationVerificationTestWithSign(cin: stri
    console.log("Deploy transaction signed successfully");
 
    console.log('CIN:', cin);
-   console.log('Type of Net:', typeOfNet);
+   //console.log('Type of Net:', typeOfNet);
 
    // Fetch company data using the utility function
    let parsedData;
    try {
-     parsedData = await fetchCorporateRegistrationData(cin, typeOfNet);
+     parsedData = await fetchCorporateRegistrationData(cin);
    } catch (err: any) {
      console.error(err.message);
      process.exit(1);
    }
 
    // Use the first matching record
-   const complianceData = getCorpRegComplianceData(parsedData, typeOfNet);
+   const complianceData = getCorpRegComplianceData(parsedData);
 
    // =================================== Oracle Signature Generation ===================================
    // Create message hash

@@ -251,10 +251,10 @@ function createOptimizedComplianceData(
 }
 
 // =================================== Main Test Function ===================================
-export async function getGLEIFOptimVerificationWithSignUtils(companyName: string, typeOfNet: string) {
+export async function getGLEIFOptimVerificationWithSignUtils(companyName: string) {
   console.log(`\n🚀 GLEIF Optimized Verification Test Started`);
   console.log(`🏢 Company: ${companyName}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
 
   try {
     // =================================== Compile Programs ===================================
@@ -285,7 +285,7 @@ export async function getGLEIFOptimVerificationWithSignUtils(companyName: string
     console.log('\n📡 Fetching GLEIF data...');
     let apiResponse: GLEIFAPIResponse;
     try {
-      apiResponse = await fetchGLEIFCompanyData(companyName, typeOfNet);
+      apiResponse = await fetchGLEIFCompanyData(companyName);
       console.log('✅ GLEIF data fetched successfully');
     } catch (err: any) {
       console.error('❌ Error fetching GLEIF data:', err.message);

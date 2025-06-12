@@ -25,7 +25,6 @@ import {
  */
 function createComprehensiveCorporateRegistrationMerkleTree(
   apiResponse: CorporateRegistrationAPIResponse,
-  typeOfNet: string
 ): {
   tree: MerkleTree,
   extractedData: any,
@@ -48,6 +47,7 @@ function createComprehensiveCorporateRegistrationMerkleTree(
     console.log(`  Set field ${fieldName} (${index}): "${safeValue.substring(0, 50)}${safeValue.length > 50 ? '...' : ''}"`);  
   }
 
+  let typeOfNet = process.env.BUILD_ENV;
   try {
     if (typeOfNet === 'LOCAL') {
       // Handle LOCAL mock data structure
@@ -188,10 +188,10 @@ function createOptimizedComplianceData(
 }
 
 // =================================== Main Test Function ===================================
-export async function getCorporateRegistrationOptimVerification(cin: string, typeOfNet: string) {
+export async function getCorporateRegistrationOptimVerification(cin: string) {
   console.log(`\n🚀 Corporate Registration Optimized Verification Test Started`);
   console.log(`🏢 CIN: ${cin}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📡 Using LIVE API for all environments`);
 
   try {
@@ -223,7 +223,7 @@ export async function getCorporateRegistrationOptimVerification(cin: string, typ
     console.log('\n📡 Fetching Corporate Registration data...');
     let apiResponse: CorporateRegistrationAPIResponse;
     try {
-      apiResponse = await fetchCorporateRegistrationDataWithFullLogging(cin, typeOfNet);
+      apiResponse = await fetchCorporateRegistrationDataWithFullLogging(cin);
       console.log('✅ Corporate Registration data fetched successfully');
     } catch (err: any) {
       console.error('❌ Error fetching Corporate Registration data:', err.message);
@@ -232,7 +232,7 @@ export async function getCorporateRegistrationOptimVerification(cin: string, typ
 
     // =================================== Analyze Compliance ===================================
     console.log('\n🔍 Analyzing compliance...');
-    const complianceAnalysis = analyzeCorporateRegistrationCompliance(apiResponse, typeOfNet);
+    const complianceAnalysis = analyzeCorporateRegistrationCompliance(apiResponse);
     console.log(`📊 Compliance Score: ${complianceAnalysis.complianceScore}%`);
     console.log(`✅ Is Compliant: ${complianceAnalysis.isCompliant}`);
     
@@ -245,7 +245,7 @@ export async function getCorporateRegistrationOptimVerification(cin: string, typ
 
     // =================================== Create Comprehensive Merkle Tree ===================================
     console.log('\n🌳 Creating comprehensive Merkle tree...');
-    const { tree, extractedData, fieldCount } = createComprehensiveCorporateRegistrationMerkleTree(apiResponse, typeOfNet);
+    const { tree, extractedData, fieldCount } = createComprehensiveCorporateRegistrationMerkleTree(apiResponse);
     console.log(`✅ Merkle tree created with ${fieldCount} fields`);
 
     // =================================== Prepare ZK Proof Data ===================================
@@ -354,13 +354,13 @@ export async function getCorporateRegistrationOptimVerification(cin: string, typ
 async function main() {
   const args = process.argv.slice(2);
   const cin = args[0] || process.env.CIN || 'U01112TZ2022PTC039493';
-  const networkType = args[1] || 'TESTNET';
+  //const networkType = args[1] || 'TESTNET';
   
   console.log('🏢 CIN:', cin);
-  console.log('🌐 Network Type:', networkType);
+  //console.log('🌐 Network Type:', networkType);
   
   try {
-    const proof = await getCorporateRegistrationOptimVerification(cin, networkType);
+    const proof = await getCorporateRegistrationOptimVerification(cin);
     console.log('\n🎯 Proof generated successfully!');
     // Uncomment the line below if you want to see the full proof JSON
     // console.log('📄 Proof:', proof.toJSON());

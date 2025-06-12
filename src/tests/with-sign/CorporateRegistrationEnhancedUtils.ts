@@ -109,11 +109,10 @@ interface CorporateRegistrationAPIResponse {
 export function printCorporateRegistrationResponse(
   response: CorporateRegistrationAPIResponse,
   companyIdentifier: string,
-  typeOfNet: string
 ): void {
   console.log(`\n🏢 ===== CORPORATE REGISTRATION API RESPONSE =====`);
   console.log(`🔍 Query: ${companyIdentifier}`);
-  console.log(`🌐 Network: ${typeOfNet}`);
+  //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📅 Timestamp: ${new Date().toISOString()}`);
   console.log(`🔄 API Response Structure Analysis:`);
   
@@ -232,11 +231,10 @@ export function printCorporateRegistrationResponse(
  */
 export async function fetchCorporateRegistrationDataWithFullLogging(
   cin: string, 
-  typeOfNet: string
 ): Promise<CorporateRegistrationAPIResponse> {
   console.log(`\n🚀 Starting Corporate Registration Data Fetch`);
   console.log(`🔍 CIN: ${cin}`);
-  console.log(`🌐 Network Type: ${typeOfNet}`);
+  //console.log(`🌐 Network Type: ${typeOfNet}`);
   console.log(`📡 All environments now use LIVE API`);
   
   try {
@@ -244,10 +242,10 @@ export async function fetchCorporateRegistrationDataWithFullLogging(
     const { fetchCorporateRegistrationData } = await import('./CorporateRegistrationUtils.js');
     
     // Use the existing function to get the data
-    const response = await fetchCorporateRegistrationData(cin, typeOfNet);
+    const response = await fetchCorporateRegistrationData(cin);
     
     // Print comprehensive response analysis
-    printCorporateRegistrationResponse(response, cin, typeOfNet);
+    printCorporateRegistrationResponse(response, cin);
     
     return response;
     
@@ -274,7 +272,6 @@ export async function fetchCorporateRegistrationDataWithFullLogging(
  */
 export function extractCorporateRegistrationSummary(
   response: CorporateRegistrationAPIResponse,
-  typeOfNet: string
 ): {
   companyName: string;
   cin: string;
@@ -310,7 +307,6 @@ export function extractCorporateRegistrationSummary(
  */
 export function analyzeCorporateRegistrationCompliance(
   response: CorporateRegistrationAPIResponse,
-  typeOfNet: string
 ): {
   isCompliant: boolean;
   complianceScore: number;
@@ -323,7 +319,7 @@ export function analyzeCorporateRegistrationCompliance(
     companyStatusActive: boolean;
   };
 } {
-  const summary = extractCorporateRegistrationSummary(response, typeOfNet);
+  const summary = extractCorporateRegistrationSummary(response);
   const issues: string[] = [];
   
   // Business rule checks
@@ -370,19 +366,18 @@ export function analyzeCorporateRegistrationCompliance(
  * Check if a company is Corporate Registration compliant
  */
 export function isCompanyCorporateRegistrationCompliant(
-  companyDataOrCin: CorporateRegistrationAPIResponse | string,
-  typeOfNet?: string
+  companyDataOrCin: CorporateRegistrationAPIResponse | string
 ): boolean | Promise<boolean> {
   if (typeof companyDataOrCin === 'string') {
     // If string provided, fetch data first
-    return fetchCorporateRegistrationDataWithFullLogging(companyDataOrCin, typeOfNet || 'TESTNET')
+    return fetchCorporateRegistrationDataWithFullLogging(companyDataOrCin )
       .then(apiResponse => {
-        const analysis = analyzeCorporateRegistrationCompliance(apiResponse, typeOfNet || 'TESTNET');
+        const analysis = analyzeCorporateRegistrationCompliance(apiResponse);
         return analysis.isCompliant;
       });
   } else {
     // If API response provided, analyze directly
-    const analysis = analyzeCorporateRegistrationCompliance(companyDataOrCin, typeOfNet || 'TESTNET');
+    const analysis = analyzeCorporateRegistrationCompliance(companyDataOrCin);
     return analysis.isCompliant;
   }
 }

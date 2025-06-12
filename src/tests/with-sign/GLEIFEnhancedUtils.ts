@@ -31,10 +31,11 @@ export interface GLEIFDataSummary {
 /**
  * Fetch company data from GLEIF API with complete JSON printing
  */
-export async function fetchGLEIFCompanyDataWithFullDetails(companyName: string, typeOfNet: string): Promise<any> {
+export async function fetchGLEIFCompanyDataWithFullDetails(companyName: string): Promise<any> {
   let BASEURL;
   let url;
 
+  let typeOfNet = process.env.BUILD_ENV; // Use environment variable for network type
   if (!typeOfNet) {
     typeOfNet = 'TESTNET';
   }
@@ -342,13 +343,13 @@ function generateZKOptimizationRecommendations(suggestions: any): void {
 /**
  * Standard GLEIF API functions (existing compatibility)
  */
-export async function fetchGLEIFCompanyData(companyName: string, typeOfNet: string): Promise<any> {
+export async function fetchGLEIFCompanyData(companyName: string): Promise<any> {
   // Keep existing function for backward compatibility
-  return await fetchGLEIFCompanyDataWithFullDetails(companyName, typeOfNet);
+  return await fetchGLEIFCompanyDataWithFullDetails(companyName);
 }
 
-export async function isCompanyGLEIFCompliant(companyName: string, typeOfNet: string): Promise<boolean> {
-  const res = await fetchGLEIFCompanyData(companyName, typeOfNet);
+export async function isCompanyGLEIFCompliant(companyName: string): Promise<boolean> {
+  const res = await fetchGLEIFCompanyData(companyName);
 
   let firstRecord;
   if (Array.isArray(res.data)) {
@@ -378,7 +379,7 @@ async function main() {
   console.log('='.repeat(100));
 
   try {
-    await fetchGLEIFCompanyDataWithFullDetails(companyName, typeOfNet);
+    await fetchGLEIFCompanyDataWithFullDetails(companyName);
     console.log('\n✅ Complete analysis finished successfully!');
   } catch (error) {
     console.error('❌ Analysis failed:', error);
@@ -389,8 +390,8 @@ async function main() {
 /**
  * Missing export aliases for backward compatibility
  */
-export async function fetchGLEIFDataWithFullLogging(companyName: string, typeOfNet: string): Promise<GLEIFAPIResponse> {
-  return await fetchGLEIFCompanyDataWithFullDetails(companyName, typeOfNet);
+export async function fetchGLEIFDataWithFullLogging(companyName: string): Promise<GLEIFAPIResponse> {
+  return await fetchGLEIFCompanyDataWithFullDetails(companyName);
 }
 
 export function extractGLEIFSummary(apiResponse: GLEIFAPIResponse): GLEIFDataSummary {

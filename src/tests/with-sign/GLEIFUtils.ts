@@ -692,12 +692,11 @@ const gleifSearcher = new UltimateGLEIFSearch();
 
 // =================================== Main GLEIF Fetch Function (UPDATED) ===================================
 export async function fetchGLEIFCompanyData(
-  companyName: string, 
-  typeOfNet: string = 'TESTNET'
+  companyName: string
 ): Promise<GLEIFAPIResponse> {
   try {
     console.log(`🔍 Fetching GLEIF data for: ${companyName}`);
-    console.log(`🌐 Network type: ${typeOfNet}`);
+    //console.log(`🌐 Network type: ${typeOfNet}`);
     console.log(`📊 Search stats:`, gleifSearcher.getSearchStats());
     
     // Use the ultimate search implementation
@@ -740,7 +739,7 @@ export async function fetchGLEIFCompanyData(
         console.log(`💡 Suggestions:`, result.suggestions);
       }
       
-      throw new Error(`GLEIF API failed for ${typeOfNet}: ${result.error || 'No results found'}`);
+      throw new Error(`GLEIF API failed for: ${result.error || 'No results found'}`);
     }
     
   } catch (error) {
@@ -756,7 +755,7 @@ export async function fetchGLEIFCompanyData(
     }
     
     console.log('🚫 No mock data fallback - real GLEIF API required');
-    throw new Error(`GLEIF API failed for ${typeOfNet}: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(`GLEIF API failed for : ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -1063,12 +1062,11 @@ export class GLEIFCircuitConverter {
  * Note: Mock data fallback has been removed - only real API responses supported
  */
 export function isCompanyGLEIFCompliant(
-  companyDataOrName: GLEIFAPIResponse | string,
-  typeOfNet?: string
+  companyDataOrName: GLEIFAPIResponse | string
 ): boolean | Promise<boolean> {
   if (typeof companyDataOrName === 'string') {
     // If string provided, fetch data first - will throw error if API fails
-    return fetchGLEIFCompanyData(companyDataOrName, typeOfNet || 'TESTNET')
+    return fetchGLEIFCompanyData(companyDataOrName)
       .then(apiResponse => {
         const analysis = GLEIFBusinessRules.analyzeCompliance(apiResponse);
         return analysis.isCompliant;
@@ -1084,15 +1082,14 @@ export function isCompanyGLEIFCompliant(
  * Fetch full GLEIF structure with detailed analysis
  */
 export async function fetchGLEIFFullStructure(
-  companyName: string, 
-  typeOfNet: string = 'TESTNET'
+  companyName: string
 ): Promise<{
   apiResponse: GLEIFAPIResponse;
   businessAnalysis: any;
   merkleTree: any;
   isCompliant: boolean;
 }> {
-  const apiResponse = await fetchGLEIFCompanyData(companyName, typeOfNet);
+  const apiResponse = await fetchGLEIFCompanyData(companyName);
   const businessAnalysis = GLEIFBusinessRules.analyzeCompliance(apiResponse);
   
   // Import GLEIFStructuredMerkleTree dynamically to avoid circular imports

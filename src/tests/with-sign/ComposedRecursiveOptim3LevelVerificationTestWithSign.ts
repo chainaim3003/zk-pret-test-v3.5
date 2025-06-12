@@ -8,7 +8,7 @@ async function main() {
     // Get company name, CIN, and network type from command line arguments
     const companyName = process.argv[2];
     const companyCIN = process.argv[3];
-    const typeOfNet = process.argv[4] || 'LOCAL';
+    //const typeOfNet = process.argv[4] || 'LOCAL';
     const testIterations = parseInt(process.argv[5] || '1'); // Number of times to test each company
 
     if (!companyName || !companyCIN) {
@@ -33,7 +33,7 @@ async function main() {
 
     console.log('🏢 Company Name:', companyName);
     console.log('🆔 Company CIN:', companyCIN);
-    console.log('🌐 Network Type:', typeOfNet);
+    //console.log('🌐 Network Type:', typeOfNet);
     console.log('🔄 Test Iterations:', testIterations);
 
     try {
@@ -43,7 +43,6 @@ async function main() {
         const result = await getComposedRecursiveOptim3LevelVerificationWithSignUtils(
             companyName,
             companyCIN, 
-            typeOfNet, 
             testIterations
         );
 

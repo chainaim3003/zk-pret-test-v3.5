@@ -17,10 +17,10 @@ async function main() {
     console.log('');
 
     const companyName = process.argv[2] || 'SREE PALANI ANDAVAR AGROS PRIVATE LIMITED';
-    const typeOfNet = process.argv[3] || 'TESTNET';
+    //const typeOfNet = process.argv[3] || 'TESTNET';
 
     try {
-        await runBlockchainProof(companyName, typeOfNet);
+        await runBlockchainProof(companyName);
         console.log('\n✅ Real Blockchain Operations Verified!');
     } catch (error) {
         console.error('\n❌ Test Failed:', (error as Error).message);
@@ -28,7 +28,7 @@ async function main() {
     }
 }
 
-async function runBlockchainProof(companyName: string, typeOfNet: string) {
+async function runBlockchainProof(companyName: string) {
     console.log('🔬 BLOCKCHAIN REALITY PROOF TEST');
     console.log('='.repeat(50));
 
@@ -82,7 +82,7 @@ async function runBlockchainProof(companyName: string, typeOfNet: string) {
 
     // =================================== Real Data & Verification ===================================
     console.log('\n📡 Fetching REAL GLEIF data...');
-    const parsedData = await fetchGLEIFCompanyData(companyName, typeOfNet);
+    const parsedData = await fetchGLEIFCompanyData(companyName);
     const entity = parsedData.data[0].attributes.entity;
     const registration = parsedData.data[0].attributes.registration;
     

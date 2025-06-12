@@ -102,9 +102,10 @@ async function fetchMasterData(
     }
 }
 
-export async function fetchCorporateRegistrationData(cin: string, typeOfNet: string): Promise<any> {
+export async function fetchCorporateRegistrationData(cin: string): Promise<any> {
     let BASEURL: string | undefined;
     
+    let typeOfNet = process.env.BUILD_ENV ;
     if (!typeOfNet) {
         typeOfNet = 'TESTNET';
     }
