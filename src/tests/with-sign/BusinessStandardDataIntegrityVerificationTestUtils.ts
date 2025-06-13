@@ -7,9 +7,12 @@ import { createComplianceData } from './BSDIo1.js';
 import { readBLJsonFile } from './BSDIUtils.js';
 
 export async function getBSDIVerificationWithSignUtils(evalBLJsonFileName: string) {
+
+    console.log("Evaluating BL JSON from file:", evalBLJsonFileName);
+
     // Read and validate BL JSON
     const evalBLJson = await readBLJsonFile(evalBLJsonFileName);
-    console.log("Evaluating BL JSON from file:", evalBLJsonFileName);
+
     console.log("eval BL JSON in verification test:", evalBLJson);
 
     // Setup Mina Local Blockchain

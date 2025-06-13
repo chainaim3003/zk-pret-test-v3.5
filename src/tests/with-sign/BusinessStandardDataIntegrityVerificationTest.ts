@@ -79,6 +79,8 @@ async function main() {
             process.exit(1);
         }
 
+        console.log ( "  in ver   " ,  evalBLJsonFileName);
+
         const proof = await getBSDIVerificationWithSignUtils(evalBLJsonFileName);
         console.log('Verification completed successfully');
         return proof;
