@@ -54,9 +54,18 @@ export async function getBPIVerificationFileTestWithSign(businessProcessType:str
    //const expectedPath = "a(cb|bc)d(ef|f)g";
    //const actualPath = process.argv[3];
    //const actualPath = "abcdefg";
+
+   console.log(" in util expFN:", expectedBPMNFileName);
+   console.log(" in util acutuaFN:", actualBPMNFileName);
+
  
-   const expectedPath = await parseBpmn(expectedBPMNFileName) || "";
-   const actualPath = await parseBpmn(actualBPMNFileName) || "";
+   //const expectedPath = await parseBpmn(expectedBPMNFileName) || "";
+   //const actualPath = await parseBpmn(actualBPMNFileName) || "";
+
+
+   const expectedPath = expectedBPMNFileName;
+   const actualPath = actualBPMNFileName;
+
 
    console.log("/////////////////////////////////Business Process Type:////////////////////////////", businessProcessType);
    console.log("EXP:", expectedPath);
