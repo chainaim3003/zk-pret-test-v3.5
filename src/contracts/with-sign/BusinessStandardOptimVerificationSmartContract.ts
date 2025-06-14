@@ -1,10 +1,9 @@
 
-
 import { Bool, Field, SmartContract, state, State, method, CircuitString, Struct, FlexibleProvablePure, ZkProgram, Provable } from 'o1js';
-import { BusinessStandardDataIntegrityProof } from '../../zk-programs/with-sign/BusinessStandardDataIntegrityZKProgram.js';
+import { BusinessStandardOptimProof } from '../../zk-programs/with-sign/BusinessStandardOptimZKProgram.js';
 
 
-export class BusinessStandardDataIntegrityVerificationSmartContract extends SmartContract {
+export class BusinessStandardOptimVerificationSmartContract extends SmartContract {
    @state(Field) risk = State<Field>(); // State variable to hold risk score
    // Initialize the contract state
    init() {
@@ -14,7 +13,7 @@ export class BusinessStandardDataIntegrityVerificationSmartContract extends Smar
 
 
    // Method to verify compliance and update state
-   @method async verifyComplianceWithProof(proof: BusinessStandardDataIntegrityProof) {
+   @method async verifyComplianceWithProof(proof: BusinessStandardOptimProof) {
       // Ensure the state of `risk` matches its current value
       this.risk.requireEquals(this.risk.get());
       const currentRisk = this.risk.get();
@@ -41,6 +40,3 @@ export class BusinessStandardDataIntegrityVerificationSmartContract extends Smar
    }
 
 }
-
-
-

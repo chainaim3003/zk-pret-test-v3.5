@@ -1,222 +1,103 @@
-import { exec } from 'child_process';
-import * as fs from 'fs';
-import { Field, Mina, PrivateKey, AccountUpdate, CircuitString } from 'o1js';
+import { Field, Mina, PrivateKey, AccountUpdate, CircuitString, Poseidon, Signature, Bool } from 'o1js';
 import { BusinessStandardDataIntegrityZKProgram, BusinessStandardDataIntegrityComplianceData } from '../../zk-programs/with-sign/BusinessStandardDataIntegrityZKProgram.js';
 import { BusinessStandardDataIntegrityVerificationSmartContract } from '../../contracts/with-sign/BusinessStandardDataIntegrityVerificationSmartContract.js';
 import { createComplianceData } from './BSDIo1.js';
 import { readBLJsonFile } from './BSDIUtils.js';
+import { getPrivateKeyFor } from '../../core/OracleRegistry.js';
+import { verifyActualFromFile } from '../../core/verifyActual.js';
 
 export async function getBSDIVerificationWithSignUtils(evalBLJsonFileName: string) {
+    console.log("🚀 Starting ZK Business Standard Data Integrity Verification");
+    console.log("📄 File:", evalBLJsonFileName);
 
-    console.log("Evaluating BL JSON from file:", evalBLJsonFileName);
-
-    // Read and validate BL JSON
+    // =================================== PRE-PROCESSING ===================================
+    console.log("📖 Reading BL JSON file...");
     const evalBLJson = await readBLJsonFile(evalBLJsonFileName);
-
+    
+    console.log("Evaluating BL JSON from file:", evalBLJsonFileName);
     console.log("eval BL JSON in verification test:", evalBLJson);
 
-    // Setup Mina Local Blockchain
+    // CRITICAL: Run verification outside the ZK circuit first
+    console.log("🔍 Running external verification before ZK proof...");
+    const externalVerificationResult = await verifyActualFromFile(evalBLJsonFileName);
+    console.log("📋 External verification result:", externalVerificationResult);
+
+    // =================================== MINA SETUP ===================================
+    console.log("⚙️ Setting up Mina blockchain...");
     const useProof = false;
     const Local = await Mina.LocalBlockchain({ proofsEnabled: useProof });
     Mina.setActiveInstance(Local);
 
-    // Setup accounts
     const deployerAccount = Local.testAccounts[0];
     const deployerKey = deployerAccount.key;
     const senderAccount = Local.testAccounts[1];
     const senderKey = senderAccount.key;
 
-    console.log('Compiling...');
-
-    // Compile ZK Program and Smart Contract
+    console.log('🔨 Compiling ZK program...');
     await BusinessStandardDataIntegrityZKProgram.compile();
+    console.log("Mina transaction is successful");
+    
     const { verificationKey } = await BusinessStandardDataIntegrityVerificationSmartContract.compile();
 
-    // Setup ZK App
     const zkAppKey = PrivateKey.random();
     const zkAppAddress = zkAppKey.toPublicKey();
     const zkApp = new BusinessStandardDataIntegrityVerificationSmartContract(zkAppAddress);
 
-    console.log("Mina transaction is successful");
-
-    // Deploy Smart Contract
-    const deployTxn = await Mina.transaction(
-        deployerAccount,
-        async () => {
-            AccountUpdate.fundNewAccount(deployerAccount);
-            await zkApp.deploy({ verificationKey });
-        }
-    );
-    
+    console.log("🚀 Deploying smart contract...");
+    const deployTxn = await Mina.transaction(deployerAccount, async () => {
+        AccountUpdate.fundNewAccount(deployerAccount);
+        await zkApp.deploy({ verificationKey });
+    });
     await deployTxn.sign([deployerKey, zkAppKey]).send();
     console.log("deployTxn signed successfully");
 
-    // Create compliance data and generate proof
-    const BusinessStandardDataIntegritycomplianceData = createComplianceData(evalBLJsonFileName, evalBLJson);
-    const proof = await BusinessStandardDataIntegrityZKProgram.proveCompliance(Field(1), BusinessStandardDataIntegritycomplianceData);
+    // =================================== ORACLE SIGNATURE ===================================
+    console.log("🔐 Generating oracle signature...");
+    const complianceData = createComplianceData(evalBLJsonFileName, evalBLJson);
+    const complianceDataHash = Poseidon.hash(BusinessStandardDataIntegrityComplianceData.toFields(complianceData));
+    const registryPrivateKey = getPrivateKeyFor('BPMN');
+    const oracleSignature = Signature.create(registryPrivateKey, [complianceDataHash]);
 
-    // Verify proof
-    const txn = await Mina.transaction(
-        senderAccount,
-        async () => {
-            await zkApp.verifyComplianceWithProof(proof);
-        }
-    );
-
-    const proof1 = await txn.prove();
-    console.log("Proof generated successfully");
-    console.log("Generated Proof:", proof1.toPretty());
+    // =================================== ZK PROOF GENERATION ===================================
+    console.log("🧮 Generating ZK proof...");
+    console.log("🔐 This proves document compliance without revealing sensitive data");
     
-    await txn.sign([senderKey]).send();
-    console.log('✅ Proof verified successfully!');
+    try {
+        // Pass the external verification result as a private input to avoid async operations in circuit
+        const proof = await BusinessStandardDataIntegrityZKProgram.proveCompliance(
+            Field(1), // Public input
+            CircuitString.fromString(evalBLJsonFileName), // Private input[0]
+            complianceData, // Private input[1]
+            Bool(externalVerificationResult), // Private input[2] - FIXED: external verification result
+            oracleSignature // Private input[3]
+        );
 
-    return proof1;
+        console.log("🎉 ZK proof generated successfully!");
+
+        // Log initial risk value before verification
+        console.log("Before verification, Initial value of risk:", zkApp.risk.get().toJSON());
+
+        // Verify proof on-chain
+        console.log("🔗 Verifying proof on blockchain...");
+        const txn = await Mina.transaction(senderAccount, async () => {
+            await zkApp.verifyComplianceWithProof(proof);
+        });
+
+        const proof1 = await txn.prove();
+        console.log("Proof generated successfully");
+        console.log("Generated Proof:", proof1.toPretty());
+        
+        await txn.sign([senderKey]).send();
+
+        console.log("✅ SUCCESS: ZK proof verified on-chain!");
+        console.log("$$$$$$Final value of risk (SUCCESS):$$$$$$", zkApp.risk.get().toJSON());
+        console.log('✅ Proof verified successfully!');
+        console.log("🎉 VERIFICATION COMPLETE!");
+
+        return proof1;
+    } catch (error) {
+        console.log("$$$$$$Final value of risk (FAILED):$$$$$$", zkApp.risk.get().toJSON());
+        console.error('❌ Error during ZK proof generation:', error);
+        throw error;
+    }
 }
-
-
-
-
-/*import { exec } from 'child_process';
-import * as fs from 'fs';
-import { Field, Mina, PrivateKey, AccountUpdate, CircuitString } from 'o1js';
-import { BusinessStandardDataIntegrityZKProgram, BusinessStandardDataIntegrityComplianceData } from '../../zk-programs/with-sign/BusinessStandardDataIntegrityZKProgram.js';
-import { BusinessStandardDataIntegrityVerificationSmartContract } from '../../contracts/with-sign/BusinessStandardDataIntegrityVerificationSmartContract.js';
-import { createComplianceData } from './BSDIo1.js';
-import { readBLJsonFile } from './BSDIUtils.js';
-
-async function main() {
-   const evalBLJsonFileName = process.argv[2];
-
-   if (!evalBLJsonFileName) {
-      console.error('Please provide the BL JSON file path as an argument');
-      process.exit(1);
-   }
-
-   // Use the utility function to read the file
-   const evalBLJson = await readBLJsonFile(evalBLJsonFileName);
-
-   console.log("Evaluating BL JSON from file:", evalBLJsonFileName);
-   console.log("eval BL JSON in verification test:", evalBLJson);
-
-   const useProof = false;
-
-   const Local = await Mina.LocalBlockchain({ proofsEnabled: useProof });
-   Mina.setActiveInstance(Local);
-
-   const deployerAccount = Local.testAccounts[0];
-   const deployerKey = deployerAccount.key;
-   const senderAccount = Local.testAccounts[1];
-   const senderKey = senderAccount.key;
-
-   console.log('Compiling...');
-
-   await BusinessStandardDataIntegrityZKProgram.compile();
-   const { verificationKey } = await BusinessStandardDataIntegrityVerificationSmartContract.compile();
-
-   //console.log("verification key is successful");
-   const zkAppKey = PrivateKey.random();
-   const zkAppAddress = zkAppKey.toPublicKey();
-
-   //console.log("ZKAppAddress is successful");
-
-   const zkApp = new BusinessStandardDataIntegrityVerificationSmartContract(zkAppAddress);
-   //console.log("zkApp is successful");
-
-   console.log("Mina transaction is successful");
-
-   const deployTxn = await Mina.transaction(
-      deployerAccount,
-      async () => {
-         AccountUpdate.fundNewAccount(deployerAccount);
-         await zkApp.deploy({ verificationKey });
-
-      }
-   );
-   console.log("deployTxn is successful");
-   await deployTxn.sign([deployerKey, zkAppKey]).send();
-   console.log("deployTxn signed successfully");
-   console.log("Fetching compliance data...");
-
-   // const BASEURL = "https://0f4aef00-9db0-4057-949e-df6937e3449b.mock.pstmn.io";
-   // const companyname = "vernon_dgft"
-   // const response = await axios.get(`${BASEURL}/${companyname}`); // Replace with your mock API endpoint
-   // const parsedData = response.data;
-
-   // //console.log(parsedData);
-   // //console.log("HI");
-
-   // //console.log(parsedData["iec"]);
-   // //console.log(parsedData["iecStatus"]);
-
-
-   // const BusinessStandardDataIntegritycomplianceData = new BusinessStandardDataIntegrityComplianceData({
-   //    // iec: CircuitString.fromString(parsedData["iec"] || ''),
-   //    // entityName: CircuitString.fromString(parsedData["entityName"] || ''),
-   //    // addressLine1: CircuitString.fromString(parsedData["addressLine1"] || ''),
-   //    // addressLine2: CircuitString.fromString(parsedData["addressLine2"] || ''),
-   //    // city: CircuitString.fromString(parsedData["city"] || ''),
-   //    // state: CircuitString.fromString(parsedData["state"] || ''),
-   //    // pin: Field(parsedData["pin"] ?? 0),
-   //    // contactNo: Field(parsedData["contactNo"] ?? 0),
-   //    // email: CircuitString.fromString(parsedData["email"] || ''),
-   //    // iecIssueDate: CircuitString.fromString(parsedData["iecIssueDate"] || ''),
-   //    // exporterType: Field(parsedData["exporterType"] ?? 0),
-   //    // pan: CircuitString.fromString(parsedData["pan"] || ''),
-   //    // iecStatus: Field(parsedData["iecStatus"] ?? 0),
-   //    // starStatus: Field(parsedData["starStatus"] ?? 0),
-   //    // iecModificationDate: CircuitString.fromString(parsedData["iecModificationDate"] || ''),
-   //    // dataAsOn: CircuitString.fromString(parsedData["dataAsOn"] || ''),
-   //    // natureOfConcern: Field(parsedData["natureOfConcern"] ?? 0),
-
-   //    // // Branch Data (from branches[0])
-   //    // branchCode: Field(parsedData.branches?.[0]?.branchCode ?? 0),
-   //    // badd1: CircuitString.fromString(parsedData.branches?.[0]?.badd1 || ''),
-   //    // badd2: CircuitString.fromString(parsedData.branches?.[0]?.badd2 || ''),
-   //    // branchCity: CircuitString.fromString(parsedData.branches?.[0]?.city || ''),
-   //    // branchState: CircuitString.fromString(parsedData.branches?.[0]?.state || ''),
-   //    // branchPin: Field(parsedData.branches?.[0]?.pin ?? 0),
-
-   //    // // Director Data (from directors)
-   //    // director1Name: CircuitString.fromString(parsedData.directors?.[0]?.name || ''),
-   //    // director2Name: CircuitString.fromString(parsedData.directors?.[1]?.name || ''),
-   //    businessStandardDataIntegrityEvaluationId: Field(0),
-   //    expectedContent: CircuitString.fromString(expectedContent),
-   //    //actualContent: CircuitString.fromString(actualContent),
-   //    actualContent: evalBLJson,
-   //    //actualContentFilename:'actualBL1.json',
-   //    actualContentFilename: evalBLJsonFileName,
-
-   // });
-
-
-   const BusinessStandardDataIntegritycomplianceData = createComplianceData(evalBLJsonFileName, evalBLJson);
-
-   const proof = await BusinessStandardDataIntegrityZKProgram.proveCompliance(Field(1), BusinessStandardDataIntegritycomplianceData)
-
-   //console.log("Before verification, Initial value of num:",zkApp.num.get().toJSON());
-   // Verify proof
-   const txn = await Mina.transaction(
-      senderAccount,
-      async () => {
-         await zkApp.verifyComplianceWithProof(proof);
-      }
-   );
-   // await txn.sign([zkAppKey]).send();
-
-   const proof1 = await txn.prove();
-
-
-   console.log("Proof generated successfully");
-   console.log(senderAccount.toJSON());
-   console.log(senderKey.toJSON(), senderKey.toPublicKey());
-   console.log("Generated Proof:", proof1.toPretty());
-   await txn.sign([senderKey]).send();
-   //console.log("Final value of num:",zkApp.num.get().toJSON());
-
-   console.log('✅ Proof verified successfully!');
-}
-
-main().catch(err => {
-   console.error('Error:', err);
-});
-*/
