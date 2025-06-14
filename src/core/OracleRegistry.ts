@@ -1,4 +1,3 @@
-
 import { Mina, PrivateKey, PublicKey, Field, Poseidon } from 'o1js';
 
 const useProof = false;
@@ -59,6 +58,11 @@ export const Registry = new Map<string, {
   ['RISK', {
     publicKey: RiskProverdeployerAccount,
     privateKey: RiskProverdeployerKey
+  }],
+
+  ['BL_REGISTRY', {
+    publicKey: BusinessProverdeployerAccount,
+    privateKey: BusinessProverdeployerKey
   }]
 
   
