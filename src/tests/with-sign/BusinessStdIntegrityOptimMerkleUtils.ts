@@ -1,4 +1,5 @@
 import { MerkleTree, MerkleWitness, CircuitString, Field, Poseidon, Bool } from 'o1js';
+import { safeFieldFrom } from '../../utils/CoreZKUtilities.js';
 
 // Merkle witness for tree height 8 (supports 256 fields)
 class BusinessStdMerkleWitness8 extends MerkleWitness(8) {}
@@ -66,12 +67,12 @@ export class BusinessStdMerkleTree {
         for (let j = 0; j < chunk.length; j++) {
           value = value * 256n + BigInt(chunk[j]);
         }
-        fields.push(Field(value));
+        fields.push(safeFieldFrom(Number(value)));
       }
       
       // If no content, add a zero field
       if (fields.length === 0) {
-        fields.push(Field(0));
+        fields.push(safeFieldFrom(0));
       }
       
       return {
