@@ -19,9 +19,8 @@ import {
     callACTUSAPIWithPostProcessing,
     printCoreACTUSResponse 
 } from './ACTUSDataProcessor.js';
-import {
-    processBasel3ThroughGenericFramework
-} from './Basel3MonthlyImplementation.js';
+// 🔥 REMOVED: Generic framework import that was causing dual calculation paths
+// import { processBasel3ThroughGenericFramework } from './Basel3Implementation.js';
 import { buildMerkleTreeZK, hashDataZK, MerkleWitness8, safeFieldFrom } from './CoreZKUtilities.js';
 import { calculatePercentageZK, calculateWeightedSumZK } from './ComplianceZKUtilities.js';
 
@@ -84,6 +83,7 @@ export interface RiskLiquidityBasel3OptimMerkleProcessedData {
 
 /**
  * Fetch and process ACTUS data for Basel3 Risk scenario
+ * ✅ FIXED: Preserves HQLA categories from config file contracts
  */
 export async function fetchRiskLiquidityBasel3OptimMerkleData(
     actusUrl: string,
@@ -92,6 +92,20 @@ export async function fetchRiskLiquidityBasel3OptimMerkleData(
     try {
         console.log('🏦 Loading Basel3-specific contract portfolio...');
         const contracts = Array.isArray(contractPortfolio) ? contractPortfolio : getBasel3ContractPortfolio();
+        
+        // ✅ CRITICAL FIX: Store original HQLA categories AND contract roles before API call
+        const originalHQLAMap = new Map<string, string>();
+        const originalRoleMap = new Map<string, string>();
+        contracts.forEach(contract => {
+            if (contract.contractID && contract.hqlaCategory) {
+                originalHQLAMap.set(contract.contractID, contract.hqlaCategory);
+                console.log(`🔄 Preserving HQLA: ${contract.contractID} → ${contract.hqlaCategory}`);
+            }
+            if (contract.contractID && contract.contractRole) {
+                originalRoleMap.set(contract.contractID, contract.contractRole);
+                console.log(`🔄 Preserving Role: ${contract.contractID} → ${contract.contractRole}`);
+            }
+        });
         
         console.log('🚀 Calling ACTUS API with post-processing for Basel3...');
         
@@ -118,6 +132,40 @@ export async function fetchRiskLiquidityBasel3OptimMerkleData(
         // Use standard post-processing to get the formatted structure
         const actusResponse = await callACTUSAPIWithPostProcessing(actusUrl, contracts);
         
+        // ✅ CRITICAL FIX: Restore HQLA categories AND contract roles to contractDetails
+        if (actusResponse.contractDetails && (originalHQLAMap.size > 0 || originalRoleMap.size > 0)) {
+            console.log(`🔄 Restoring HQLA categories and contract roles to ${actusResponse.contractDetails.length} contract details`);
+            
+            actusResponse.contractDetails = actusResponse.contractDetails.map((detail, index) => {
+                // Try to match by contractID first, then by index
+                const contractID = detail.contractID || contracts[index]?.contractID;
+                const hqlaCategory = originalHQLAMap.get(contractID) || contracts[index]?.hqlaCategory;
+                const contractRole = originalRoleMap.get(contractID) || contracts[index]?.contractRole;
+                
+                let updated = { ...detail };
+                
+                if (contractID) {
+                    updated.contractID = contractID;
+                }
+                
+                if (hqlaCategory) {
+                    updated.hqlaCategory = hqlaCategory;
+                    console.log(`   ✅ Restored HQLA: ${contractID || `contract_${index}`} → ${hqlaCategory}`);
+                }
+                
+                if (contractRole) {
+                    updated.contractRole = contractRole;
+                    console.log(`   ✅ Restored Role: ${contractID || `contract_${index}`} → ${contractRole}`);
+                } else {
+                    console.log(`   ⚠️ No contract role found for: ${contractID || `contract_${index}`}`);
+                }
+                
+                return updated;
+            });
+        } else {
+            console.log(`⚠️ No data to restore (originalHQLAMap: ${originalHQLAMap.size}, originalRoleMap: ${originalRoleMap.size}, contractDetails: ${actusResponse.contractDetails?.length || 0})`);
+        }
+        
         console.log(`✅ Basel3 ACTUS data fetched and processed: ${actusResponse.periodsCount} periods`);
         
         // Attach raw response data for generic framework processing
@@ -133,10 +181,10 @@ export async function fetchRiskLiquidityBasel3OptimMerkleData(
 }
 
 /**
- * Process ACTUS response with Basel3-specific categorization
- * Uses the enhanced generic framework for event-based HQLA classification
+ * Process ACTUS response with Basel3-specific categorization - OptimMerkle implementation
+ * 🔥 RENAMED to follow OptimMerkle naming convention for execution path traceability
  */
-export async function processBasel3RiskData(
+export async function processBasel3RiskDataOptimMerkle(
     actusResponse: ACTUSOptimMerkleAPIResponse,
     lcrThreshold: number,
     nsfrThreshold: number = 100,
@@ -145,136 +193,7 @@ export async function processBasel3RiskData(
     newInvoiceEvaluationMonth: number = 11
 ): Promise<RiskLiquidityBasel3OptimMerkleData> {
     
-    console.log('🏦 Processing Basel3 data with enhanced generic framework...');
-    
-    try {
-        // Try to use the enhanced generic framework for event-based processing
-        console.log('🔍 ACTUS Response Structure:');
-        console.log(`   - Has contractDetails: ${actusResponse.contractDetails ? 'YES' : 'NO'}`);
-        console.log(`   - ContractDetails length: ${actusResponse.contractDetails?.length || 0}`);
-        console.log(`   - Raw ACTUS Response keys: ${Object.keys(actusResponse)}`);
-        
-        // ✅ CRITICAL FIX: Pass actual ACTUS response data as rawEvents instead of contract definitions
-        // The rawEvents parameter should contain the actual API response with contract events
-        const rawEventsData = (actusResponse as any).rawResponseData || [];
-        
-        console.log(`   - Raw events data length: ${rawEventsData.length}`);
-        if (rawEventsData.length > 0) {
-            console.log(`   - Sample raw data: ${JSON.stringify(rawEventsData[0], null, 2)}`);
-        }
-        
-        const enhancedResults = await processBasel3ThroughGenericFramework(
-            actusResponse.inflow,
-            actusResponse.outflow,
-            actusResponse.periodsCount,
-            rawEventsData,  // ✅ FIX: Use actual ACTUS response data with events
-            actusResponse.contractDetails,
-            {
-                liquidityThreshold_LCR: lcrThreshold,
-                liquidityThreshold: liquidityThreshold,
-                newInvoiceAmount: newInvoiceAmount,
-                newInvoiceEvaluationMonth: newInvoiceEvaluationMonth
-            }
-        );
-        
-        console.log('✅ Enhanced framework processing successful - using event-based HQLA classification');
-        
-        // Extract HQLA data from generic framework results
-        const hqlaData = extractHQLAFromGenericResults(enhancedResults);
-        
-        return {
-            // Scenario identifiers
-            companyID: 'BASEL3_ENHANCED_10001',
-            companyName: 'Basel3 Enhanced Generic Framework Assessment',
-            mcaID: 'BASEL3_MCA_201',
-            businessPANID: 'BASEL3_PAN_1001',
-            
-            // Basic cash flow data
-            riskEvaluated: 1,
-            cashInflow: actusResponse.inflow.map((period: number[]) => period.reduce((sum: number, value: number) => sum + value, 0)),
-            cashOutflow: actusResponse.outflow.map((period: number[]) => period.reduce((sum: number, value: number) => sum + value, 0)),
-            periodsCount: actusResponse.periodsCount,
-            
-            // Basel3 LCR components (from enhanced framework)
-            hqlaLevel1: hqlaData.level1,
-            hqlaLevel2A: hqlaData.level2A,
-            hqlaLevel2B: hqlaData.level2B,
-            netCashOutflows: hqlaData.netCashOutflows,
-            
-            // Basel3 NSFR components (calculated)
-            availableStableFunding: hqlaData.asf,
-            requiredStableFunding: hqlaData.rsf,
-            
-            // Basel3 thresholds
-            lcrThreshold: Math.round(lcrThreshold),
-            nsfrThreshold: Math.round(nsfrThreshold),
-            
-            // Additional parameters
-            liquidityThreshold: Math.round(liquidityThreshold),
-            newInvoiceAmount,
-            newInvoiceEvaluationMonth,
-            
-            // Metadata
-            metadata: actusResponse.metadata
-        };
-        
-    } catch (error) {
-        console.warn('⚠️ Enhanced framework processing failed, falling back to legacy processing:', error);
-        return processBasel3RiskDataLegacy(actusResponse, lcrThreshold, nsfrThreshold, liquidityThreshold, newInvoiceAmount, newInvoiceEvaluationMonth);
-    }
-}
-
-/**
- * Extract HQLA data from generic framework results
- */
-function extractHQLAFromGenericResults(enhancedResults: any): {
-    level1: number[];
-    level2A: number[];
-    level2B: number[];
-    netCashOutflows: number[];
-    asf: number[];
-    rsf: number[];
-} {
-    const periodsCount = enhancedResults.classification.periodsCount;
-    const classifiedData = enhancedResults.classification.classifiedData;
-    
-    const level1 = new Array(periodsCount).fill(0);
-    const level2A = new Array(periodsCount).fill(0);
-    const level2B = new Array(periodsCount).fill(0);
-    const netCashOutflows = new Array(periodsCount).fill(0);
-    const asf = new Array(periodsCount).fill(0);
-    const rsf = new Array(periodsCount).fill(0);
-    
-    // Extract HQLA values from classified data
-    for (let period = 0; period < periodsCount; period++) {
-        const monthData = classifiedData[period];
-        if (monthData) {
-            level1[period] = monthData.L1 || 0;
-            level2A[period] = monthData.L2A || 0;
-            level2B[period] = monthData.L2B || 0;
-            netCashOutflows[period] = monthData.NonHQLA || 0;
-            
-            // Calculate NSFR components (simplified)
-            const totalHQLA = level1[period] + level2A[period] + level2B[period];
-            asf[period] = totalHQLA * 0.7; // 70% average ASF factor
-            rsf[period] = netCashOutflows[period] * 0.6; // 60% average RSF factor
-        }
-    }
-    
-    return { level1, level2A, level2B, netCashOutflows, asf, rsf };
-}
-
-/**
- * Legacy Basel3 processing (fallback)
- */
-function processBasel3RiskDataLegacy(
-    actusResponse: ACTUSOptimMerkleAPIResponse,
-    lcrThreshold: number,
-    nsfrThreshold: number = 100,
-    liquidityThreshold: number = 10,
-    newInvoiceAmount: number = 5000,
-    newInvoiceEvaluationMonth: number = 11
-): RiskLiquidityBasel3OptimMerkleData {
+    console.log('🏦 Processing Basel3 data using OptimMerkle methodology...');
     
     // Aggregate basic cash flows
     const aggregatedInflows = actusResponse.inflow.map((period: number[]) =>
@@ -286,15 +205,15 @@ function processBasel3RiskDataLegacy(
     );
     
     // Categorize assets into HQLA buckets based on contract details
-    const hqlaCategories = categorizeContractsForHQLA(actusResponse.contractDetails, actusResponse.inflow);
+    const hqlaCategories = categorizeContractsForHQLAOptimMerkle(actusResponse.contractDetails, actusResponse.inflow);
     
-    // Calculate NSFR components
-    const nsfrComponents = calculateNSFRComponents(actusResponse.contractDetails, aggregatedInflows, aggregatedOutflows);
+    // ✅ BASEL III COMPLIANT: Calculate NSFR components using balance sheet positions, not cash flows
+    const nsfrComponents = calculateBasel3CompliantNSFR(actusResponse.contractDetails, (actusResponse as any).rawResponseData, actusResponse.periodsCount);
     
     return {
         // Scenario identifiers
-        companyID: 'BASEL3_RISK_10001',
-        companyName: 'Basel3 LCR/NSFR Risk Assessment',
+        companyID: 'BASEL3_OPTIMMERKLE_10001',
+        companyName: 'Basel3 OptimMerkle LCR/NSFR Assessment',
         mcaID: 'BASEL3_MCA_201',
         businessPANID: 'BASEL3_PAN_1001',
         
@@ -308,7 +227,7 @@ function processBasel3RiskDataLegacy(
         hqlaLevel1: hqlaCategories.level1,
         hqlaLevel2A: hqlaCategories.level2A,
         hqlaLevel2B: hqlaCategories.level2B,
-        netCashOutflows: calculateStressedOutflows(aggregatedOutflows),
+        netCashOutflows: calculateStressedOutflowsOptimMerkle(aggregatedOutflows),
         
         // Basel3 NSFR components
         availableStableFunding: nsfrComponents.asf,
@@ -328,10 +247,14 @@ function processBasel3RiskDataLegacy(
     };
 }
 
+// 🔥 REMOVED: extractHQLAFromGenericResults function since we no longer use Generic framework
+
+// 🔥 REMOVED: Old delegation function processBasel3RiskDataOptimMerkle - logic moved to main function above
+
 /**
- * Categorize contracts into HQLA buckets for LCR calculation
+ * Categorize contracts into HQLA buckets for LCR calculation - OptimMerkle method
  */
-function categorizeContractsForHQLA(
+function categorizeContractsForHQLAOptimMerkle(
     contractDetails: any[],
     inflowData: number[][]
 ): {
@@ -387,55 +310,203 @@ function categorizeContractsForHQLA(
 }
 
 /**
- * Calculate NSFR Available Stable Funding and Required Stable Funding
+ * ✅ BASEL III COMPLIANT: Calculate NSFR using balance sheet positions per official regulation
+ * Based on BIS Basel III NSFR document d295, paragraphs 17-47
+ * ASF = Available Stable Funding (from liabilities and capital)
+ * RSF = Required Stable Funding (from assets based on liquidity characteristics)
+ * ✅ HANDLES CASH01 CONTRACT FAILURE: Uses contract config when ACTUS API fails
  */
-function calculateNSFRComponents(
+function calculateBasel3CompliantNSFR(
     contractDetails: any[],
+    rawActusData: any,
+    periodsCount: number
+): {
+    asf: number[];
+    rsf: number[];
+} {
+    console.log('\n🏛️ BASEL III COMPLIANT NSFR CALCULATION');
+    console.log('📋 Using balance sheet positions per BIS regulation d295');
+    
+    // Initialize ASF and RSF arrays
+    const asf = new Array(periodsCount).fill(0);
+    const rsf = new Array(periodsCount).fill(0);
+    
+    let totalASF = 0;
+    let totalRSF = 0;
+    
+    // Process each contract according to Basel III methodology  
+    console.log(`   Processing ${contractDetails.length} contracts...`);
+    contractDetails.forEach((contract, index) => {
+        const contractID = contract.contractID || `contract_${index}`;
+        const hqlaCategory = contract.hqlaCategory || 'NonHQLA';
+        
+        console.log(`\n   🏦 Contract ${index + 1}/${contractDetails.length}: ${contractID}`);
+        
+        // Find corresponding raw ACTUS data and contract configuration
+        const rawContract = Array.isArray(rawActusData) ? rawActusData.find((raw: any) => raw.contractId === contractID) : {};
+        
+        // Get notional principal - try multiple sources
+        let notionalPrincipal = 0;
+        if (rawContract && rawContract.events && rawContract.events.length > 0) {
+            // Get notional from IED event if available
+            const iedEvent = rawContract.events.find((event: any) => event.type === 'IED');
+            if (iedEvent) {
+                notionalPrincipal = Math.abs(iedEvent.payoff);
+            }
+        }
+        
+        // ✅ CRITICAL FIX FOR CASH01: Fallback to contract configuration when ACTUS fails
+        if (notionalPrincipal === 0) {
+            notionalPrincipal = parseFloat(contract.notionalPrincipal || rawContract?.notionalPrincipal || 0);
+            if (notionalPrincipal > 0) {
+                console.log(`   ⚙️ Using config notional for ${contractID}: ${notionalPrincipal} (ACTUS failed)`);
+            }
+        }
+        
+        console.log(`   🔍 Processing ${contractID}: notional=${notionalPrincipal}, hqla=${hqlaCategory}`);
+        
+        // Determine contract role from configuration FIRST, then ACTUS events
+        const contractRole = contract.contractRole || 'RPA'; // Use config role
+        const hasNegativeIED = rawContract?.events?.some((event: any) => 
+            event.type === 'IED' && event.payoff < 0
+        );
+        
+        // ✅ CRITICAL FIX: Use config role as primary source of truth - Support both RFL and RPL as liability roles
+        const isAsset = contractRole === 'RPA' || (contractRole !== 'RFL' && contractRole !== 'RPL' && hasNegativeIED);
+        const isLiability = contractRole === 'RFL' || contractRole === 'RPL';
+        
+        console.log(`   📋 ${contractID}: role=${contractRole}, hasNegativeIED=${hasNegativeIED}, isAsset=${isAsset}, isLiability=${isLiability}`);
+        
+        // ✅ ENHANCED: Handle ACTUS failure by using config data
+        if (notionalPrincipal === 0) {
+            notionalPrincipal = parseFloat(contract.notionalPrincipal || rawContract?.notionalPrincipal || 0);
+            if (notionalPrincipal > 0) {
+                console.log(`   ⚙️ Using config notional for ${contractID}: ${notionalPrincipal} (ACTUS failed)`);
+            }
+        }
+        
+        // Skip if no notional principal
+        if (notionalPrincipal === 0) {
+            console.log(`   ⚠️ Skipping ${contractID}: no notional principal found`);
+            return;
+        }
+        
+        // Basel III categorization based on contract role
+        if (isAsset) {
+            // Asset (bank pays out money to acquire asset)
+            // Calculate RSF based on HQLA category per Basel III Table 2
+            let rsfFactor = 0;
+            switch (hqlaCategory) {
+                case 'L1':
+                    rsfFactor = 0.05; // Unencumbered Level 1 assets: 5% RSF
+                    break;
+                case 'L2A':
+                    rsfFactor = 0.15; // Unencumbered Level 2A assets: 15% RSF  
+                    break;
+                case 'L2B':
+                    rsfFactor = 0.50; // Unencumbered Level 2B assets: 50% RSF
+                    break;
+                default:
+                    rsfFactor = 0.85; // Other assets: 85% RSF
+                    break;
+            }
+            
+            const contractRSF = Math.abs(notionalPrincipal) * rsfFactor;
+            totalRSF += contractRSF;
+            
+            console.log(`   📊 Asset ${contractID}: ${Math.abs(notionalPrincipal)} × ${(rsfFactor*100).toFixed(1)}% = ${contractRSF.toFixed(0)} RSF (${hqlaCategory})`);
+            
+        } else if (isLiability) {
+            // Liability (bank receives funding)
+            // Calculate ASF based on maturity per Basel III Table 1
+            
+            // Determine maturity from contract configuration or raw data
+            const maturityDateStr = contract.maturityDate || rawContract?.maturityDate || '2024-12-31T00:00:00';
+            const maturityDate = new Date(maturityDateStr);
+            const startDate = new Date('2024-01-01');
+            const maturityMonths = (maturityDate.getFullYear() - startDate.getFullYear()) * 12 + 
+                                 (maturityDate.getMonth() - startDate.getMonth());
+            
+            console.log(`   📅 ${contractID}: maturity=${maturityDateStr}, months=${maturityMonths}`);
+            
+            let asfFactor = 0;
+            if (maturityMonths >= 12) {
+                asfFactor = 1.0; // Liabilities ≥1 year: 100% ASF
+            } else if (maturityMonths >= 6) {
+                asfFactor = 0.5; // Liabilities 6mo-1yr: 50% ASF
+            } else {
+                asfFactor = 0.0; // Short-term liabilities: 0% ASF
+            }
+            
+            const contractASF = Math.abs(notionalPrincipal) * asfFactor;
+            totalASF += contractASF;
+            
+            console.log(`   💰 Liability ${contractID}: ${Math.abs(notionalPrincipal)} × ${(asfFactor*100).toFixed(1)}% = ${contractASF.toFixed(0)} ASF (${maturityMonths}mo maturity)`);
+        } else {
+            console.log(`   ❓ Unknown role for ${contractID}: ${contractRole} - skipping`);
+        }
+    });
+    
+    // Distribute total ASF and RSF across all periods
+    // Per Basel III, NSFR is calculated on balance sheet positions, not period-by-period cash flows
+    // ✅ CRITICAL FIX: Use single period values for Merkle tree, not multiplied by periods
+    for (let period = 0; period < periodsCount; period++) {
+        asf[period] = totalASF;  // Each period gets the same balance sheet value
+        rsf[period] = totalRSF;  // Each period gets the same balance sheet value
+    }
+    
+    console.log(`\n🎯 BASEL III NSFR TOTALS:`);
+    console.log(`   Available Stable Funding (ASF): ${totalASF.toFixed(0)}`);
+    console.log(`   Required Stable Funding (RSF): ${totalRSF.toFixed(0)}`);
+    console.log(`   Expected NSFR: ${totalRSF > 0 ? (totalASF / totalRSF * 100).toFixed(1) : 'N/A'}%`);
+    console.log(`   Basel III Compliance: ${totalRSF > 0 && (totalASF / totalRSF) >= 1.0 ? '✅ PASS' : '❌ FAIL'}\n`);
+    
+    return { asf, rsf };
+}
+
+/**
+ * 🔄 BACKWARD COMPATIBILITY: Keep old function for any legacy references
+ * @deprecated Use calculateBasel3CompliantNSFR instead
+ */
+function calculateNSFRComponentsOptimMerkle(
+    hqlaCategories: { level1: number[]; level2A: number[]; level2B: number[]; },
     inflows: number[],
     outflows: number[]
 ): {
     asf: number[];
     rsf: number[];
 } {
+    console.log('⚠️ Using legacy NSFR calculation (cash flow based) - deprecated');
     const periodsCount = inflows.length;
-    
-    // NSFR factors (simplified - real implementation would be more granular)
-    const ASF_FACTORS = {
-        tier1Capital: 1.0,      // 100% ASF
-        retailDeposits: 0.95,   // 95% ASF for stable retail deposits
-        wholesaleDeposits: 0.5, // 50% ASF for wholesale deposits
-        securedFunding: 0.0     // 0% ASF for very short-term secured funding
-    };
-    
-    const RSF_FACTORS = {
-        cash: 0.0,              // 0% RSF for cash
-        hqlaL1: 0.05,          // 5% RSF for Level 1 HQLA
-        hqlaL2A: 0.15,         // 15% RSF for Level 2A HQLA
-        hqlaL2B: 0.25,         // 25% RSF for Level 2B HQLA
-        corporateLoans: 0.85,   // 85% RSF for corporate loans
-        retailLoans: 0.65      // 65% RSF for retail loans
-    };
     
     const asf = new Array(periodsCount).fill(0);
     const rsf = new Array(periodsCount).fill(0);
     
     for (let period = 0; period < periodsCount; period++) {
-        // Calculate ASF (funding sources)
-        const totalInflow = inflows[period];
-        asf[period] = totalInflow * 0.7; // Simplified: 70% average ASF factor
+        // Legacy calculation (incorrect but preserved for compatibility)
+        const asfL1 = hqlaCategories.level1[period] * 1.0;
+        const asfL2A = hqlaCategories.level2A[period] * 0.85;
+        const asfL2B = hqlaCategories.level2B[period] * 0.5;
+        asf[period] = asfL1 + asfL2A + asfL2B;
         
-        // Calculate RSF (funding requirements)
-        const totalOutflow = outflows[period];
-        rsf[period] = totalOutflow * 0.6; // Simplified: 60% average RSF factor
+        const totalHQLA = hqlaCategories.level1[period] + hqlaCategories.level2A[period] + hqlaCategories.level2B[period];
+        const rsfHQLA = totalHQLA * 0.0;
+        const otherAssets = Math.max(inflows[period] - totalHQLA, 0);
+        const rsfOtherAssets = otherAssets * 0.65;
+        rsf[period] = rsfHQLA + rsfOtherAssets;
+        
+        if (rsf[period] === 0 && asf[period] > 0) {
+            rsf[period] = asf[period] * 0.01;
+        }
     }
     
     return { asf, rsf };
 }
 
 /**
- * Apply stress factors to outflows for LCR calculation
+ * Apply stress factors to outflows for LCR calculation - OptimMerkle method
  */
-function calculateStressedOutflows(baseOutflows: number[]): number[] {
+function calculateStressedOutflowsOptimMerkle(baseOutflows: number[]): number[] {
     // Basel3 stress factors
     const STRESS_FACTORS = {
         retailDeposits: 0.03,   // 3% runoff for stable retail deposits
@@ -463,8 +534,10 @@ export function buildBasel3RiskMerkleStructure(
     const hqlaLevel2ATotal = Math.round(complianceData.hqlaLevel2A.reduce((sum, val) => sum + val, 0));
     const hqlaLevel2BTotal = Math.round(complianceData.hqlaLevel2B.reduce((sum, val) => sum + val, 0));
     const netCashOutflowsTotal = Math.round(complianceData.netCashOutflows.reduce((sum, val) => sum + val, 0));
-    const availableStableFundingTotal = Math.round(complianceData.availableStableFunding.reduce((sum, val) => sum + val, 0));
-    const requiredStableFundingTotal = Math.round(complianceData.requiredStableFunding.reduce((sum, val) => sum + val, 0));
+    // ✅ CRITICAL FIX: For NSFR components, use single period value not sum across periods
+    // Since ASF/RSF are balance sheet positions (constant across periods), we only need first period value
+    const availableStableFundingTotal = Math.round(complianceData.availableStableFunding[0] || 0);
+    const requiredStableFundingTotal = Math.round(complianceData.requiredStableFunding[0] || 0);
     
     console.log('🔧 Merkle Structure Debug:');
     console.log(`   Company ID: ${complianceData.companyID}`);
@@ -562,7 +635,7 @@ function calculateAndDisplayMonthlyDetails(
     console.log('Calculating detailed monthly LCR breakdown...');
     
     // 🔧 CRITICAL FIX: Use EXACT same logic as working old version
-    let initial_reservenum = 10000;
+    let initial_reservenum = 0;
     let cumulativeInflows = initial_reservenum;
     let cumulativeOutflows = 0;
     let cumulativeHQLA = 0;
@@ -570,30 +643,33 @@ function calculateAndDisplayMonthlyDetails(
     const monthlyDetails = [];
     
     for (let month = 0; month < complianceData.periodsCount; month++) {
-        // ✅ EXACT OLD VERSION LOGIC: Add ALL HQLA categories as inflows
+        // 🔧 CRITICAL FIX: Use Basel3 adjusted HQLA calculation with haircuts
+        // Must match ZK circuit calculation exactly
         const monthInflow = (complianceData.hqlaLevel1[month] || 0) + 
                            (complianceData.hqlaLevel2A[month] || 0) + 
                            (complianceData.hqlaLevel2B[month] || 0);
         const monthOutflow = complianceData.netCashOutflows[month] || 0;
         
-        // Update cumulatives like old version
+        // Update cumulatives
         cumulativeInflows += monthInflow;
         cumulativeOutflows += monthOutflow;
         
         // Calculate cumulative cash flow
         const cumulativeCashFlow = cumulativeInflows - cumulativeOutflows;
         
-        // ✅ CRITICAL: Use OLD VERSION HQLA calculation
-        // Add total HQLA (L1 + L2A + L2B + NonHQLA) to cumulative HQLA like working version
-        const totalMonthHQLA = monthInflow + monthOutflow;
-        cumulativeHQLA += totalMonthHQLA;
+        // 🔧 CRITICAL FIX: Use Basel3 adjusted HQLA (same as ZK circuit)
+        // Apply Basel3 haircuts: Level1=100%, Level2A=85%, Level2B=50%
+        const adjustedMonthHQLA = (complianceData.hqlaLevel1[month] || 0) + 
+                                 ((complianceData.hqlaLevel2A[month] || 0) * 0.85) + 
+                                 ((complianceData.hqlaLevel2B[month] || 0) * 0.50);
+        cumulativeHQLA += adjustedMonthHQLA;
         
-        // ✅ OLD VERSION LCR calculation (no haircuts)
+        // 🔧 CRITICAL FIX: Use Basel3 compliant LCR calculation
         let LCR = 0;
         if (cumulativeOutflows > 0) {
             LCR = (cumulativeHQLA / cumulativeOutflows) * 100;
         } else {
-            LCR = 100; // If no outflows, assume 100% LCR
+            LCR = 200; // If no outflows, use same as ZK circuit (200%)
         }
         
         // Store monthly details in EXACT same format as working version
@@ -613,16 +689,18 @@ function calculateAndDisplayMonthlyDetails(
 }
 
 /**
- * Calculate Basel3 compliance metrics
- * 🔧 FIXED VERSION: Corrected compliance calculation logic
+ * Calculate Basel3 compliance metrics - OptimMerkle implementation
+ * 🔧 CORRECTED NSFR calculation using Basel3 methodology
  */
-export function calculateBasel3RiskMetrics(
+export function calculateBasel3RiskMetricsOptimMerkle(
     complianceData: RiskLiquidityBasel3OptimMerkleData
 ): {
     lcrRatios: number[];
     nsfrRatios: number[];
     averageLCR: number;
     averageNSFR: number;
+    totalBasedLCR: number;  // 🔧 NEW: Total-based LCR for ZK circuit
+    totalBasedNSFR: number; // 🔧 NEW: Total-based NSFR for ZK circuit
     worstCaseLCR: number;
     worstCaseNSFR: number;
     lcrCompliant: boolean;
@@ -649,6 +727,8 @@ export function calculateBasel3RiskMetrics(
             nsfrRatios: [],
             averageLCR: 100,
             averageNSFR: 100,
+            totalBasedLCR: 100,  // 🔧 ADDED: Missing property
+            totalBasedNSFR: 100, // 🔧 ADDED: Missing property
             worstCaseLCR: 100,
             worstCaseNSFR: 100,
             lcrCompliant: true,
@@ -657,59 +737,111 @@ export function calculateBasel3RiskMetrics(
         };
     }
     
-    // 🔧 CRITICAL FIX: Use EXACT OLD VERSION cumulative logic instead of period-by-period
-    // The old version uses cumulative LCR calculation with simple threshold check
-    let initial_reservenum = 10000;
+    // 🔧 REVERTED: Use the SAME calculation as Basel3Implementation.ts for consistency
+    let initial_reservenum = 0;
     let cumulativeInflows = initial_reservenum;
     let cumulativeOutflows = 0;
-    let cumulativeHQLA = 0;
+    let cumulativeHQLA = 0;  // 🔧 REVERT: Use same HQLA calculation as Basel3Implementation.ts
     let allPeriodsCompliant = true;
+    
+    // 🔧 NEW: Cumulative NSFR tracking (keep the corrected NSFR methodology)
+    let cumulativeASF = 0;
+    let cumulativeRSF = 0;
     
     const cumulativeLCRRatios: number[] = [];
     const cumulativeNSFRRatios: number[] = [];
     
     for (let period = 0; period < complianceData.periodsCount; period++) {
-        // ✅ OLD VERSION LOGIC: Add ALL HQLA categories as inflows
-        const periodInflow = hqlaLevel1[period] + hqlaLevel2A[period] + hqlaLevel2B[period];
+        // ✅ CRITICAL FIX: Use BASEL3 COMPLIANT LCR calculation with haircuts
+        // Must match ZK circuit calculation exactly
+        const periodInflow = (hqlaLevel1[period] || 0) + 
+                            (hqlaLevel2A[period] || 0) + 
+                            (hqlaLevel2B[period] || 0);
         const periodOutflow = netCashOutflows[period];
         
-        // Update cumulatives like old version
+        // Update cumulatives
         cumulativeInflows += periodInflow;
         cumulativeOutflows += periodOutflow;
         
-        // ✅ CRITICAL: Use OLD VERSION HQLA calculation  
-        // Add total HQLA (L1 + L2A + L2B + NonHQLA) to cumulative HQLA
-        const totalPeriodHQLA = periodInflow + periodOutflow;
-        cumulativeHQLA += totalPeriodHQLA;
+        // 🔧 CRITICAL FIX: Use Basel3 adjusted HQLA calculation (same as ZK circuit)
+        // Apply Basel3 haircuts: Level1=100%, Level2A=85%, Level2B=50%
+        const adjustedHQLA = (hqlaLevel1[period] || 0) + 
+                             ((hqlaLevel2A[period] || 0) * 0.85) + 
+                             ((hqlaLevel2B[period] || 0) * 0.50);
+        cumulativeHQLA += adjustedHQLA;
         
-        // ✅ OLD VERSION LCR calculation (no haircuts in cumulative calculation)
+        // ✅ BASEL III COMPLIANT: Use pre-calculated ASF/RSF from balance sheet positions
+        // These values are already correctly calculated by calculateBasel3CompliantNSFR
+        const periodASF = availableStableFunding[period] || 0;
+        const periodRSF = requiredStableFunding[period] || 0;
+        cumulativeASF = periodASF; // ASF is constant across periods (balance sheet position)
+        cumulativeRSF = periodRSF; // RSF is constant across periods (balance sheet position)
+        
+        // ✅ CRITICAL FIX: Use Basel3 compliant LCR calculation with haircuts
         let cumulativeLCR = 0;
         if (cumulativeOutflows > 0) {
             cumulativeLCR = (cumulativeHQLA / cumulativeOutflows) * 100;
         } else {
-            cumulativeLCR = 100; // If no outflows, assume 100% LCR
+            cumulativeLCR = 200; // If no outflows, use same as ZK circuit (200%)
         }
         
         cumulativeLCRRatios.push(cumulativeLCR);
         
-        // NSFR calculation (period-based is fine)
-        const nsfr = requiredStableFunding[period] > 0 ? (availableStableFunding[period] / requiredStableFunding[period]) * 100 : 100;
-        cumulativeNSFRRatios.push(nsfr);
+        // 🔧 KEEP: NSFR calculation using CORRECTED methodology
+        let cumulativeNSFR = 100; // Default to 100%
+        if (cumulativeRSF > 0) {
+            cumulativeNSFR = (cumulativeASF / cumulativeRSF) * 100;
+        } else if (cumulativeASF > 0) {
+            // If we have stable funding but no requirements, excellent
+            cumulativeNSFR = 200; // High compliance score
+        }
+        // If both are 0, keep default 100%
         
-        // ✅ OLD VERSION compliance check
+        cumulativeNSFRRatios.push(cumulativeNSFR);
+        
+        // ✅ Compliance check
         if (cumulativeLCR < lcrThreshold) {
             allPeriodsCompliant = false;
         }
         
         // 🔍 DEBUG: Show first few and last few calculations
         if (period < 3 || period >= complianceData.periodsCount - 3) {
-            console.log(`   - Period ${period}: Cumulative LCR = ${cumulativeLCR.toFixed(2)}% (Cumulative HQLA=${cumulativeHQLA.toFixed(2)}, Cumulative Outflows=${cumulativeOutflows.toFixed(2)})`);
+            console.log(`   - Period ${period}: Cumulative LCR = ${cumulativeLCR.toFixed(2)}%, Cumulative NSFR = ${cumulativeNSFR.toFixed(2)}% (Cumulative HQLA=${cumulativeHQLA.toFixed(2)}, Cumulative Outflows=${cumulativeOutflows.toFixed(2)})`);
         }
     }
     
-    // Use cumulative ratios like old version
+    // Use cumulative ratios
     const lcrRatios = cumulativeLCRRatios;
     const nsfrRatios = cumulativeNSFRRatios;
+    
+    // 🔧 CRITICAL FIX: Calculate total-based LCR/NSFR FIRST (for compliance check)
+    // This matches what the ZK circuit expects: single calculation from totals
+    
+    // Calculate total adjusted HQLA with Basel3 haircuts
+    const totalHQLALevel1 = hqlaLevel1.reduce((sum, val) => sum + val, 0);
+    const totalHQLALevel2A = hqlaLevel2A.reduce((sum, val) => sum + val, 0);
+    const totalHQLALevel2B = hqlaLevel2B.reduce((sum, val) => sum + val, 0);
+    const totalNetCashOutflows = netCashOutflows.reduce((sum, val) => sum + val, 0);
+    
+    // Apply Basel3 haircuts: Level1=100%, Level2A=85%, Level2B=50%
+    const totalAdjustedHQLA = totalHQLALevel1 + (totalHQLALevel2A * 0.85) + (totalHQLALevel2B * 0.50);
+    
+    // Calculate total-based LCR (same logic as ZK circuit)
+    let totalBasedLCR = 200; // Default for zero outflows
+    if (totalNetCashOutflows > 0) {
+        totalBasedLCR = (totalAdjustedHQLA / totalNetCashOutflows) * 100;
+    }
+    
+    // Calculate total-based NSFR using first period values (balance sheet positions)
+    const totalASF = availableStableFunding[0] || 0;
+    const totalRSF = requiredStableFunding[0] || 0;
+    
+    let totalBasedNSFR = 100; // Default
+    if (totalRSF > 0) {
+        totalBasedNSFR = (totalASF / totalRSF) * 100;
+    } else if (totalASF > 0) {
+        totalBasedNSFR = 200; // High compliance
+    }
     
     // Calculate summary metrics (safe against empty arrays)
     const averageLCR = lcrRatios.length > 0 ? lcrRatios.reduce((sum, ratio) => sum + ratio, 0) / lcrRatios.length : 100;
@@ -717,21 +849,47 @@ export function calculateBasel3RiskMetrics(
     const worstCaseLCR = lcrRatios.length > 0 ? Math.min(...lcrRatios) : 100;
     const worstCaseNSFR = nsfrRatios.length > 0 ? Math.min(...nsfrRatios) : 100;
     
-    // 🔧 CRITICAL FIX: Match OLD VERSION logic - only check LCR compliance
-    // The old working version ONLY checks LCR, not NSFR
-    // ✅ OLD VERSION compliance check: only LCR matters
+    // 🔧 SURGICAL FIX: Check BOTH LCR and NSFR compliance using total-based values
     const TOLERANCE = 0.01; // 0.01% tolerance for floating point comparison
     
-    // OLD VERSION: Simple LCR compliance check like working version
-    const lcrCompliant = lcrRatios.every(ratio => ratio >= (lcrThreshold - TOLERANCE));
+    // Total-based compliance (matches ZK circuit logic)
+    const lcrCompliantTotal = totalBasedLCR >= (lcrThreshold - TOLERANCE);
+    const nsfrCompliantTotal = totalBasedNSFR >= (nsfrThreshold - TOLERANCE);
     
-    // NEW: Still calculate NSFR for reporting, but don't require it for compliance
-    const nsfrCompliant = nsfrRatios.every(ratio => ratio >= (nsfrThreshold - TOLERANCE));
+    // 🔧 SURGICAL FIX: Use total-based compliance for ZK circuit consistency
+    const lcrCompliant = lcrCompliantTotal;
+    const nsfrCompliant = nsfrCompliantTotal;
     
-    // ✅ CRITICAL FIX: Use ONLY LCR compliance like old version
-    // Old version: if all LCR periods pass → COMPLIANT
-    // New version was requiring BOTH LCR AND NSFR → too strict
-    const overallCompliant = lcrCompliant; // ✅ Only LCR matters like old version
+    // 🔧 SURGICAL FIX: Require BOTH LCR AND NSFR compliance for overall compliance
+    const overallCompliant = lcrCompliant && nsfrCompliant;
+    
+    // 🔧 SURGICAL FIX DEBUG: Verify the fix worked
+    console.log(`🔧 SURGICAL FIX - Compliance Flags:`);
+    console.log(`   - totalBasedLCR: ${totalBasedLCR.toFixed(2)} >= ${lcrThreshold} = ${lcrCompliantTotal}`);
+    console.log(`   - totalBasedNSFR: ${totalBasedNSFR.toFixed(2)} >= ${nsfrThreshold} = ${nsfrCompliantTotal}`);
+    console.log(`   - Final flags: lcrCompliant=${lcrCompliant}, nsfrCompliant=${nsfrCompliant}, overallCompliant=${overallCompliant}`);
+    
+    // 🔧 SURGICAL FIX: Ensure flags match expectations
+    if (totalBasedLCR >= lcrThreshold && totalBasedNSFR >= nsfrThreshold && !overallCompliant) {
+        console.error(`❌ SURGICAL FIX FAILED: Ratios compliant but flags wrong!`);
+        console.error(`   Debug: LCR=${totalBasedLCR.toFixed(2)}>=100=${lcrCompliantTotal}, NSFR=${totalBasedNSFR.toFixed(2)}>=100=${nsfrCompliantTotal}`);
+    } else if (totalBasedLCR >= lcrThreshold && totalBasedNSFR >= nsfrThreshold && overallCompliant) {
+        console.log(`✅ SURGICAL FIX SUCCESSFUL: Compliance flags now match ratios!`);
+    }
+    
+    // 🔍 SURGICAL FIX DEBUG: Show compliance calculation step by step
+    console.log(`\n🔧 SURGICAL FIX COMPLIANCE CALCULATION DEBUG:`);
+    console.log(`   - Total-based LCR: ${totalBasedLCR.toFixed(2)}% >= ${lcrThreshold}% = ${lcrCompliantTotal}`);
+    console.log(`   - Total-based NSFR: ${totalBasedNSFR.toFixed(2)}% >= ${nsfrThreshold}% = ${nsfrCompliantTotal}`);
+    console.log(`   - Final: lcrCompliant=${lcrCompliant}, nsfrCompliant=${nsfrCompliant}, overallCompliant=${overallCompliant}`);
+    console.log(`   - LCR Ratios: [${lcrRatios.map(r => r.toFixed(2)).join(', ')}]`);
+    console.log(`   - NSFR Ratios: [${nsfrRatios.map(r => r.toFixed(2)).join(', ')}]`);
+    
+    console.log(`   - Overall = ${lcrCompliant} && ${nsfrCompliant} = ${overallCompliant}`);
+    
+    if (lcrCompliant && !nsfrCompliant) {
+        console.log(`   ❌ BUG DETECTED: LCR passed but NSFR failed - should be NON-COMPLIANT!`);
+    }
     
     // 🔍 DEBUG: Show compliance calculation details
     console.log(`   - Average LCR: ${averageLCR.toFixed(2)}% vs Threshold: ${lcrThreshold}%`);
@@ -741,6 +899,7 @@ export function calculateBasel3RiskMetrics(
     console.log(`   - Average NSFR: ${averageNSFR.toFixed(2)}% vs Threshold: ${nsfrThreshold}%`);
     console.log(`   - All NSFR ratios >= threshold: ${nsfrCompliant}`);
     console.log(`   - Overall Compliance: ${overallCompliant}`);
+    console.log(`🔧 END COMPLIANCE DEBUG\n`);
     
     // 🔍 DEBUG: Show any non-compliant periods
     lcrRatios.forEach((ratio, period) => {
@@ -755,11 +914,21 @@ export function calculateBasel3RiskMetrics(
         }
     });
     
+    console.log(`🔧 TOTAL-BASED CALCULATIONS FOR ZK CIRCUIT:`);
+    console.log(`   - Total Adjusted HQLA: ${totalAdjustedHQLA.toFixed(2)} (L1: ${totalHQLALevel1}, L2A: ${totalHQLALevel2A}, L2B: ${totalHQLALevel2B})`);
+    console.log(`   - Total Net Cash Outflows: ${totalNetCashOutflows.toFixed(2)}`);
+    console.log(`   - Total-based LCR: ${totalBasedLCR.toFixed(2)}% (vs Average LCR: ${averageLCR.toFixed(2)}%)`);
+    console.log(`   - Total ASF: ${totalASF}, Total RSF: ${totalRSF}`);
+    console.log(`   - Total-based NSFR: ${totalBasedNSFR.toFixed(2)}% (vs Average NSFR: ${averageNSFR.toFixed(2)}%)`);
+    console.log(`   - ℹ️ ZK Circuit should use TOTAL-BASED values, not averages!`);
+    
     return {
         lcrRatios,
         nsfrRatios,
         averageLCR,
         averageNSFR,
+        totalBasedLCR,  // 🔧 NEW: For ZK circuit
+        totalBasedNSFR, // 🔧 NEW: For ZK circuit
         worstCaseLCR,
         worstCaseNSFR,
         lcrCompliant,
@@ -769,9 +938,9 @@ export function calculateBasel3RiskMetrics(
 }
 
 /**
- * Validate Basel3 risk data integrity
+ * Validate Basel3 risk data integrity - OptimMerkle implementation
  */
-export function validateBasel3RiskData(complianceData: RiskLiquidityBasel3OptimMerkleData): boolean {
+export function validateBasel3RiskDataOptimMerkle(complianceData: RiskLiquidityBasel3OptimMerkleData): boolean {
     // Check required fields
     if (!complianceData.companyID || complianceData.companyID.length === 0) {
         throw new Error('Company ID is required for Basel3 scenario');
@@ -805,12 +974,11 @@ export function validateBasel3RiskData(complianceData: RiskLiquidityBasel3OptimM
 }
 
 /**
- * Generate Basel3 compliance summary report
- * 🔧 UPDATED: Reflects that only LCR compliance matters (like old version)
+ * Generate Basel3 compliance summary report - OptimMerkle implementation
  */
-export function generateBasel3RiskSummary(
+export function generateBasel3RiskSummaryOptimMerkle(
     complianceData: RiskLiquidityBasel3OptimMerkleData,
-    riskMetrics: ReturnType<typeof calculateBasel3RiskMetrics>
+    riskMetrics: ReturnType<typeof calculateBasel3RiskMetricsOptimMerkle>
 ): string {
     return `
 === Basel3 LCR/NSFR Risk Assessment Summary ===
@@ -820,19 +988,19 @@ Currency: ${complianceData.metadata.currency}
 
 Basel3 Parameters:
 - LCR Threshold: ${complianceData.lcrThreshold}%
-- NSFR Threshold: ${complianceData.nsfrThreshold}% (informational only)
+- NSFR Threshold: ${complianceData.nsfrThreshold}%
 
-LCR Metrics (PRIMARY COMPLIANCE CHECK):
+LCR Metrics (REQUIRED FOR COMPLIANCE):
 - Average LCR: ${riskMetrics.averageLCR.toFixed(2)}%
 - Worst Case LCR: ${riskMetrics.worstCaseLCR.toFixed(2)}%
 - LCR Compliance: ${riskMetrics.lcrCompliant ? 'PASSED' : 'FAILED'}
 
-NSFR Metrics (INFORMATIONAL ONLY):
+NSFR Metrics (REQUIRED FOR COMPLIANCE):
 - Average NSFR: ${riskMetrics.averageNSFR.toFixed(2)}%
 - Worst Case NSFR: ${riskMetrics.worstCaseNSFR.toFixed(2)}%
-- NSFR Compliance: ${riskMetrics.nsfrCompliant ? 'PASSED' : 'FAILED'} (not required for overall compliance)
+- NSFR Compliance: ${riskMetrics.nsfrCompliant ? 'PASSED' : 'FAILED'}
 
-Overall Basel3 Compliance: ${riskMetrics.overallCompliant ? 'COMPLIANT' : 'NON-COMPLIANT'} (based on LCR only)
+Overall Basel3 Compliance: ${riskMetrics.overallCompliant ? 'COMPLIANT' : 'NON-COMPLIANT'} (requires both LCR and NSFR)
 Generated: ${complianceData.metadata.processingDate}
 `;
 }
