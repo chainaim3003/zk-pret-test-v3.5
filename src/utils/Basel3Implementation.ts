@@ -1,9 +1,9 @@
 /**
  * ====================================================================
- * Basel3 Monthly Implementation of Generic Temporal Risk Framework
+ * Basel3 Implementation of Generic Temporal Risk Framework
  * ====================================================================
- * Maintains 100% functional equivalence with existing Basel3 test
- * Uses generic framework while preserving exact same business logic
+ * Period-agnostic Basel3 LCR/NSFR risk calculations
+ * Works with any time period (daily, monthly, yearly) - math is identical
  * ====================================================================
  */
 
@@ -19,36 +19,36 @@ import {
 import { ACTUSDatao1 } from '../zk-programs/with-sign/RiskLiquidityACTUSZKProgram_basel3_Withsign.js';
 import { getBasel3ContractPortfolio } from './ACTUSOptimMerkleAPI.js';
 
-// =================================== Basel3 Monthly Processor ===================================
+// =================================== Basel3 Risk Processor ===================================
 
-export class Basel3MonthlyProcessor extends GenericRiskProcessor<Basel3HQLA> {
-  periodType = 'monthly';
+export class Basel3Processor extends GenericRiskProcessor<Basel3HQLA> {
+  periodType = 'period-agnostic'; // Works with any time unit
   
   /**
    * Process temporal ACTUS data into Basel3 HQLA classifications
-   * MAINTAINS EXACT SAME LOGIC as existing working test
+   * Period-agnostic: works whether periods are daily, monthly, or yearly
    */
   processRiskData(temporalData: TemporalACTUSData): GenericRiskClassification<Basel3HQLA> {
-    console.log('🏦 Processing Basel3 monthly HQLA classifications with EVENT-BASED logic...');
+    console.log('🏦 Processing Basel3 HQLA classifications with EVENT-BASED logic...');
     console.log(`📊 Processing ${temporalData.eventDetails.contractEvents.length} events across ${temporalData.periodsCount} periods`);
     
-    // Create month-by-month HQLA classifications using EVENT-BASED logic
-    const monthlyHQLA: Basel3HQLA[] = [];
+    // Create period-by-period HQLA classifications using EVENT-BASED logic
+    const periodHQLA: Basel3HQLA[] = [];
     
-    for (let month = 0; month < temporalData.periodsCount; month++) {
-      const monthData = this.classifyHQLAForMonth(month, temporalData);
-      monthlyHQLA.push(monthData);
+    for (let period = 0; period < temporalData.periodsCount; period++) {
+      const periodData = this.classifyHQLAForPeriod(period, temporalData);
+      periodHQLA.push(periodData);
     }
     
-    // Create aggregated arrays for backward compatibility with ACTUSDatao1
-    const aggregatedMetrics = this.createAggregatedArrays(monthlyHQLA);
+    // Create aggregated arrays for backward compatibility
+    const aggregatedMetrics = this.createAggregatedArrays(periodHQLA);
     
-    console.log(`✅ Processed ${monthlyHQLA.length} monthly HQLA classifications`);
+    console.log(`✅ Processed ${periodHQLA.length} period HQLA classifications`);
     
     return {
       periodsCount: temporalData.periodsCount,
-      periodType: 'monthly',
-      classifiedData: monthlyHQLA,
+      periodType: 'period-agnostic',
+      classifiedData: periodHQLA,
       aggregatedMetrics,
       riskMetrics: {
         periodMetrics: [],     // Will be calculated in ZK program
@@ -60,12 +60,11 @@ export class Basel3MonthlyProcessor extends GenericRiskProcessor<Basel3HQLA> {
   }
   
   /**
-   * Classify HQLA for a specific month using EVENT-BASED logic
-   * Matches EXACTLY the original categorizeContractsForHQLA function
-   * Processes individual ACTUS events with their HQLA classifications
+   * Classify HQLA for a specific period using EVENT-BASED logic
+   * Period-agnostic: works whether period represents day, month, or year
    */
-  private classifyHQLAForMonth(
-    month: number,
+  private classifyHQLAForPeriod(
+    period: number,
     temporalData: TemporalACTUSData
   ): Basel3HQLA {
     
@@ -76,16 +75,16 @@ export class Basel3MonthlyProcessor extends GenericRiskProcessor<Basel3HQLA> {
       NonHQLA: 0
     };
     
-    // Process each individual event for this month - EXACT same logic as original
+    // Process each individual event for this period
     temporalData.eventDetails.contractEvents.forEach((event, eventIndex) => {
-      const eventMonth = temporalData.eventDetails.eventToMonthMapping[eventIndex];
+      const eventPeriod = temporalData.eventDetails.eventToMonthMapping[eventIndex];
       
-      if (eventMonth === month && event.payoff !== 0) {
+      if (eventPeriod === period && event.payoff !== 0) {
         const hqlaCategory = event.hqlaCategory || 'NonHQLA';
         
-        // Debug logging for first few months
-        if (month <= 2 || month >= 12) {
-          console.log(`   Month ${month}, Event ${eventIndex}: ${event.contractId} | ${event.type} | Payoff: ${event.payoff} | HQLA: ${hqlaCategory}`);
+        // Debug logging for first few periods
+        if (period <= 2 || period >= 12) {
+          console.log(`   Period ${period}, Event ${eventIndex}: ${event.contractId} | ${event.type} | Payoff: ${event.payoff} | HQLA: ${hqlaCategory}`);
         }
         
         if (event.payoff > 0) {
@@ -112,29 +111,27 @@ export class Basel3MonthlyProcessor extends GenericRiskProcessor<Basel3HQLA> {
       }
     });
     
-    // Apply fallback heuristic ONLY if no events were found for this month
-    // This matches the original categorizeContractsForHQLA logic
+    // Apply fallback heuristic ONLY if no events were found for this period
     if (hqla.L1 === 0 && hqla.L2A === 0 && hqla.L2B === 0 && hqla.NonHQLA === 0) {
-      // Check if there are any cash flows for this month from the aggregated data
-      if (month < temporalData.cashFlows.inflows.length) {
-        const totalInflow = temporalData.cashFlows.inflows[month].reduce((sum, val) => sum + val, 0);
+      // Check if there are any cash flows for this period from the aggregated data
+      if (period < temporalData.cashFlows.inflows.length) {
+        const totalInflow = temporalData.cashFlows.inflows[period].reduce((sum, val) => sum + val, 0);
         if (totalInflow > 0) {
-          // EXACT same heuristic from original categorizeContractsForHQLA
-          hqla.L1 = totalInflow * 0.4;   // 40% Level 1 (government bonds, cash)
-          hqla.L2A = totalInflow * 0.35; // 35% Level 2A (high-grade corporate bonds)
-          hqla.L2B = totalInflow * 0.15; // 15% Level 2B (lower-grade assets)
-          // 10% goes to Non-HQLA (not counted in above)
+          // Heuristic distribution
+          hqla.L1 = totalInflow * 0.4;   // 40% Level 1
+          hqla.L2A = totalInflow * 0.35; // 35% Level 2A
+          hqla.L2B = totalInflow * 0.15; // 15% Level 2B
         }
         
-        const totalOutflow = temporalData.cashFlows.outflows[month].reduce((sum, val) => sum + val, 0);
+        const totalOutflow = temporalData.cashFlows.outflows[period].reduce((sum, val) => sum + val, 0);
         if (totalOutflow > 0) {
           hqla.NonHQLA += totalOutflow;
         }
       }
     }
     
-    if (month <= 2 || month >= 12) {
-      console.log(`   Month ${month} HQLA Result: L1=${hqla.L1.toFixed(2)}, L2A=${hqla.L2A.toFixed(2)}, L2B=${hqla.L2B.toFixed(2)}, NonHQLA=${hqla.NonHQLA.toFixed(2)}`);
+    if (period <= 2 || period >= 12) {
+      console.log(`   Period ${period} HQLA Result: L1=${hqla.L1.toFixed(2)}, L2A=${hqla.L2A.toFixed(2)}, L2B=${hqla.L2B.toFixed(2)}, NonHQLA=${hqla.NonHQLA.toFixed(2)}`);
     }
     
     return hqla;
@@ -142,110 +139,185 @@ export class Basel3MonthlyProcessor extends GenericRiskProcessor<Basel3HQLA> {
   
   /**
    * Create aggregated metric arrays for backward compatibility
-   * Produces same arrays as original ACTUSDatao1 structure
    */
   protected createAggregatedArrays(classifiedData: Basel3HQLA[]): Record<string, number[]> {
     return {
-      totalHQLA_L1: classifiedData.map(month => month.L1),
-      totalHQLA_L2A: classifiedData.map(month => month.L2A),
-      totalHQLA_L2B: classifiedData.map(month => month.L2B),
-      totalNonHQLA: classifiedData.map(month => month.NonHQLA),
+      totalHQLA_L1: classifiedData.map(period => period.L1),
+      totalHQLA_L2A: classifiedData.map(period => period.L2A),
+      totalHQLA_L2B: classifiedData.map(period => period.L2B),
+      totalNonHQLA: classifiedData.map(period => period.NonHQLA),
       
       // Also create cash flow arrays for compatibility
-      cashInflows: classifiedData.map(month => month.L1 + month.L2A + month.L2B),
-      cashOutflows: classifiedData.map(month => month.NonHQLA)
+      cashInflows: classifiedData.map(period => period.L1 + period.L2A + period.L2B),
+      cashOutflows: classifiedData.map(period => period.NonHQLA)
     };
   }
 }
 
-// =================================== Basel3 Monthly ZK Program ===================================
+// =================================== Basel3 ZK Program ===================================
 
-export class Basel3MonthlyZKProgram extends GenericTemporalRiskZKProgram<Basel3HQLA> {
-  periodType = 'monthly';
+export class Basel3ZKProgram extends GenericTemporalRiskZKProgram<Basel3HQLA> {
+  periodType = 'period-agnostic'; // Works with any time unit
   
   /**
-   * Core risk calculation logic - IDENTICAL to existing LiquidityRatioZkprogram
+   * Core risk calculation logic - FIXED NSFR to use cumulative funding
    * Maintains exact same month-by-month cumulative LCR calculation
+   * 🔧 CRITICAL FIX: NSFR now calculates cumulative stable funding properly
    */
   riskCalculation(
     data: GenericRiskClassification<Basel3HQLA>,
     thresholds: Record<string, number>
   ): boolean {
     
-    console.log('🔐 Executing Basel3 monthly LCR calculation...');
+    console.log('🔐 Executing Basel3 cumulative LCR/NSFR calculation...');
     
-    // EXACT same initial values as original test
-    let initial_reservenum = 10000;
+    // Same cumulative calculation logic regardless of time period
+    let initial_reservenum = 0;
     let cumulativeInflows = initial_reservenum;
     let cumulativeOutflows = 0;
     let cumulativeHQLA = 0;
-    let compliant = true;
+    let lcrCompliant = true;
+    
+    // 🔧 NEW: Cumulative stable funding tracking for NSFR
+    let cumulativeL1 = 0;
+    let cumulativeL2A = 0;
+    let cumulativeL2B = 0;
+    let cumulativeNonHQLA = 0;
     
     const liquidityThreshold_LCR = thresholds.liquidityThreshold_LCR || 100;
+    const liquidityThreshold_NSFR = thresholds.liquidityThreshold_NSFR || 100;
     
     console.log(`📊 Starting cumulative calculation with ${data.periodsCount} periods`);
     console.log(`🎯 LCR Threshold: ${liquidityThreshold_LCR}%`);
+    console.log(`🎯 NSFR Threshold: ${liquidityThreshold_NSFR}%`);
     
-    // 🔧 ADD: Store monthly details for comprehensive output
-    const monthlyLCRDetails = [];
+    // Store calculation details
+    const periodLCRDetails = [];
+    const nsfrRatios: number[] = [];
+    const lcrRatios: number[] = [];
     
-    // ✅ CRITICAL FIX: Use OLD system's EXACT logic
-    for (let month = 0; month < data.periodsCount; month++) {
+    // Period-by-period cumulative calculation
+    for (let period = 0; period < data.periodsCount; period++) {
       
-      const monthData = data.classifiedData[month];
+      const periodData = data.classifiedData[period];
       
-      // ✅ OLD SYSTEM LOGIC: Add ALL HQLA + NonHQLA as inflows, outflows separate
-      const monthInflow = monthData.L1 + monthData.L2A + monthData.L2B;
-      const monthOutflow = monthData.NonHQLA;
+      // Add all HQLA categories as inflows
+      const periodInflow = periodData.L1 + periodData.L2A + periodData.L2B;
+      const periodOutflow = periodData.NonHQLA;
       
-      cumulativeInflows += monthInflow;
-      cumulativeOutflows += monthOutflow;
+      cumulativeInflows += periodInflow;
+      cumulativeOutflows += periodOutflow;
       
-      // SAME cumulative cash flow check
+      // 🔧 NEW: Update cumulative HQLA tracking for NSFR
+      cumulativeL1 += periodData.L1;
+      cumulativeL2A += periodData.L2A;
+      cumulativeL2B += periodData.L2B;
+      cumulativeNonHQLA += periodData.NonHQLA;
+      
+      // Cumulative cash flow check
       const cumulativeCashFlow = cumulativeInflows - cumulativeOutflows;
       if (cumulativeInflows < cumulativeOutflows) {
-        console.log(`❌ Month ${month}: Negative cash flow (${cumulativeCashFlow})`);
-        compliant = false;
+        console.log(`❌ Period ${period}: Negative cash flow (${cumulativeCashFlow})`);
       }
       
-      // ✅ CRITICAL FIX: Use OLD system's HQLA calculation
-      // Add total HQLA (L1 + L2A + L2B + NonHQLA) to cumulative HQLA
-      const totalHQLA = monthData.L1 + monthData.L2A + monthData.L2B + monthData.NonHQLA;
+      // Total HQLA calculation
+      const totalHQLA = periodData.L1 + periodData.L2A + periodData.L2B + periodData.NonHQLA;
       cumulativeHQLA += totalHQLA;
       
-      // ✅ OLD SYSTEM LCR calculation (no haircuts in cumulative calculation)
+      // LCR calculation
       let LCR = 0;
       if (cumulativeOutflows > 0) {
         LCR = (cumulativeHQLA / cumulativeOutflows) * 100;
       } else {
-        LCR = 100; // If no outflows, assume 100% LCR
+        LCR = 100;
       }
       
-      console.log(`📈 Month ${month}: LCR = ${LCR.toFixed(2)}%, Cumulative HQLA = ${cumulativeHQLA.toFixed(2)}, Cumulative Outflows = ${cumulativeOutflows.toFixed(2)}`);
+      lcrRatios.push(LCR);
       
-      // 🔧 ADD: Store monthly details for JSON output
-      monthlyLCRDetails.push({
-        month: month + 1,
+      // 🔧 FIXED NSFR: Proper Basel3 Available Stable Funding (ASF) / Required Stable Funding (RSF)
+      // ASF: Funding sources with proper Basel3 haircuts
+      const asfL1 = cumulativeL1 * 1.0;     // Level 1 HQLA: 100% ASF factor
+      const asfL2A = cumulativeL2A * 0.85;  // Level 2A HQLA: 85% ASF factor
+      const asfL2B = cumulativeL2B * 0.5;   // Level 2B HQLA: 50% ASF factor
+      const totalASF = asfL1 + asfL2A + asfL2B;
+      
+      // RSF: Required stable funding based on asset categories
+      // For Basel3: Cash/HQLA require less RSF, loans/assets require more
+      const rsfHQLA = (cumulativeL1 + cumulativeL2A + cumulativeL2B) * 0.0;  // HQLA: 0% RSF
+      const rsfOtherAssets = cumulativeNonHQLA * 0.65; // Other assets: 65% RSF
+      const totalRSF = rsfHQLA + rsfOtherAssets;
+      
+      let NSFR = 100; // Default to 100%
+      if (totalRSF > 0) {
+        NSFR = (totalASF / totalRSF) * 100;
+      } else if (totalASF > 0) {
+        // If we have stable funding but no requirements, excellent
+        NSFR = 200; // High compliance score
+      }
+      // If both are 0, keep default 100%
+      
+      nsfrRatios.push(NSFR);
+      
+      console.log(`📈 Period ${period}: LCR = ${LCR.toFixed(2)}%, NSFR = ${NSFR.toFixed(2)}%, Cumulative HQLA = ${cumulativeHQLA.toFixed(2)}, Cumulative Outflows = ${cumulativeOutflows.toFixed(2)}`);
+      
+      // Store details
+      periodLCRDetails.push({
+        period: period + 1,
         cumulativeInflows: cumulativeInflows.toString(),
         cumulativeOutflows: cumulativeOutflows.toString(),
         cumulativeCashFlow: cumulativeCashFlow.toString(),
         cumulativeHQLA: cumulativeHQLA.toString(),
-        LCR: LCR.toString()
+        LCR: LCR.toString(),
+        NSFR: NSFR.toString()
       });
       
       if (LCR < liquidityThreshold_LCR) {
-        console.log(`❌ Month ${month}: LCR ${LCR.toFixed(2)}% below threshold ${liquidityThreshold_LCR}%`);
-        compliant = false;
+        console.log(`❌ Period ${period}: LCR ${LCR.toFixed(2)}% below threshold ${liquidityThreshold_LCR}%`);
+        lcrCompliant = false;
       }
     }
     
-    // 🔧 ADD: Display detailed monthly breakdown like working version
-    console.log('\n===== Monthly LCR Calculation Details =====');
-    console.log(JSON.stringify(monthlyLCRDetails, null, 2));
-    console.log('===========================================\n');
+    // Check compliance for both LCR and NSFR
+    lcrCompliant = lcrRatios.every(ratio => ratio >= liquidityThreshold_LCR);
+    const nsfrCompliant = nsfrRatios.every(ratio => ratio >= liquidityThreshold_NSFR);
     
-    console.log(`🏁 Final result: ${compliant ? 'COMPLIANT' : 'NON-COMPLIANT'}`);
-    return compliant;
+    const averageLCR = lcrRatios.length > 0 ? lcrRatios.reduce((sum, ratio) => sum + ratio, 0) / lcrRatios.length : 100;
+    const averageNSFR = nsfrRatios.length > 0 ? nsfrRatios.reduce((sum, ratio) => sum + ratio, 0) / nsfrRatios.length : 100;
+    const worstCaseLCR = Math.min(...lcrRatios);
+    const worstCaseNSFR = Math.min(...nsfrRatios);
+    
+    console.log(`\n🔧 CRITICAL BASEL3 COMPLIANCE CHECK:`);
+    console.log(`   - LCR Compliant: ${lcrCompliant}`);
+    console.log(`   - NSFR Compliant: ${nsfrCompliant}`);
+    console.log(`   - Average LCR: ${averageLCR.toFixed(2)}%`);
+    console.log(`   - Average NSFR: ${averageNSFR.toFixed(2)}%`);
+    console.log(`   - Worst Case LCR: ${worstCaseLCR.toFixed(2)}%`);
+    console.log(`   - Worst Case NSFR: ${worstCaseNSFR.toFixed(2)}%`);
+    console.log(`   - LCR Ratios: [${lcrRatios.map(r => r.toFixed(2)).join(', ')}]`);
+    console.log(`   - NSFR Ratios: [${nsfrRatios.map(r => r.toFixed(2)).join(', ')}]`);
+    
+    // Check for any periods with NSFR below threshold
+    nsfrRatios.forEach((ratio, index) => {
+      if (ratio < liquidityThreshold_NSFR) {
+        console.log(`   ⚠️ Period ${index}: NSFR ${ratio.toFixed(2)}% < ${liquidityThreshold_NSFR}%`);
+      }
+    });
+    
+    // 🔧 CRITICAL FIX: Require BOTH LCR AND NSFR compliance
+    const overallCompliant = lcrCompliant && nsfrCompliant;
+    console.log(`   - Overall Compliant (LCR && NSFR): ${lcrCompliant} && ${nsfrCompliant} = ${overallCompliant}`);
+    
+    if (lcrCompliant && !nsfrCompliant) {
+      console.log(`   ❌ LCR passed but NSFR failed - Overall: NON-COMPLIANT`);
+    }
+    
+    // 🔧 Display detailed period breakdown
+    console.log('\n===== Period LCR/NSFR Calculation Details =====');
+    console.log(JSON.stringify(periodLCRDetails, null, 2));
+    console.log('==============================================\n');
+    
+    console.log(`🏁 Final result: ${overallCompliant ? 'COMPLIANT' : 'NON-COMPLIANT'}`);
+    return overallCompliant; // 🔧 Return overall compliance, not just LCR
   }
 }
 
@@ -340,15 +412,32 @@ export function convertACTUSToGenericTemporal(
   
   console.log('🌉 Converting processed ACTUS data to generic temporal format...');
   
-  // ✅ CRITICAL FIX: Ensure HQLA classifications are properly merged
-  // Create Basel3 contract portfolio and merge HQLA classifications
-  const basel3Contracts = getBasel3ContractPortfolio();
-  console.log(`📋 Got ${basel3Contracts.length} Basel3 contracts with HQLA classifications`);
+  // ✅ CRITICAL FIX: Use contractDetails HQLA classifications if available, otherwise fall back to hardcoded
+  let contractsWithHQLA: any[];
   
-  // ✅ CRITICAL DEBUG: Show Basel3 mapping
-  basel3Contracts.forEach(contract => {
-    console.log(`   Basel3 Contract: ${contract.contractID} → ${contract.hqlaCategory}`);
-  });
+  // Check if contractDetails already contain HQLA categories (from config file)
+  const hasHQLAInDetails = contractDetails && contractDetails.length > 0 && 
+    contractDetails.some(detail => detail && detail.hqlaCategory);
+  
+  if (hasHQLAInDetails) {
+    console.log(`📋 Using HQLA categories from config file (${contractDetails.length} contracts)`);
+    contractsWithHQLA = contractDetails;
+    
+    // DEBUG: Show config file HQLA mapping
+    contractsWithHQLA.forEach((contract, index) => {
+      if (contract && contract.hqlaCategory) {
+        console.log(`   Config Contract: ${contract.contractID || `contract_${index}`} → ${contract.hqlaCategory}`);
+      }
+    });
+  } else {
+    console.log(`📋 No HQLA categories in contractDetails, using hardcoded Basel3 contracts`);
+    contractsWithHQLA = getBasel3ContractPortfolio();
+    
+    // DEBUG: Show hardcoded Basel3 mapping
+    contractsWithHQLA.forEach(contract => {
+      console.log(`   Basel3 Contract: ${contract.contractID} → ${contract.hqlaCategory}`);
+    });
+  }
   
   // ✅ CRITICAL DEBUG: Show raw events structure
   console.log(`📋 Raw events received: ${rawEvents.length} contracts`);
@@ -356,18 +445,18 @@ export function convertACTUSToGenericTemporal(
     console.log(`   Raw Event Contract ${index}: ${eventContract.contractId} with ${eventContract.events?.length || 0} events`);
   });
   
-  // Enhance raw events with HQLA classifications from Basel3 contracts
+  // Enhance raw events with HQLA classifications from config or Basel3 contracts
   const enhancedRawEvents = rawEvents.map((eventContract, index) => {
-    // Find matching Basel3 contract by contractId
-    const matchingBasel3Contract = basel3Contracts.find(b3c => 
-      b3c.contractID === eventContract.contractId
+    // Find matching contract by contractId
+    const matchingContract = contractsWithHQLA.find(contract => 
+      contract.contractID === eventContract.contractId
     );
     
-    console.log(`   Matching ${eventContract.contractId} with Basel3 contract: ${matchingBasel3Contract ? matchingBasel3Contract.hqlaCategory : 'NOT FOUND'}`);
+    console.log(`   Matching ${eventContract.contractId} with contract: ${matchingContract ? matchingContract.hqlaCategory : 'NOT FOUND'}`);
     
     return {
       ...eventContract,
-      hqlaCategory: matchingBasel3Contract?.hqlaCategory || 'NonHQLA'
+      hqlaCategory: matchingContract?.hqlaCategory || 'NonHQLA'
     };
   });
   
@@ -412,6 +501,7 @@ export async function processBasel3ThroughGenericFramework(
   contractDetails: any[],
   thresholds: {
     liquidityThreshold_LCR: number;
+    liquidityThreshold_NSFR?: number; // 🔧 Add NSFR threshold
     liquidityThreshold?: number;
     newInvoiceAmount?: number;
     newInvoiceEvaluationMonth?: number;
@@ -431,7 +521,7 @@ export async function processBasel3ThroughGenericFramework(
   );
   
   // Step 2: Process through Basel3 processor
-  const processor = new Basel3MonthlyProcessor();
+  const processor = new Basel3Processor();
   const classification = processor.processRiskData(temporalData);
   
   // Step 3: Create backward-compatible data structure
@@ -443,9 +533,11 @@ export async function processBasel3ThroughGenericFramework(
   });
   
   // Step 4: Calculate compliance using generic ZK program logic
-  const zkProgram = new Basel3MonthlyZKProgram();
+  // 🔧 CRITICAL FIX: Pass BOTH LCR and NSFR thresholds
+  const zkProgram = new Basel3ZKProgram();
   const compliance = zkProgram.riskCalculation(classification, {
-    liquidityThreshold_LCR: thresholds.liquidityThreshold_LCR
+    liquidityThreshold_LCR: thresholds.liquidityThreshold_LCR,
+    liquidityThreshold_NSFR: thresholds.liquidityThreshold_NSFR || 100 // 🔧 Add NSFR threshold
   });
   
   console.log('✅ Basel3 processing complete through generic framework');

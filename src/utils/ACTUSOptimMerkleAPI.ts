@@ -129,7 +129,7 @@ export function getDefaultContractPortfolio(): ACTUSContract[] {
             "initialExchangeDate": "2023-01-02T00:00:00",
             "statusDate": "2023-01-01T00:00:00",
             "notionalPrincipal": "10000",
-            "maturityDate": "2024-01-01T00:00:00",
+            "maturityDate": "2023-06-01T00:00:00",
             "nominalInterestRate": "0.05",
             "currency": "USD",
             "dayCountConvention": "A365"

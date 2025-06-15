@@ -25,7 +25,7 @@ import {
 import { 
   processBasel3ThroughGenericFramework,
   convertACTUSToGenericTemporal
-} from './Basel3MonthlyImplementation.js';
+} from './Basel3Implementation.js';
 import { ACTUSOptimMerkleAPIResponse } from './ACTUSOptimMerkleAPI.js';
 
 // =================================== Enhanced Processing Functions ===================================
@@ -312,4 +312,4 @@ export {
   processBasel3ThroughGenericFramework,
   convertACTUSToGenericTemporal,
   createCompatibleACTUSData
-} from './Basel3MonthlyImplementation.js';
+} from './Basel3Implementation.js';

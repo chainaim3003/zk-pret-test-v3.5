@@ -20,7 +20,7 @@ import {
 } from './ACTUSDataProcessor.js';
 import {
     processBasel3ThroughGenericFramework
-} from './Basel3MonthlyImplementation.js';
+} from './Basel3Implementation.js';
 import { buildMerkleTreeZK, hashDataZK, MerkleWitness8 } from './CoreZKUtilities.js';
 import { calculatePercentageZK, calculateWeightedSumZK } from './ComplianceZKUtilities.js';
 
