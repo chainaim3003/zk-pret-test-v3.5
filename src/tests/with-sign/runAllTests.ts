@@ -62,6 +62,18 @@ function runAllTests() {
       console.log('----------------------------------BusinessStandardDataIntegrity=> \src\data\scf\BILLOFLADING\BOL-VALID-1.json----------------------------------------');
       execSync('node ./build/tests/with-sign/BusinessStandardDataIntegrityVerificationTest.js .\src\data\scf\BILLOFLADING\BOL-VALID-1.json', { stdio: 'inherit' });
 
+      console.log('------------------------------------------------------------------------------------------------------------------------');
+      console.log('----------------------------------BusinessStandardDataIntegrity=> \src\data\scf\BILLOFLADING\BOL-VALID-2.json----------------------------------------');
+      execSync('node ./build/tests/with-sign/BusinessStandardDataIntegrityVerificationTest.js .\src\data\scf\BILLOFLADING\BOL-VALID-2.json', { stdio: 'inherit' });
+
+      console.log('------------------------------------------------------------------------------------------------------------------------');
+      console.log('----------------------------------BusinessStandardDataIntegrity=> \src\data\scf\BILLOFLADING\BOL-INVALID-1.json----------------------------------------');
+      execSync('node ./build/tests/with-sign/BusinessStandardDataIntegrityVerificationTest.js .\src\data\scf\BILLOFLADING\BOL-INVALID-1.json', { stdio: 'inherit' });
+
+      console.log('------------------------------------------------------------------------------------------------------------------------');
+      console.log('----------------------------------BusinessStandardDataIntegrity=> \src\data\scf\BILLOFLADING\BOL-INVALID-2.json----------------------------------------');
+      execSync('node ./build/tests/with-sign/BusinessStandardDataIntegrityVerificationTest.js .\src\data\scf\BILLOFLADING\BOL-INVALID-2.json', { stdio: 'inherit' });
+
       console.log('All tests finished successfully.');
    } catch (error) {
       console.error('Error running one of the scripts:', error);
