@@ -16,6 +16,8 @@
   "scripts": {
     "copy-wasm": "cp -r node_modules/o1js/dist/node/bindings/compiled/_node_bindings/* build/",
     "build": "tsc -p tsconfig.json",
+    "pre-build-check": "node pre-build-validation.mjs",
+    "build-safe": "npm run pre-build-check && npm run build",
     "precompile-zk": "npm run build && node scripts/precompile-zk-programs.js",
     "smart-precompile": "node scripts/smart-precompile.js",
     "build-smart": "node scripts/smart-precompile.js build",
