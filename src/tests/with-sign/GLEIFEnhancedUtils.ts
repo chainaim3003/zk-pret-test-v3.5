@@ -49,8 +49,8 @@ export async function fetchGLEIFCompanyDataWithFullDetails(companyName: string):
     url = `${BASEURL}?filter[entity.legalName]=${encodeURIComponent(companyName)}`;
   } else if (typeOfNet === 'LOCAL') {
     console.log('------------------------------------------------using live GLEIF API--------------------------------------------------');
-    BASEURL = process.env.GLEIF_URL_SANDBOX; // Use live GLEIF API for LOCAL too
-    url = `${BASEURL}?filter[entity.legalName]=${encodeURIComponent(companyName)}`;
+    BASEURL = process.env.GLEIF_URL_MOCK; // Use live GLEIF API for LOCAL too
+    url = `${BASEURL}/${companyName}`;
   } else {
     console.log('///////////////////////////////////////////////in prod//////////////////////////////////////////////');
     BASEURL = process.env.GLEIF_URL_PROD;

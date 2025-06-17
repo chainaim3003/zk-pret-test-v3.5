@@ -113,7 +113,7 @@ export async function fetchCorporateRegistrationData(cin: string): Promise<any> 
     console.log('Type of Network:', typeOfNet);
     console.log('CIN:', cin);
     
-    if (typeOfNet === process.env.BUILD_ENV) {
+    if (typeOfNet === 'TESTNET') {
         console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++in sandbox++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
         BASEURL = process.env.CORPREG_URL_SANDBOX_INDIA;
         if (!BASEURL) {
@@ -129,17 +129,19 @@ export async function fetchCorporateRegistrationData(cin: string): Promise<any> 
     } else if (typeOfNet === 'LOCAL') {
         console.log('------------------------------------------------using live API for LOCAL--------------------------------------------------');
         // Changed: LOCAL now uses live production API instead of mock
-        BASEURL = process.env.CORPREG_URL_PROD_INDIA;
+        BASEURL = process.env.CORPREG_URL_MOCK_INDIA;
         if (!BASEURL) {
-            throw new Error('CORPREG_URL_PROD_INDIA is not set in the environment variables.');
+            throw new Error('CORPREG_URL_MOCK_INDIA is not set in the environment variables.');
         }
         if (!cin) {
             throw new Error('CIN is required.');
         }
         
         // For LOCAL, now use authenticated live API request like production
-        const accessToken = await authenticate();
-        return fetchMasterData(accessToken, BASEURL, cin);
+        // const accessToken = await authenticate();
+        // return fetchMasterData(accessToken, BASEURL, cin);
+        const response = await axios.get(`${BASEURL}/${cin}`);
+        return  response.data;
         
     } else {
         console.log('///////////////////////////////////////////////in prod//////////////////////////////////////////////');
