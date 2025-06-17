@@ -1,0 +1,28 @@
+{
+  "summary": {
+    "workingMapCount": 183,
+    "brokenMapCount": 180,
+    "missingCount": 3,
+    "differentCount": 0
+  },
+  "missingMapFiles": [
+    {
+      "relativePath": "utils\\test-compilation.js.map",
+      "workingPath": "C:\\SATHYA\\CHAINAIM3003\\mcp-servers\\zk-pret-test-v3.5\\build\\utils\\test-compilation.js.map"
+    },
+    {
+      "relativePath": "utils\\TypeScriptBuildValidator.js.map",
+      "workingPath": "C:\\SATHYA\\CHAINAIM3003\\mcp-servers\\zk-pret-test-v3.5\\build\\utils\\TypeScriptBuildValidator.js.map"
+    },
+    {
+      "relativePath": "zk-programs\\with-sign\\RiskLiquidityStableCoinOptimMerkleZKProgramWithSign-ORIGINAL.js.map",
+      "workingPath": "C:\\SATHYA\\CHAINAIM3003\\mcp-servers\\zk-pret-test-v3.5\\build\\zk-programs\\with-sign\\RiskLiquidityStableCoinOptimMerkleZKProgramWithSign-ORIGINAL.js.map"
+    }
+  ],
+  "mapIssues": [],
+  "failingFileMap": {
+    "workingExists": true,
+    "brokenExists": true,
+    "identical": true
+  }
+}

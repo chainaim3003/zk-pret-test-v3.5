@@ -15,7 +15,7 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "copy-wasm": "cp -r node_modules/o1js/dist/node/bindings/compiled/_node_bindings/* build/",
-    "build": "tsc -p tsconfig.json",
+    "build": "node build-hybrid.js",
     "pre-build-check": "node pre-build-validation.mjs",
     "build-safe": "npm run pre-build-check && npm run build",
     "precompile-zk": "npm run build && node scripts/precompile-zk-programs.js",
@@ -45,7 +45,11 @@
     "test:basel3-risk-optimerkle": "npm run build && node ./build/tests/with-sign/RiskLiquidityBasel3OptimMerkleVerificationTestWithSign.js 100 100",
     "test:stablecoin-risk-optimerkle": "npm run build && node ./build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js 100 20 25 80",
     "test:all-risk-optimerkle": "npm run test:advanced-risk-optimerkle && npm run test:basel3-risk-optimerkle && npm run test:stablecoin-risk-optimerkle",
-    "test:verify-merkle-fixes": "npm run build && node ./build/verify-merkle-fixes.js"
+    "test:verify-merkle-fixes": "npm run build && node ./build/verify-merkle-fixes.js",
+    "build-ts-only": "npx tsc",
+    "build-working": "cp -r build.working-copy/* build/",
+    "verify-build": "echo \"Build files: $(find build/ -name \"*.js\" | wc -l)\"",
+    "postinstall": "npm run build"
   },
   "lint-staged": {
     "**/*": [
