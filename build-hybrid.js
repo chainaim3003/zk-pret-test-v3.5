@@ -91,22 +91,17 @@ try {
 
 console.log('🎉 Build complete! Ready to run.');
 
-// Auto-apply jurisdiction patch
-const fs = require("fs");
-const patchFile = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
-const targetFile = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
-if (fs.existsSync(patchFile)) {
-    fs.copyFileSync(patchFile, targetFile);
-    console.log("✅ Auto-applied jurisdiction patch");
-}
-
 
 // Auto-apply jurisdiction patch
-const fs = require("fs");
-const patchFile = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
-const targetFile = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
-if (fs.existsSync(patchFile)) {
-    fs.copyFileSync(patchFile, targetFile);
-    console.log("✅ Auto-applied jurisdiction patch");
+const patchFilePath = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+const targetFilePath = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+if (fs.existsSync(patchFilePath)) {
+    try {
+        fs.copyFileSync(patchFilePath, targetFilePath);
+        console.log("✅ Auto-applied jurisdiction patch");
+    } catch (error) {
+        console.log("⚠️ Failed to apply patch:", error.message);
+    }
+} else {
+    console.log("⚠️ Patch file not found");
 }
-
