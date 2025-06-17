@@ -6,7 +6,7 @@
  * Follows modular pattern: API → data prep → signature → witnesses → ZK → contract
  * ====================================================================
  */
-cl
+
 import { Field, Mina, PrivateKey, AccountUpdate, CircuitString, Poseidon, Signature, UInt64 } from 'o1js';
 import { getPrivateKeyFor } from '../../core/OracleRegistry.js';
 import { 
