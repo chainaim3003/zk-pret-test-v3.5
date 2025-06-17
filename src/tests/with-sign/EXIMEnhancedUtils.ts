@@ -5,11 +5,11 @@ import axios from 'axios';
 // =================================== EXIM API Response Interface ===================================
 interface EXIMAPIResponse {
   success?: boolean;
-  data?: {
+  //data?: {
     iec?: string;
     entityName?: string;
     iecIssueDate?: string;
-    PAN?: string;
+    pan?: string;
     iecStatus?: number;
     iecModificationDate?: string;
     dataAsOn?: string;
@@ -41,7 +41,7 @@ interface EXIMAPIResponse {
     directors?: Array<{
       name?: string;
     }>;
-  };
+  //};
   error?: string;
   message?: string;
   
@@ -87,7 +87,7 @@ export function printEXIMResponse(
       console.log(`\n🆔 Core Identification:`);
       console.log(`  IEC: ${data.iec || 'N/A'}`);
       console.log(`  Entity Name: ${data.entityName || 'N/A'}`);
-      console.log(`  PAN: ${data.PAN || 'N/A'}`);
+      console.log(`  PAN: ${data.pan || 'N/A'}`);
       console.log(`  IEC Status: ${data.iecStatus !== undefined ? data.iecStatus : 'N/A'}`);
       
       // Temporal information
@@ -118,7 +118,7 @@ export function printEXIMResponse(
       console.log(`  Email: ${data.email || 'N/A'}`);
       
       // Branch information
-      if (data.branches && Array.isArray(data.branches) && data.branches.length > 0) {
+      /*if (data.branches && Array.isArray(data.branches) && data.branches.length > 0) {
         console.log(`\n🏢 Branch Information (${data.branches.length} branches):`);
         data.branches.forEach((branch, index) => {
           console.log(`  Branch ${index + 1}:`);
@@ -137,7 +137,7 @@ export function printEXIMResponse(
         data.directors.forEach((director, index) => {
           console.log(`  Director ${index + 1}: ${director.name || 'N/A'}`);
         });
-      }
+      }*/
       
       // Complete field inventory
       console.log(`\n📋 Complete Field Inventory (All fields):`);
@@ -208,18 +208,18 @@ export function extractEXIMSummary(
   iec: string;
   entityName: string;
   iecIssueDate: string;
-  PAN: string;
+  pan: string;
   iecStatus: number;
   iecModificationDate: string;
   dataAsOn: string;
 } {
   // Since LOCAL now uses live API, all environments use the same structure
-  const data = response.data || {};
+  const data = response || {};
   return {
     iec: data.iec || 'UNKNOWN',
     entityName: data.entityName || 'UNKNOWN',
     iecIssueDate: data.iecIssueDate || 'UNKNOWN',
-    PAN: data.PAN || 'UNKNOWN',
+    pan: data.pan || 'UNKNOWN',
     iecStatus: data.iecStatus !== undefined ? data.iecStatus : -1,
     iecModificationDate: data.iecModificationDate || 'UNKNOWN',
     dataAsOn: data.dataAsOn || 'UNKNOWN'
@@ -259,7 +259,7 @@ export function analyzeEXIMCompliance(
   const businessRuleResults = {
     entityNameNotEmpty: summary.entityName !== '' && summary.entityName !== 'UNKNOWN' && summary.entityName !== null && summary.entityName !== undefined,
     iecNotEmpty: summary.iec !== '' && summary.iec !== 'UNKNOWN' && summary.iec !== null && summary.iec !== undefined,
-    panNotEmpty: summary.PAN !== '' && summary.PAN !== 'UNKNOWN' && summary.PAN !== null && summary.PAN !== undefined,
+    panNotEmpty: summary.pan !== '' && summary.pan !== 'UNKNOWN' && summary.pan !== null && summary.pan !== undefined,
     iecIssueDateExists: summary.iecIssueDate !== '' && summary.iecIssueDate !== 'UNKNOWN' && summary.iecIssueDate !== null && summary.iecIssueDate !== undefined,
     iecModificationDateExists: summary.iecModificationDate !== '' && summary.iecModificationDate !== 'UNKNOWN' && summary.iecModificationDate !== null && summary.iecModificationDate !== undefined,
     dataAsOnValid: summary.dataAsOn !== '' && summary.dataAsOn !== 'UNKNOWN' && summary.dataAsOn !== null && summary.dataAsOn !== undefined,

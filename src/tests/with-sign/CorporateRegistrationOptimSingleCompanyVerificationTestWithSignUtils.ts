@@ -133,9 +133,9 @@ function createOptimizedComplianceData(
 }
 
 // =================================== Main Single Company Verification Function ===================================
-export async function getCorporateRegistrationOptimSingleCompanyVerificationWithSignUtils(companyName: string) {
+export async function getCorporateRegistrationOptimSingleCompanyVerificationWithSignUtils(cin: string) {
   console.log(`\n🚀 Corporate Registration Single Company Verification Test Started`);
-  console.log(`🏢 Company: ${companyName}`);
+  console.log(`🏢 CIN: ${cin}`);
   //console.log(`🌐 Network: ${typeOfNet}`);
   console.log(`📡 Using LIVE API for all environments`);
 
@@ -180,7 +180,7 @@ export async function getCorporateRegistrationOptimSingleCompanyVerificationWith
     console.log('\n📡 Fetching Corporate Registration data...');
     let apiResponse: CorporateRegistrationAPIResponse;
     try {
-      apiResponse = await fetchCorporateRegistrationDataWithFullLogging(companyName);
+      apiResponse = await fetchCorporateRegistrationDataWithFullLogging(cin);
       console.log('✅ Corporate Registration data fetched successfully');
     } catch (err: any) {
       console.error('❌ Error fetching Corporate Registration data:', err.message);
