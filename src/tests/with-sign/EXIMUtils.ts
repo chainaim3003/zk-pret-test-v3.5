@@ -11,7 +11,7 @@ export async function fetchEXIMCompanyData(companyName: string): Promise<any> {
         typeOfNet = 'TESTNET';
     }
     console.log('Type of Network:', typeOfNet);
-    if (typeOfNet === process.env.BUILD_ENV) {
+    if (typeOfNet === 'TESTNET') {
         console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++in sandbox++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
         BASEURL = process.env.EXIM_URL_SANDBOX_INDIA;
         if (!BASEURL) {
