@@ -90,3 +90,23 @@ try {
 }
 
 console.log('🎉 Build complete! Ready to run.');
+
+// Auto-apply jurisdiction patch
+const fs = require("fs");
+const patchFile = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+const targetFile = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+if (fs.existsSync(patchFile)) {
+    fs.copyFileSync(patchFile, targetFile);
+    console.log("✅ Auto-applied jurisdiction patch");
+}
+
+
+// Auto-apply jurisdiction patch
+const fs = require("fs");
+const patchFile = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+const targetFile = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+if (fs.existsSync(patchFile)) {
+    fs.copyFileSync(patchFile, targetFile);
+    console.log("✅ Auto-applied jurisdiction patch");
+}
+
