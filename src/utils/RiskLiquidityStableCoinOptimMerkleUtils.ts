@@ -9,14 +9,22 @@
 
 import { Field, CircuitString, Poseidon, MerkleTree } from 'o1js';
 import { 
-    callACTUSAPI, 
     loadContractPortfolio, 
     getStableCoinContractPortfolio,
     ACTUSOptimMerkleAPIResponse,
     ACTUSContract 
 } from './ACTUSOptimMerkleAPI.js';
+import { callACTUSAPIWithPostProcessing } from './ACTUSDataProcessor.js';
 import { buildMerkleTreeZK, hashDataZK, MerkleWitness8, safeFieldFrom } from './CoreZKUtilities.js';
 import { calculatePercentageZK, calculateConcentrationRiskZK } from './ComplianceZKUtilities.js';
+import { 
+    loadMasterConfig, 
+    getRegulatoryFrameworks, 
+    getBackingRatioRequirement,
+    validateRegulatoryCompliance as validateRegulatoryComplianceConfigurable,
+    JurisdictionComplianceResult as ConfigurableJurisdictionComplianceResult,
+    RegulatoryConfigManager 
+} from './ConfigurableRegulatoryFrameworks.js';
 
 // =================================== StableCoin Risk Data Structures ===================================
 
@@ -91,10 +99,38 @@ export async function fetchRiskLiquidityStableCoinOptimMerkleData(
 ): Promise<ACTUSOptimMerkleAPIResponse> {
     try {
         console.log('Loading StableCoin-specific contract portfolio...');
-        const contracts = await loadContractPortfolio(contractPortfolio || getStableCoinContractPortfolio());
+        console.log(`🔍 DEBUG: contractPortfolio type: ${typeof contractPortfolio}`);
+        console.log(`🔍 DEBUG: contractPortfolio length: ${Array.isArray(contractPortfolio) ? contractPortfolio.length : 'N/A'}`);
         
-        console.log('Calling ACTUS API for StableCoin reserve calculations...');
-        const actusResponse = await callACTUSAPI(actusUrl, contracts);
+        // Use provided portfolio directly if it's an array, otherwise fall back to default
+        let contracts: ACTUSContract[];
+        if (Array.isArray(contractPortfolio)) {
+            contracts = contractPortfolio;
+            console.log(`🔍 DEBUG: Using provided contract array with ${contracts.length} contracts`);
+        } else {
+            contracts = await loadContractPortfolio(contractPortfolio || getStableCoinContractPortfolio());
+            console.log(`🔍 DEBUG: Loaded from file/default: ${contracts.length} contracts`);
+        }
+        
+        console.log(`🔍 DEBUG: Final contracts being sent to ACTUS:`);
+        contracts.forEach((contract, index) => {
+            console.log(`   Contract ${contract.contractID || index}: ${contract.contractType} - ${contract.notionalPrincipal} ${contract.currency}`);
+        });
+        
+        console.log(`🌐 Calling ACTUS API at: ${actusUrl}`);
+        console.log(`🔍 DEBUG: ACTUS REQUEST PAYLOAD:`);
+        console.log(`   URL: ${actusUrl}`);
+        console.log(`   Contracts array:`, JSON.stringify(contracts, null, 2));
+        
+        const actusResponse = await callACTUSAPIWithPostProcessing(actusUrl, contracts);
+        
+        console.log(`🔍 DEBUG: ACTUS RESPONSE:`);
+        console.log(`   Raw response:`, JSON.stringify(actusResponse, null, 2));
+        console.log(`   Periods count: ${actusResponse.periodsCount}`);
+        console.log(`   Inflow length: ${actusResponse.inflow?.length || 'undefined'}`);
+        console.log(`   Outflow length: ${actusResponse.outflow?.length || 'undefined'}`);
+        console.log(`   Contract details length: ${actusResponse.contractDetails?.length || 'undefined'}`);
+        console.log(`   Metadata:`, JSON.stringify(actusResponse.metadata, null, 2));
         
         console.log(`StableCoin ACTUS data fetched: ${actusResponse.periodsCount} periods`);
         return actusResponse;
@@ -107,19 +143,42 @@ export async function fetchRiskLiquidityStableCoinOptimMerkleData(
 
 /**
  * Process ACTUS response with StableCoin-specific reserve categorization
+ * Uses balance sheet analysis (contract principals) instead of cash flow analysis
+ * Supports jurisdiction-based regulatory frameworks
+ * NOW READS CONCENTRATION LIMIT FROM CONFIG HIERARCHY
  */
-export function processStableCoinRiskData(
+export async function processStableCoinRiskData(
     actusResponse: ACTUSOptimMerkleAPIResponse,
+    contracts: ACTUSContract[],  // Add contracts parameter for principal analysis
     backingRatioThreshold: number = 100,
     liquidityRatioThreshold: number = 20,
-    concentrationLimit: number = 25,
+    concentrationLimit?: number,  // CHANGED: Remove default, make optional
     qualityThreshold: number = 80,
     outstandingTokensAmount: number = 1000000,
     tokenValue: number = 1.0,
     liquidityThreshold: number = 10,
     newInvoiceAmount: number = 5000,
-    newInvoiceEvaluationMonth: number = 11
-): RiskLiquidityStableCoinOptimMerkleData {
+    newInvoiceEvaluationMonth: number = 11,
+    regulatoryFramework?: string  // NEW: Support for framework detection
+): Promise<RiskLiquidityStableCoinOptimMerkleData> {
+    
+    console.log('🔍 DEBUG: StableCoin processing with contracts:', contracts.map(c => `${c.contractID}: ${c.notionalPrincipal}`));
+    
+    // NEW: Determine concentration limit from config hierarchy
+    let finalConcentrationLimit = concentrationLimit || 25; // Provide default if undefined
+    if (!concentrationLimit) {
+        // Try to get from master settings
+        try {
+            const masterConfig = await loadMasterConfig();
+            finalConcentrationLimit = masterConfig.stablecoinThresholds?.concentrationLimits?.maximumSingleAsset || 25;
+            console.log(`📊 Using concentration limit from master settings: ${finalConcentrationLimit}%`);
+        } catch (error) {
+            finalConcentrationLimit = 25; // Ultimate fallback
+            console.log(`⚠️ Using fallback concentration limit: ${finalConcentrationLimit}%`);
+        }
+    } else {
+        console.log(`📊 Using provided concentration limit: ${finalConcentrationLimit}%`);
+    }
     
     // Aggregate basic cash flows
     const aggregatedInflows = actusResponse.inflow.map((period: number[]) =>
@@ -130,11 +189,20 @@ export function processStableCoinRiskData(
     period.reduce((sum: number, value: number) => sum + value, 0)
     );
     
-    // Categorize reserves based on contract details
-    const reserveCategories = categorizeReserveAssets(actusResponse.contractDetails, actusResponse.inflow);
+    // NEW: Categorize reserves based on contract principals (balance sheet approach)
+    // Extract jurisdiction from metadata if available
+    const jurisdiction = regulatoryFramework || 'US'; // Default to US if not specified
+    const reserveCategories = await categorizeReserveAssetsByPrincipals(contracts, actusResponse.periodsCount, jurisdiction);
     
-    // Calculate outstanding tokens for each period (could vary with redemptions/issuances)
-    const outstandingTokens = new Array(actusResponse.periodsCount).fill(outstandingTokensAmount);
+    // Calculate outstanding tokens based on liability contracts
+    const totalLiabilities = contracts
+        .filter(c => c.contractRole === 'RPL') // Liability contracts
+        .reduce((sum, c) => sum + Math.abs(parseFloat(c.notionalPrincipal)), 0);
+    
+    console.log('🔍 DEBUG: Total liabilities from contracts:', totalLiabilities);
+    
+    // Use actual liability amount instead of default
+    const outstandingTokens = new Array(actusResponse.periodsCount).fill(totalLiabilities);
     
     return {
         // Scenario identifiers
@@ -167,7 +235,7 @@ export function processStableCoinRiskData(
         // Compliance thresholds
         backingRatioThreshold: Math.round(backingRatioThreshold),
         liquidityRatioThreshold: Math.round(liquidityRatioThreshold),
-        concentrationLimit: Math.round(concentrationLimit),
+        concentrationLimit: Math.round(finalConcentrationLimit), // Use final determined value
         qualityThreshold: Math.round(qualityThreshold),
         
         // Additional parameters
@@ -181,7 +249,355 @@ export function processStableCoinRiskData(
 }
 
 /**
- * Categorize reserve assets for StableCoin compliance
+ * NEW: Categorize reserve assets based on contract principals (balance sheet approach)
+ * This is the correct approach for stablecoin reserve analysis
+ * Supports regulatory framework validation
+ */
+async function categorizeReserveAssetsByPrincipals(
+    contracts: ACTUSContract[],
+    periodsCount: number,
+    jurisdiction?: string
+): Promise<{
+    cash: number[];
+    treasury: number[];
+    corporate: number[];
+    other: number[];
+    liquidityScores: number[];
+    creditRatings: number[];
+    maturityProfiles: number[];
+    regulatoryCompliance?: ConfigurableJurisdictionComplianceResult;
+}> {
+    console.log('📋 DEBUG: Categorizing reserves by principals...');
+    
+    // Get only asset contracts (RPA = Receive Principal Amount)
+    const assetContracts = contracts.filter(c => c.contractRole === 'RPA');
+    
+    console.log('📋 DEBUG: Asset contracts:', assetContracts.map(c => `${c.contractID}: ${c.notionalPrincipal} (${c.hqlaCategory || 'no-hqla'}))`));
+    
+    // Calculate total assets
+    const totalAssets = assetContracts.reduce((sum, c) => sum + parseFloat(c.notionalPrincipal), 0);
+    console.log('📋 DEBUG: Total assets:', totalAssets);
+    
+    // Initialize arrays - all periods will have the same static values (balance sheet approach)
+    const cash = new Array(periodsCount).fill(0);
+    const treasury = new Array(periodsCount).fill(0);
+    const corporate = new Array(periodsCount).fill(0);
+    const other = new Array(periodsCount).fill(0);
+    
+    // Categorize each asset contract with enhanced logic for treasury securities
+    assetContracts.forEach(contract => {
+        const principal = parseFloat(contract.notionalPrincipal);
+        const contractId = contract.contractID.toLowerCase();
+        const hqlaCategory = contract.hqlaCategory;
+        const description = contract.description?.toLowerCase() || '';
+        
+        console.log(`📋 DEBUG: Processing ${contractId} (${principal}) - HQLA: ${hqlaCategory}`);
+        
+        // Enhanced categorization logic for professional stablecoin reserves
+        let category = 'other';
+        
+        // Prioritize treasury securities identification
+        if (contractId.includes('treasury') || description.includes('treasury') || 
+            description.includes('t-bill') || description.includes('government')) {
+            category = 'treasury';
+        }
+        // Cash and demand deposits
+        else if (contractId.includes('cash') || contractId.includes('deposit') || 
+                description.includes('cash') || description.includes('demand') ||
+                contractId.includes('fed_member') || description.includes('fdic')) {
+            category = 'cash';
+        }
+        // Corporate bonds and commercial paper
+        else if (contractId.includes('corporate') || contractId.includes('commercial') ||
+                description.includes('corporate') || description.includes('commercial')) {
+            category = 'corporate';
+        }
+        // Fallback for institutional cash if no clear categorization
+        else if (contractId.includes('institutional') || description.includes('institutional')) {
+            category = 'cash';
+        }
+        
+        // Fill all periods with the same static amount (balance sheet approach)
+        for (let period = 0; period < periodsCount; period++) {
+            switch (category) {
+                case 'cash':
+                    cash[period] += principal;
+                    break;
+                case 'treasury':
+                    treasury[period] += principal;
+                    break;
+                case 'corporate':
+                    corporate[period] += principal;
+                    break;
+                default:
+                    other[period] += principal;
+                    break;
+            }
+        }
+        
+        console.log(`📋 DEBUG: Assigned ${contractId} (${principal}) to ${category}`);
+    });
+    
+    // Log final categorization with professional terminology
+    console.log('📋 DEBUG: Final stablecoin reserve categorization (per period):');
+    console.log(`  Cash & Equivalents: ${cash[0].toLocaleString()} (${((cash[0]/totalAssets)*100).toFixed(1)}%)`);
+    console.log(`  US Treasury Securities: ${treasury[0].toLocaleString()} (${((treasury[0]/totalAssets)*100).toFixed(1)}%)`);
+    console.log(`  Corporate Bonds: ${corporate[0].toLocaleString()} (${((corporate[0]/totalAssets)*100).toFixed(1)}%)`);
+    console.log(`  Other Assets: ${other[0].toLocaleString()} (${((other[0]/totalAssets)*100).toFixed(1)}%)`);
+    console.log(`  Total Reserve Assets: ${totalAssets.toLocaleString()}`);
+    
+    // Professional-grade quality metrics for institutional stablecoin reserves
+    const liquidityScores = [100, 98, 75, 60]; // Cash, Treasury Bills, Corporate Bonds, Other
+    const creditRatings = [100, 100, 85, 70];   // Risk-free (Cash), Risk-free (UST), Investment Grade, Lower Grade
+    const maturityProfiles = [0, 60, 180, 365]; // Overnight, 60-day avg, 6-month avg, 1-year avg
+    
+    // NEW: Comprehensive regulatory compliance validation using configurable frameworks
+    let regulatoryCompliance: ConfigurableJurisdictionComplianceResult | undefined;
+    if (jurisdiction) {
+        // Use internal validation with all contracts (assets + liabilities) for complete compliance check
+        const internalCompliance = validateRegulatoryCompliance(contracts, jurisdiction);
+        console.log(`🏛️ Jurisdiction: ${jurisdiction}`);
+        console.log(`📊 Compliance Score: ${internalCompliance.overallScore}%`);
+        console.log(`⚖️ Status: ${internalCompliance.compliant ? 'COMPLIANT' : 'NON-COMPLIANT'}`);
+        console.log(`📋 Details: ${internalCompliance.details}`);
+        if (internalCompliance.violations.length > 0) {
+            console.log(`🚨 Violations:`, internalCompliance.violations);
+        }
+        
+        // Also try configurable compliance if available
+        try {
+            regulatoryCompliance = await validateRegulatoryComplianceConfigurable(assetContracts, jurisdiction);
+        } catch (error) {
+            console.log(`⚠️ Configurable compliance not available: ${error}`);
+        }
+    }
+    
+    return {
+        cash,
+        treasury,
+        corporate,
+        other,
+        liquidityScores,
+        creditRatings,
+        maturityProfiles,
+        regulatoryCompliance
+    };
+}
+
+// =================================== Regulatory Compliance Functions ===================================
+
+/**
+ * Comprehensive regulatory framework definitions
+ * Internal validation against ALL applicable frameworks
+ */
+const REGULATORY_FRAMEWORKS = {
+    'STABLE': {
+        jurisdiction: 'US',
+        weight: 0.6, // Higher weight (more stringent)
+        requirements: {
+            maturityLimitDays: 93,
+            yieldAllowed: false,
+            corporateBondsAllowed: false,
+            minimumBackingRatio: 100
+        },
+        description: 'US STABLE Act (Stringent)'
+    },
+    'GENIUS': {
+        jurisdiction: 'US', 
+        weight: 0.4, // Lower weight (less stringent)
+        requirements: {
+            maturityLimitDays: 93,
+            yieldAllowed: false,
+            corporateBondsAllowed: false,
+            minimumBackingRatio: 100
+        },
+        description: 'US GENIUS Act (Moderate)'
+    },
+    'MiCA': {
+        jurisdiction: 'EU',
+        weight: 1.0, // Single framework
+        requirements: {
+            maturityLimitDays: 365,
+            yieldAllowed: true,
+            corporateBondsAllowed: true,
+            minimumBackingRatio: 100
+        },
+        description: 'EU MiCA Requirements'
+    }
+} as const;
+
+/**
+ * Jurisdiction-based compliance thresholds
+ */
+const JURISDICTION_THRESHOLDS = {
+    'US': 85,  // Higher threshold (multiple frameworks)
+    'EU': 80   // Lower threshold (single framework)
+} as const;
+
+/**
+ * Interface for comprehensive compliance results
+ */
+interface JurisdictionComplianceResult {
+    jurisdiction: string;
+    
+    // Internal framework scores (detailed)
+    frameworkScores: {
+        STABLE?: number;
+        GENIUS?: number;
+        MiCA?: number;
+    };
+    
+    // Aggregate results (simple output)
+    overallScore: number;
+    complianceThreshold: number;
+    compliant: boolean;
+    
+    // Debug information
+    violations: string[];
+    details: string;
+    description: string;
+}
+
+/**
+ * Comprehensive jurisdiction-based compliance validation
+ * Checks ALL applicable frameworks, returns weighted score
+ */
+function validateRegulatoryCompliance(
+    allContracts: ACTUSContract[],
+    jurisdiction: string
+): JurisdictionComplianceResult {
+    // Separate asset and liability contracts for different validations
+    const assetContracts = allContracts.filter(c => c.contractRole === 'RPA');
+    
+    if (!['US', 'EU'].includes(jurisdiction)) {
+        return {
+            jurisdiction,
+            frameworkScores: {},
+            overallScore: 0,
+            complianceThreshold: 0,
+            compliant: false,
+            violations: [`Unsupported jurisdiction: ${jurisdiction}`],
+            details: 'Invalid jurisdiction specified',
+            description: 'Error: Unknown jurisdiction'
+        };
+    }
+    
+    const frameworkScores: { [key: string]: number } = {};
+    const allViolations: string[] = [];
+    let weightedScore = 0;
+    let totalWeight = 0;
+    
+    // Determine applicable frameworks for jurisdiction
+    const applicableFrameworks = Object.entries(REGULATORY_FRAMEWORKS)
+        .filter(([_, config]) => config.jurisdiction === jurisdiction);
+    
+    // Validate against each applicable framework
+    applicableFrameworks.forEach(([frameworkName, config]) => {
+        // Pass all contracts (both assets and liabilities) for proper validation
+        const frameworkResult = validateFrameworkCompliance(allContracts, frameworkName, config.requirements);
+        
+        frameworkScores[frameworkName] = frameworkResult.score;
+        allViolations.push(...frameworkResult.violations.map(v => `${frameworkName}: ${v}`));
+        
+        // Add to weighted score calculation
+        weightedScore += frameworkResult.score * config.weight;
+        totalWeight += config.weight;
+    });
+    
+    // Calculate final weighted score
+    const overallScore = totalWeight > 0 ? Math.round(weightedScore / totalWeight) : 0;
+    const threshold = JURISDICTION_THRESHOLDS[jurisdiction as keyof typeof JURISDICTION_THRESHOLDS];
+    const compliant = overallScore >= threshold;
+    
+    // Generate description
+    const frameworkNames = applicableFrameworks.map(([name]) => name).join(' + ');
+    const description = `${jurisdiction} Stablecoin Compliance (${frameworkNames})`;
+    
+    const details = `Frameworks: ${Object.entries(frameworkScores)
+        .map(([name, score]) => `${name} ${score}%`).join(', ')}. ` +
+        `Weighted Score: ${overallScore}%. Threshold: ${threshold}%. Result: ${compliant ? 'PASS' : 'FAIL'}.`;
+    
+    return {
+        jurisdiction,
+        frameworkScores,
+        overallScore,
+        complianceThreshold: threshold,
+        compliant,
+        violations: allViolations,
+        details,
+        description
+    };
+}
+
+/**
+ * Validate compliance against a specific regulatory framework
+ * Fixed to correctly handle yield prohibition (applies only to stablecoin holders, not reserve assets)
+ */
+function validateFrameworkCompliance(
+    allContracts: ACTUSContract[],
+    frameworkName: string,
+    requirements: any
+): {
+    score: number;
+    violations: string[];
+} {
+    const violations: string[] = [];
+    let score = 100; // Start with perfect score, deduct for violations
+    
+    // Separate asset contracts (RPA) from liability contracts (RPL)
+    const assetContracts = allContracts.filter(c => c.contractRole === 'RPA');
+    const liabilityContracts = allContracts.filter(c => c.contractRole === 'RPL');
+    
+    // Validate asset contracts (reserve assets)
+    assetContracts.forEach(contract => {
+        const contractId = contract.contractID;
+        const maturityDate = new Date(contract.maturityDate);
+        const issueDate = new Date(contract.contractDealDate);
+        const maturityDays = Math.ceil((maturityDate.getTime() - issueDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        // Check maturity limits (25 points)
+        if (maturityDays > requirements.maturityLimitDays) {
+            violations.push(`${contractId}: Maturity ${maturityDays} days exceeds ${requirements.maturityLimitDays} day limit`);
+            score -= 25;
+        }
+        
+        // Check corporate bonds (25 points)  
+        if (!requirements.corporateBondsAllowed && contractId.includes('corporate')) {
+            violations.push(`${contractId}: Corporate bonds not allowed`);
+            score -= 25;
+        }
+        
+        // Note: Interest earned on RESERVE ASSETS is allowed and normal
+        // The yield prohibition applies only to payments to stablecoin HOLDERS
+    });
+    
+    // Validate liability contracts (stablecoin tokens)
+    liabilityContracts.forEach(contract => {
+        const contractId = contract.contractID;
+        const interestRate = parseFloat(contract.nominalInterestRate || '0');
+        
+        // Check yield restrictions - this applies to payments to stablecoin holders (25 points)
+        if (!requirements.yieldAllowed && interestRate > 0) {
+            violations.push(`${contractId}: Interest rate ${(interestRate * 100).toFixed(2)}% to stablecoin holders violates yield prohibition`);
+            score -= 25;
+        }
+        
+        // Note: Maturity limits do NOT apply to stablecoin liability contracts
+        // They can have long-term or perpetual maturities
+    });
+    
+    // Backing ratio check would be done separately at portfolio level (25 points)
+    // This is handled in the main risk metrics calculation
+    
+    return {
+        score: Math.max(0, score), // Don't go below 0
+        violations
+    };
+}
+
+/**
+ * LEGACY: Categorize reserve assets for StableCoin compliance (cash flow approach - INCORRECT for stablecoins)
+ * This function is kept for reference but should not be used
  */
 function categorizeReserveAssets(
     contractDetails: any[],
@@ -260,43 +676,83 @@ function categorizeReserveAssets(
 
 /**
  * Build Merkle tree structure for StableCoin data
+ * IMPORTANT: This function should receive the SAME aggregated totals that are passed to the ZK program
  */
 export function buildStableCoinRiskMerkleStructure(
-    complianceData: RiskLiquidityStableCoinOptimMerkleData
+    complianceData: RiskLiquidityStableCoinOptimMerkleData,
+    aggregatedTotals?: {
+        cashReservesTotal: number;
+        treasuryReservesTotal: number;
+        corporateReservesTotal: number;
+        otherReservesTotal: number;
+        outstandingTokensTotal: number;
+        averageLiquidityScore: number;
+        averageCreditRating: number;
+        averageMaturity: number;
+        assetQualityScore: number;
+    }
 ): RiskLiquidityStableCoinOptimMerkleProcessedData {
     
-    // Prepare data for Merkle tree
+    // Use provided aggregated totals if available, otherwise fallback to array reduction
+    // ✅ ZK-COMPLIANT: Ensure consistency with ZK program calculations
+    const cashTotal = aggregatedTotals?.cashReservesTotal ?? complianceData.cashReserves.reduce((sum, val) => sum + val, 0);
+    const treasuryTotal = aggregatedTotals?.treasuryReservesTotal ?? complianceData.treasuryReserves.reduce((sum, val) => sum + val, 0);
+    const corporateTotal = aggregatedTotals?.corporateReservesTotal ?? complianceData.corporateReserves.reduce((sum, val) => sum + val, 0);
+    const otherTotal = aggregatedTotals?.otherReservesTotal ?? complianceData.otherReserves.reduce((sum, val) => sum + val, 0);
+    const outstandingTotal = aggregatedTotals?.outstandingTokensTotal ?? complianceData.outstandingTokens.reduce((sum, val) => sum + val, 0);
+    const avgLiquidityScore = aggregatedTotals?.averageLiquidityScore ?? (complianceData.liquidityScores.reduce((sum, val) => sum + val, 0) / complianceData.liquidityScores.length);
+    const avgCreditRating = aggregatedTotals?.averageCreditRating ?? (complianceData.creditRatings.reduce((sum, val) => sum + val, 0) / complianceData.creditRatings.length);
+    const avgMaturity = aggregatedTotals?.averageMaturity ?? (complianceData.maturityProfiles.reduce((sum, val) => sum + val, 0) / complianceData.maturityProfiles.length);
+    const assetQuality = aggregatedTotals?.assetQualityScore ?? avgLiquidityScore;
+    
+    // Prepare data for Merkle tree using consistent aggregated values
     const merkleLeaves: Field[] = [
         // Company information hash
-        hashDataZK([
-            Field(complianceData.companyID.length),
-            Field(complianceData.mcaID.length),
+        // ✅ ZK-COMPLIANT: Use CircuitString hash for consistency with ZK program
+        Poseidon.hash([
+            CircuitString.fromString(complianceData.companyID).hash(),
             Field(complianceData.riskEvaluated)
         ]),
         
-        // Reserve assets hash
-        hashDataZK([
-            ...complianceData.cashReserves.map(amount => safeFieldFrom(amount)),
-            ...complianceData.treasuryReserves.map(amount => safeFieldFrom(amount)),
-            ...complianceData.corporateReserves.map(amount => safeFieldFrom(amount)),
-            ...complianceData.otherReserves.map(amount => safeFieldFrom(amount))
+        // Reserve assets hash (using aggregated totals)
+        // ✅ ZK-COMPLIANT: Use same values that will be passed to ZK program
+        Poseidon.hash([
+            safeFieldFrom(cashTotal),
+            safeFieldFrom(treasuryTotal),
+            safeFieldFrom(corporateTotal),
+            safeFieldFrom(otherTotal),
+            Field(0), // Padding to 8 elements
+            Field(0),
+            Field(0),
+            Field(0)
         ]),
         
-        // Token information hash
-        hashDataZK([
-            ...complianceData.outstandingTokens.map(amount => safeFieldFrom(amount)),
-            safeFieldFrom(complianceData.tokenValue * 100) // Scale to avoid decimals
+        // Token information hash (using aggregated totals)
+        Poseidon.hash([
+            safeFieldFrom(outstandingTotal),
+            safeFieldFrom(complianceData.tokenValue * 100), // Scale to avoid decimals
+            Field(0), // Padding to 8 elements
+            Field(0),
+            Field(0),
+            Field(0),
+            Field(0),
+            Field(0)
         ]),
         
-        // Quality metrics hash
-        hashDataZK([
-            ...complianceData.liquidityScores.map(score => safeFieldFrom(score)),
-            ...complianceData.creditRatings.map(rating => safeFieldFrom(rating)),
-            ...complianceData.maturityProfiles.map(days => safeFieldFrom(days))
+        // Quality metrics hash (using average values)
+        Poseidon.hash([
+            safeFieldFrom(avgLiquidityScore),
+            safeFieldFrom(avgCreditRating),
+            safeFieldFrom(avgMaturity),
+            safeFieldFrom(assetQuality),
+            Field(0), // Padding to 8 elements
+            Field(0),
+            Field(0),
+            Field(0)
         ]),
         
         // Thresholds and parameters hash
-        hashDataZK([
+        Poseidon.hash([
             Field(complianceData.backingRatioThreshold),
             Field(complianceData.liquidityRatioThreshold),
             Field(complianceData.concentrationLimit),

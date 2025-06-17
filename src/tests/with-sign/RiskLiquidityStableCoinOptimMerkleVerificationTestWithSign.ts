@@ -6,7 +6,7 @@
  * Follows modular pattern: API → data prep → signature → witnesses → ZK → contract
  * ====================================================================
  */
-
+cl
 import { Field, Mina, PrivateKey, AccountUpdate, CircuitString, Poseidon, Signature, UInt64 } from 'o1js';
 import { getPrivateKeyFor } from '../../core/OracleRegistry.js';
 import { 
@@ -33,7 +33,9 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
     concentrationLimit: number = 25,
     qualityThreshold: number = 80,
     actusUrl: string = 'http://localhost:8083/eventsBatch',
-    contractPortfolio?: string | any[]
+    contractPortfolio?: string | any[],
+    regulatoryFramework?: string,
+    jurisdictionOverride?: string  // NEW: CLI jurisdiction parameter
 ): Promise<{
     success: boolean;
     proof: any;
@@ -90,18 +92,60 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
         console.log('🌐 Fetching ACTUS data for StableCoin scenario...');
         
         const actusResponse = await fetchRiskLiquidityStableCoinOptimMerkleData(actusUrl, contractPortfolio);
-        const stableCoinRiskData = processStableCoinRiskData(
+        
+        // Load contracts for balance sheet analysis
+        const contracts = Array.isArray(contractPortfolio) ? contractPortfolio : await loadContractPortfolio(contractPortfolio);
+        
+        // SIMPLIFIED: Use explicit jurisdiction parameter (no fallbacks)
+        if (!jurisdictionOverride) {
+            throw new Error('Jurisdiction parameter is required. Use: US or EU');
+        }
+        
+        const finalJurisdiction = jurisdictionOverride;
+        console.log(`\n🏛️ JURISDICTION: ${finalJurisdiction}`);
+        
+        const stableCoinRiskData = await processStableCoinRiskData(
             actusResponse,
+            contracts, // Pass contracts for principal-based analysis
             backingRatioThreshold,
             liquidityRatioThreshold,
             concentrationLimit,
             qualityThreshold,
-            1000000, // outstandingTokensAmount
+            1000000, // outstandingTokensAmount (will be overridden by actual liability amounts)
             1.0,     // tokenValue
             10,      // liquidityThreshold
             5000,    // newInvoiceAmount
-            11       // newInvoiceEvaluationMonth
+            11,      // newInvoiceEvaluationMonth
+            finalJurisdiction // Pass final jurisdiction for compliance validation
         );
+        
+        // 🚨 CRITICAL: Extract regulatory compliance data for ZK program validation
+        const { validateRegulatoryCompliance } = await import('../../utils/ConfigurableRegulatoryFrameworks.js');
+        const regulatoryComplianceResult = await validateRegulatoryCompliance(contracts, finalJurisdiction);
+        
+        console.log(`\n🏦 REGULATORY COMPLIANCE ASSESSMENT:`);
+        console.log(`   Jurisdiction: ${regulatoryComplianceResult.jurisdiction}`);
+        console.log(`   Overall Score: ${regulatoryComplianceResult.overallScore}%`);
+        console.log(`   Threshold: ${regulatoryComplianceResult.complianceThreshold}%`);
+        console.log(`   Status: ${regulatoryComplianceResult.compliant ? 'COMPLIANT' : 'NON-COMPLIANT'}`);
+        if (regulatoryComplianceResult.violations.length > 0) {
+            console.log(`   🚨 Violations:`);
+            regulatoryComplianceResult.violations.forEach(violation => {
+                console.log(`      - ${violation}`);
+            });
+        }
+        console.log(`   Details: ${regulatoryComplianceResult.details}`);
+        
+        // 🚨 IMPORTANT: If regulatory compliance fails, the ZK proof SHOULD fail
+        if (!regulatoryComplianceResult.compliant) {
+            console.log(`\n⚠️  WARNING: This portfolio fails regulatory compliance!`);
+            console.log(`   The ZK program will now reject this portfolio due to regulatory violations.`);
+            console.log(`   Expected result: ZK proof generation should FAIL.`);
+        } else {
+            console.log(`\n✅ Portfolio meets all regulatory requirements.`);
+            console.log(`   The ZK program should accept this portfolio.`);
+            console.log(`   Expected result: ZK proof generation should SUCCEED.`);
+        }
         
         console.log(`📈 Processed ${stableCoinRiskData.periodsCount} periods with reserve categorization`);
 
@@ -121,23 +165,7 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
         console.log(`✅ Quality Compliance: ${riskMetrics.qualityCompliant ? 'PASSED' : 'FAILED'}`);
         console.log(`✅ Overall StableCoin Compliance: ${riskMetrics.overallCompliant ? 'PASSED' : 'FAILED'}`);
 
-        // =================================== Step 6: Build Merkle Tree Structure ===================================
-        console.log('🌳 Building Merkle tree structure...');
-        
-        const merkleStructure = buildStableCoinRiskMerkleStructure(stableCoinRiskData);
-        const merkleRoot = merkleStructure.merkleRoot;
-        
-        console.log(`🔐 Merkle root: ${merkleRoot.toString()}`);
-
-        // =================================== Step 7: Create Oracle Signature ===================================
-        console.log('🔑 Creating oracle signature...');
-        
-        const registryPrivateKey = getPrivateKeyFor('RISK');
-        const oracleSignature = Signature.create(registryPrivateKey, [merkleRoot]);
-        
-        console.log('✅ Oracle signature created');
-
-        // =================================== Step 8: Create ZK Compliance Data ===================================
+        // =================================== Step 6: Create ZK Compliance Data ===================================
         console.log('📋 Creating ZK compliance data structure...');
         
         // Calculate aggregated totals for StableCoin
@@ -184,6 +212,36 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
             qualityCompliant: riskMetrics.qualityCompliant,
             stableCoinCompliant: riskMetrics.overallCompliant
         };
+
+        // =================================== Step 7: Build Merkle Tree Structure ===================================
+        console.log('🌳 Building Merkle tree structure...');
+        
+        // ✅ ZK-COMPLIANT: Pass the same aggregated totals to tree builder and ZK program
+        const merkleStructure = buildStableCoinRiskMerkleStructure(stableCoinRiskData, {
+            cashReservesTotal: reserveComponents.cashReservesTotal,
+            treasuryReservesTotal: reserveComponents.treasuryReservesTotal,
+            corporateReservesTotal: reserveComponents.corporateReservesTotal,
+            otherReservesTotal: reserveComponents.otherReservesTotal,
+            outstandingTokensTotal: tokenInfo.outstandingTokensTotal,
+            averageLiquidityScore: qualityMetrics.averageLiquidityScore,
+            averageCreditRating: qualityMetrics.averageCreditRating,
+            averageMaturity: qualityMetrics.averageMaturity,
+            assetQualityScore: qualityMetrics.assetQualityScore
+        });
+        const merkleRoot = merkleStructure.merkleRoot;
+        
+        console.log(`🔐 Merkle root: ${merkleRoot.toString()}`);
+
+        // =================================== Step 8: Create Oracle Signature ===================================
+        console.log('🔑 Creating oracle signature...');
+        
+        const registryPrivateKey = getPrivateKeyFor('RISK');
+        const oracleSignature = Signature.create(registryPrivateKey, [merkleRoot]);
+        
+        console.log('✅ Oracle signature created');
+
+        // =================================== Step 9: Create ZK Compliance Data Structure ===================================
+        console.log('📋 Creating ZK compliance data structure...');
         
         const zkComplianceData = createStableCoinRiskComplianceData(
             stableCoinRiskData.companyID,
@@ -194,13 +252,21 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
             thresholds,
             additionalParams,
             merkleRoot,
-            calculatedMetrics
+            calculatedMetrics,
+            // 🚨 NEW: Pass regulatory compliance data to ZK program
+            {
+                jurisdiction: regulatoryComplianceResult.jurisdiction,
+                score: regulatoryComplianceResult.overallScore,
+                threshold: regulatoryComplianceResult.complianceThreshold,
+                compliant: regulatoryComplianceResult.compliant
+            },
+            Date.now() // ✅ FIXED: Pass current timestamp as parameter
         );
         
         validateStableCoinRiskComplianceData(zkComplianceData);
         console.log('✅ ZK compliance data structure created and validated');
 
-        // =================================== Step 9: Generate ZK Proof ===================================
+        // =================================== Step 10: Generate ZK Proof ===================================
         console.log('🔒 Generating ZK proof...');
         
         const currentTimestamp = UInt64.from(Date.now());
@@ -217,12 +283,14 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
         
         console.log('✅ ZK proof generated successfully');
         console.log(`📊 Proof public output - StableCoin Compliant: ${proof.publicOutput.stableCoinCompliant.toBoolean()}`);
+        console.log(`📊 Proof public output - Regulatory Compliant: ${proof.publicOutput.regulatoryCompliant.toBoolean()}`);
+        console.log(`📊 Proof public output - Regulatory Score: ${proof.publicOutput.regulatoryScore.toString()}`);
         console.log(`📊 Proof public output - Backing Ratio: ${proof.publicOutput.backingRatio.toString()}`);
         console.log(`📊 Proof public output - Liquidity Ratio: ${proof.publicOutput.liquidityRatio.toString()}`);
         console.log(`📊 Proof public output - Concentration Risk: ${proof.publicOutput.concentrationRisk.toString()}`);
         console.log(`📊 Proof public output - Asset Quality Score: ${proof.publicOutput.assetQualityScore.toString()}`);
 
-        // =================================== Step 10: Verify Proof with Smart Contract ===================================
+        // =================================== Step 11: Verify Proof with Smart Contract ===================================
         console.log('📋 Verifying proof with smart contract...');
         
         const verificationTxn = await Mina.transaction(senderAccount, async () => {
@@ -234,14 +302,14 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
         
         console.log('✅ Proof verified by smart contract');
 
-        // =================================== Step 11: Check Final Contract Status ===================================
+        // =================================== Step 12: Check Final Contract Status ===================================
         const finalStatus = zkApp.riskComplianceStatus.get().toBigInt();
         const totalVerifications = zkApp.totalVerifications.get().toBigInt();
         
         console.log(`📊 Final contract status: ${finalStatus}`);
         console.log(`🔢 Total verifications: ${totalVerifications}`);
 
-        // =================================== Step 12: Generate Summary Report ===================================
+        // =================================== Step 13: Generate Summary Report ===================================
         const summary = generateStableCoinRiskSummary(stableCoinRiskData, riskMetrics);
         console.log('\n' + summary);
 
@@ -274,30 +342,118 @@ export async function executeRiskLiquidityStableCoinOptimMerkleVerification(
 
 // =================================== CLI Entry Point ===================================
 
+// =================================== Load Jurisdiction Thresholds ===================================
+async function loadJurisdictionThresholds(jurisdiction: string) {
+    const fs = await import('fs');
+    const path = await import('path');
+    const { fileURLToPath } = await import('url');
+    
+    try {
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        
+        // Navigate from build/tests/with-sign/ to src/data/RISK/StableCoin/SETTINGS/
+        const settingsPath = path.join(
+            __dirname, 
+            '../../../src/data/RISK/StableCoin/SETTINGS',
+            `${jurisdiction}-Professional-Thresholds.json`
+        );
+        
+        console.log(`📊 Loading thresholds from: ${settingsPath}`);
+        const thresholds = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+        console.log(`✅ Loaded ${jurisdiction} professional thresholds`);
+        
+        return thresholds.operationalThresholds;
+    } catch (error) {
+        console.error(`❌ Error loading thresholds for ${jurisdiction}:`, error);
+        throw new Error(`Failed to load thresholds for jurisdiction: ${jurisdiction}`);
+    }
+}
+
 async function main() {
-    const backingRatioThreshold = parseFloat(process.argv[2]) || 100;
-    const liquidityRatioThreshold = parseFloat(process.argv[3]) || 20;
-    const concentrationLimit = parseFloat(process.argv[4]) || 25;
-    const qualityThreshold = parseFloat(process.argv[5]) || 80;
-    const actusUrl = process.argv[6] || 'http://localhost:8083/eventsBatch';
-    const portfolioPath = process.argv[7]; // Optional portfolio file path
+    // Enhanced argument parsing with jurisdiction support
+    const initialStatus = parseFloat(process.argv[2]) || 100;
+    const actusUrl = process.argv[3] || 'http://localhost:8083/eventsBatch';
+    const portfolioPath = process.argv[4]; // Portfolio file path
+    const executionMode = process.argv[5] || 'ultra_strict'; // Execution mode
+    const jurisdictionCLI = process.argv[6]; // NEW: Jurisdiction parameter (US/EU)
+    
+    // Jurisdiction parameter is now REQUIRED
+    if (!jurisdictionCLI) {
+        console.error(`❌ Error: Jurisdiction parameter is required!`);
+        console.log('\n📖 Usage: node test.js <threshold> <url> <config> <mode> <jurisdiction>');
+        console.log('   jurisdiction: US or EU (REQUIRED)');
+        console.log('   Examples:');
+        console.log('     node test.js 100 http://api.url config.json ultra_strict US');
+        console.log('     node test.js 100 http://api.url config.json ultra_strict EU');
+        process.exit(1);
+    }
+    
+    // Validate jurisdiction parameter
+    if (!['US', 'EU'].includes(jurisdictionCLI.toUpperCase())) {
+        console.error(`❌ Error: Invalid jurisdiction '${jurisdictionCLI}'. Must be 'US' or 'EU'.`);
+        process.exit(1);
+    }
+    
+    // Load jurisdiction-specific thresholds from SETTINGS directory
+    const jurisdictionThresholds = await loadJurisdictionThresholds(jurisdictionCLI.toUpperCase());
+    
+    // Set stablecoin-specific thresholds from SETTINGS files (NO HARDCODING)
+    const backingRatioThreshold = jurisdictionThresholds.backingRatioThreshold;
+    const liquidityRatioThreshold = jurisdictionThresholds.liquidityRatioThreshold;
+    const concentrationLimit = jurisdictionThresholds.concentrationLimit; // Will be overridden by config if present
+    const qualityThreshold = jurisdictionThresholds.qualityThreshold;
+    
+    // Load portfolio configuration if provided as file path
+    let finalContractPortfolio = undefined;
+    let configConcentrationLimit = 25; // Default concentration limit
+    
+    if (portfolioPath && portfolioPath.endsWith('.json')) {
+        console.log(`📁 Loading portfolio configuration from: ${portfolioPath}`);
+        const fs = await import('fs');
+        const loadedConfig = JSON.parse(fs.readFileSync(portfolioPath, 'utf8'));
+        console.log(`✅ Portfolio loaded: ${loadedConfig.portfolioMetadata?.portfolioId || 'Unknown'}`);
+        
+        // Extract contracts from the configuration file
+        finalContractPortfolio = loadedConfig.contracts || loadedConfig;
+        
+        // Read concentration limit from config if available
+        if (loadedConfig.portfolioMetadata?.complianceTarget?.concentrationLimit) {
+            configConcentrationLimit = loadedConfig.portfolioMetadata.complianceTarget.concentrationLimit;
+            console.log(`📊 Using concentration limit from config: ${configConcentrationLimit}%`);
+        }
+        
+        console.log(`✅ Extracted ${finalContractPortfolio?.length || 0} contracts from configuration`);
+        // Debug: Show loaded contract details
+        console.log(`🔍 LOADED CONTRACTS DEBUG:`);
+        finalContractPortfolio?.forEach((contract: any, index: number) => {
+            console.log(`   Contract ${contract.contractID || index}: ${contract.contractType} - ${contract.notionalPrincipal} ${contract.currency}`);
+        });
+    }
+    
+    // Use concentration limit from config file if available, otherwise use jurisdiction threshold
+    const finalConcentrationLimit = configConcentrationLimit !== 25 ? configConcentrationLimit : concentrationLimit;
     
     console.log(`🎯 StableCoin Backing Ratio Threshold: ${backingRatioThreshold}%`);
     console.log(`🎯 StableCoin Liquidity Ratio Threshold: ${liquidityRatioThreshold}%`);
-    console.log(`🎯 StableCoin Concentration Limit: ${concentrationLimit}%`);
+    console.log(`🎯 StableCoin Concentration Limit: ${finalConcentrationLimit}%`);
     console.log(`🎯 StableCoin Quality Threshold: ${qualityThreshold}`);
     console.log(`🌐 ACTUS API URL: ${actusUrl}`);
     if (portfolioPath) {
         console.log(`📁 Portfolio Path: ${portfolioPath}`);
     }
+    console.log(`🚀 Execution Mode: ${executionMode}`);
+    console.log(`🏛️ Jurisdiction: ${jurisdictionCLI}`);
     
     const result = await executeRiskLiquidityStableCoinOptimMerkleVerification(
         backingRatioThreshold,
         liquidityRatioThreshold,
-        concentrationLimit,
+        finalConcentrationLimit,
         qualityThreshold,
         actusUrl,
-        portfolioPath
+        finalContractPortfolio,
+        undefined, // No longer using regulatoryFramework from config
+        jurisdictionCLI?.toUpperCase()  // Pass CLI jurisdiction parameter (normalized)
     );
     
     if (result.success) {
