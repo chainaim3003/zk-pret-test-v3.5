@@ -95,13 +95,24 @@ console.log('🎉 Build complete! Ready to run.');
 // Auto-apply jurisdiction patch
 const patchFilePath = "patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
 const targetFilePath = "build/tests/with-sign/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js";
+
+// Ensure target directory exists
+const targetDir = path.dirname(targetFilePath);
+if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+}
+
 if (fs.existsSync(patchFilePath)) {
     try {
         fs.copyFileSync(patchFilePath, targetFilePath);
         console.log("✅ Auto-applied jurisdiction patch");
     } catch (error) {
         console.log("⚠️ Failed to apply patch:", error.message);
+        console.log("🔍 Patch path:", patchFilePath);
+        console.log("🔍 Target path:", targetFilePath);
     }
 } else {
-    console.log("⚠️ Patch file not found");
+    console.log("⚠️ Patch file not found at:", patchFilePath);
+    console.log("🔍 Current directory:", process.cwd());
+    console.log("🔍 Patch exists:", fs.existsSync(patchFilePath));
 }
