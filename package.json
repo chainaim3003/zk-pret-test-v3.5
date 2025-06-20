@@ -15,7 +15,9 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "copy-wasm": "cp -r node_modules/o1js/dist/node/bindings/compiled/_node_bindings/* build/",
-    "build": "node build-hybrid.js",
+    "build": "npx tsc",
+    "build-enhanced": "node build-enhanced.js",
+    "build-info": "node build-enhanced.js",
     "pre-build-check": "node pre-build-validation.mjs",
     "build-safe": "npm run pre-build-check && npm run build",
     "precompile-zk": "npm run build && node scripts/precompile-zk-programs.js",
