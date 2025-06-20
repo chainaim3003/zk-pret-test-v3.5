@@ -40,12 +40,14 @@ node ./build/tests/with-sign/RiskLiquidityStablecoinOptimMerkleVerificationTestW
 
 
 
-node .\build\tests\with-sign\BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Accepted-1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Accepted-1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Rejected-1.bpmn
 
 
-node .\build\tests\with-sign\BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Rejected-1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
 
 
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
 
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
