@@ -1,3 +1,21 @@
+# 3.5 OLD TESTS
+
+
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Accepted-1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Rejected-1.bpmn
+
+
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
+
+
+
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
+
+
+
+
 
 node ./build/tests/with-sign/CorporateRegistrationOptimSingleCompanyVerificationTestWithSign.js "U01112TZ2022PTC039493"
 node ./build/tests/with-sign/EXIMOptimSingleCompanyVerificationTestWithSign.js "SREE PALANI ANDAVAR AGROS PRIVATE LIMITED"
@@ -38,16 +56,16 @@ node ./build/tests/with-sign/RiskLiquidityStablecoinOptimMerkleVerificationTestW
 node ./build/tests/with-sign/RiskLiquidityStablecoinOptimMerkleVerificationTestWithSign.js 100 http://98.84.165.146:8083/eventsBatch src/data/RISK/StableCoin/CONFIG/EU/StableCoin-INVALID-4.json ultra_strict EU
 
 
+#NEW TESTS BusinessProcesIntegrity
+
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js SCF ./src/data/SCF/process/EXPECTED/SCF-Expected.bpmn ./src/data/SCF/process/ACTUAL/SCF-Accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js SCF ./src/data/SCF/process/EXPECTED/SCF-Expected.bpmn ./src/data/SCF/process/ACTUAL/SCF-Rejected1.bpmn
+
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js DVP ./src/data/DVP/process/EXPECTED/DVP-Expected.bpmn ./src/data/DVP/process/ACTUAL/DVP-Accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js DVP ./src/data/DVP/process/EXPECTED/DVP-Expected.bpmn ./src/data/DVP/process/ACTUAL/DVP-Rejected1.bpmn
+
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/EXPECTED/STABLECOIN-Expected.bpmn ./src/data/STABLECOIN/process/ACTUAL/STABLECOIN-Accepted1.bpmn
+node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/EXPECTED/STABLECOIN-Expected.bpmn ./src/data/STABLECOIN/process/ACTUAL/STABLECOIN-Rejected1.bpmn
 
 
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Accepted-1.bpmn
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js SCF ./src/data/scf/process/EXPECTED/bpmn-SCF-Example-Process-Expected.bpmn ./src/data/scf/process/ACTUAL/bpmn-SCF-Example-Execution-Actual-Rejected-1.bpmn
 
-
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js DVP ./src/data/DVP/process/bpmnCircuitDVP-expected.bpmn ./src/data/DVP/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
-
-
-
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-accepted1.bpmn
-node ./build/tests/with-sign/BusinessProcessIntegrityVerificationFileTestWithSign.js STABLECOIN ./src/data/STABLECOIN/process/bpmnCircuitDVP-expected.bpmn ./src/data/STABLECOIN/process/bpmnCircuitSTABLECOIN-rejected1.bpmn
