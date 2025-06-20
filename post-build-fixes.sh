@@ -1,1 +1,0 @@
-cp patches/RiskLiquidityStableCoinOptimMerkleVerificationTestWithSign.js build/tests/with-sign/
