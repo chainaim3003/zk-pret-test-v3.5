@@ -222,6 +222,8 @@ export default async function parseBpmn(filePath: string) {
       return null;
    }
 }
-const filePath = 'src/utils/circuit.bpmn'; // Adjust path as needed
-parseBpmn(filePath)
-   .then(() => console.log('BPMN parsing completed.'))   
+
+// DEVELOPMENT CODE - Auto-execution commented out to prevent side effects on module import
+// const filePath = 'src/utils/circuit.bpmn'; // Adjust path as needed
+// parseBpmn(filePath)
+//    .then(() => console.log('BPMN parsing completed.'));

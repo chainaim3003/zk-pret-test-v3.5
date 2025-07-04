@@ -95,6 +95,7 @@
     "tsx": "^4.19.4",
     "xmldom": "^0.6.0",
     "xpath": "^0.0.34",
+    "zk-regex-o1js": "^0.2.0",
     "zod": "^3.24.2"
   },
   "_moduleAliases": {

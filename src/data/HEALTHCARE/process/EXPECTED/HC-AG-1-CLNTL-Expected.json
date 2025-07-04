@@ -1,0 +1,584 @@
+{
+  "processId": "HC-AG-1-CLNTL",
+  "processName": "Multi-Hospital Clinical Trial Coordination",
+  "version": "2.0.0",
+  "description": "Zero-knowledge proof enabled multi-entity clinical trial workflow with privacy boundaries and regulatory compliance",
+  "created": "2025-01-04T12:00:00Z",
+  "lastModified": "2025-01-04T15:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC1_CLNTL_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 13,
+    "totalFlows": 13,
+    "branchPoints": 1,
+    "joinPoints": 1,
+    "maxPathLength": 11,
+    "minPathLength": 11
+  },
+  
+  "entities": [
+    {
+      "name": "Hospital A",
+      "role": "Clinical Site A",
+      "jurisdiction": "US - East Coast",
+      "privacyLevel": "High"
+    },
+    {
+      "name": "Hospital B", 
+      "role": "Clinical Site B",
+      "jurisdiction": "US - West Coast",
+      "privacyLevel": "High"
+    },
+    {
+      "name": "Pharma Corp",
+      "role": "Sponsor",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Commercial"
+    },
+    {
+      "name": "FDA",
+      "role": "Regulatory Authority",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Regulatory"
+    },
+    {
+      "name": "IRB Committee",
+      "role": "Ethics Review Board",
+      "jurisdiction": "Multi-site",
+      "privacyLevel": "Ethics"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-1-CLNTL-Expected.bpmn",
+    "svg": "HC-AG-1-CLNTL-Expected.svg", 
+    "json": "HC-AG-1-CLNTL-Expected.json",
+    "backup": "HC-AG-1-CLNTL-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-1-CLNTL-Accepted-1.bpmn",
+      "HC-AG-1-CLNTL-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-1-CLNTL-Rejected-1.bpmn",
+      "HC-AG-1-CLNTL-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "ab(c|d)efghijkl",
+  "regexExplanation": {
+    "pattern": "ab(c|d)efghijkl",
+    "meaning": "Start with 'a' then 'b', branch to either 'c' OR 'd', then continue with 'efghijkl'",
+    "branchPoint": "After 'b', at position 3",
+    "joinPoint": "At 'e', position 4",
+    "totalPossiblePaths": 2
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→e→f→g→h→i→j→k→l",
+        "description": "Hospital A enrollment route",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "6", "7", "8", "9", "10", "11", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_5", "Flow_5_to_6", "Flow_6_to_7", "Flow_7_to_8", "Flow_8_to_9", "Flow_9_to_10", "Flow_10_to_11", "Flow_11_to_End"]
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→d→e→f→g→h→i→j→k→l",
+        "description": "Hospital B enrollment route",
+        "nodeSequence": ["Start", "1", "2", "4", "5", "6", "7", "8", "9", "10", "11", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_4", "Flow_4_to_5", "Flow_5_to_6", "Flow_6_to_7", "Flow_7_to_8", "Flow_8_to_9", "Flow_9_to_10", "Flow_10_to_11", "Flow_11_to_End"]
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "b→[c,d]→...",
+        "violation": "Skip IRB approval - REGULATORY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→[c,d]→e→f→g→h→j→k→l",
+        "violation": "Skip adverse event monitoring - SAFETY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→[c,d]→e→...",
+        "violation": "Enrollment before IRB approval - ETHICS VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→[c,d]→f→e→...",
+        "violation": "Drug distribution before randomization - OUT-OF-ORDER",
+        "severity": "High"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3", "Flow_2_to_4"],
+        "isBranchPoint": true
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_5"]
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_4"],
+        "outgoing": ["Flow_4_to_5"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5", "Flow_4_to_5"],
+        "outgoing": ["Flow_5_to_6"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_5_to_6"],
+        "outgoing": ["Flow_6_to_7"]
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_7"],
+        "outgoing": ["Flow_7_to_8"]
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_7_to_8"],
+        "outgoing": ["Flow_8_to_9"]
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_9"],
+        "outgoing": ["Flow_9_to_10"]
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_10"],
+        "outgoing": ["Flow_10_to_11"]
+      },
+      {
+        "id": "Event_11",
+        "name": "11",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_11"],
+        "outgoing": ["Flow_11_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_11_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3",
+        "branchPath": "Hospital A"
+      },
+      {
+        "id": "Flow_2_to_4",
+        "name": "d",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_4",
+        "branchPath": "Hospital B"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_4_to_5",
+        "name": "e",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_6_to_7",
+        "name": "g",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_7_to_8",
+        "name": "h",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_8"
+      },
+      {
+        "id": "Flow_8_to_9",
+        "name": "i",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_9_to_10",
+        "name": "j",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_10_to_11",
+        "name": "k",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_11"
+      },
+      {
+        "id": "Flow_11_to_End",
+        "name": "l",
+        "sourceRef": "Event_11",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "Multi-Site Clinical Trial Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Trial Protocol Agent",
+        "description": "🔒 PRIVATE: Pharma Corp protocol specification",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Pharma Corp"
+      },
+      "b": {
+        "name": "IRB Approval Agent",
+        "description": "🟦 REGULATORY: Ethics compliance verification, 🔐 ZK PROOF: Protocol meets ethics standards",
+        "privacy": "Regulatory Required",
+        "stakeholder": "IRB Committee"
+      },
+      "c": {
+        "name": "Hospital A Enrollment",
+        "description": "🔒 PRIVATE: Hospital A patients only",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital A"
+      },
+      "d": {
+        "name": "Hospital B Enrollment",
+        "description": "🔒 PRIVATE: Hospital B patients only",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital B"
+      },
+      "e": {
+        "name": "Patient Randomization",
+        "description": "🔐 ZK PROOF: Fair allocation without revealing patient identities",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites"
+      },
+      "f": {
+        "name": "Drug Distribution Agent",
+        "description": "🔒 PRIVATE: Pharma supply chain data",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Pharma Corp"
+      },
+      "g": {
+        "name": "Adverse Event Monitoring",
+        "description": "🔐 ZK PROOF: Safety signal detection across sites",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites + FDA"
+      },
+      "h": {
+        "name": "Data Collection Agent",
+        "description": "🔒 PRIVATE: Site-specific patient data",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Individual Sites"
+      },
+      "i": {
+        "name": "Efficacy Analysis Agent",
+        "description": "🔐 ZK PROOF: Statistical significance without patient exposure",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites"
+      },
+      "j": {
+        "name": "Safety Database Agent",
+        "description": "🟦 REGULATORY: FDA FAERS compliance",
+        "privacy": "Regulatory Required",
+        "stakeholder": "FDA"
+      },
+      "k": {
+        "name": "Publication Preparation",
+        "description": "🔐 ZK PROOF: Results validity without competitive intelligence",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites + Pharma"
+      },
+      "l": {
+        "name": "Final Verification Step",
+        "description": "🔐 ZK PROOF: Complete process integrity validation",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Trial Protocol Processing",
+        "description": "Initial protocol validation and setup"
+      },
+      "2": {
+        "name": "IRB Approval Gateway",
+        "description": "Ethics review branch point - splits to Hospital A and B"
+      },
+      "3": {
+        "name": "Hospital A Enrollment",
+        "description": "Patient enrollment at Hospital A site"
+      },
+      "4": {
+        "name": "Hospital B Enrollment",
+        "description": "Patient enrollment at Hospital B site"
+      },
+      "5": {
+        "name": "Patient Randomization",
+        "description": "Join point - randomize patients from both sites"
+      },
+      "6": {
+        "name": "Drug Distribution",
+        "description": "Distribute study medication to enrolled patients"
+      },
+      "7": {
+        "name": "Adverse Event Monitoring",
+        "description": "Monitor safety signals across all sites"
+      },
+      "8": {
+        "name": "Data Collection",
+        "description": "Collect efficacy and safety data"
+      },
+      "9": {
+        "name": "Efficacy Analysis",
+        "description": "Analyze treatment effectiveness"
+      },
+      "10": {
+        "name": "Safety Database",
+        "description": "Maintain regulatory safety database"
+      },
+      "11": {
+        "name": "Publication Preparation",
+        "description": "Prepare results for publication"
+      }
+    },
+    "end": {
+      "End": "Trial Results Verified and Published"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "Hospital A enrollment route",
+      "sequence": "a→b→c→e→f→g→h→i→j→k→l",
+      "regexMatch": "abcefghijkl"
+    },
+    {
+      "pathId": 2,
+      "description": "Hospital B enrollment route",
+      "sequence": "a→b→d→e→f→g→h→i→j→k→l",
+      "regexMatch": "abdefghijkl"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "Hospital A": {
+      "sees": ["Own patients only", "Own site data", "Aggregate results"],
+      "hidden": ["Hospital B patient data", "Pharma formulations", "Patient identities in other sites", "Commercial terms"],
+      "zkProofs": ["Patient anonymity", "Fair randomization", "Safety signals"]
+    },
+    "Hospital B": {
+      "sees": ["Own patients only", "Own site data", "Aggregate results"],
+      "hidden": ["Hospital A patient data", "Pharma formulations", "Patient identities in other sites", "Commercial terms"],
+      "zkProofs": ["Patient anonymity", "Fair randomization", "Safety signals"]
+    },
+    "Pharma Corp": {
+      "sees": ["Protocol data", "Aggregate results", "Supply chain", "Commercial data"],
+      "hidden": ["Patient identities", "Site-specific data", "Individual patient records", "Competitor intelligence"],
+      "zkProofs": ["Ethics compliance", "Statistical validity", "Results integrity"]
+    },
+    "FDA": {
+      "sees": ["Aggregate safety data", "Compliance status", "Regulatory submissions"],
+      "hidden": ["Patient identities", "Proprietary methods", "Site-specific details", "Commercial terms"],
+      "zkProofs": ["Safety signal detection", "Compliance verification"]
+    },
+    "IRB Committee": {
+      "sees": ["Ethics compliance", "Protocol approval status", "Safety overview"],
+      "hidden": ["Drug formulation", "Patient identities", "Commercial data", "Competitive intelligence"],
+      "zkProofs": ["Ethics compliance verification"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "b",
+      "proof": "Ethics compliance without revealing drug formulation",
+      "mechanism": "Zero-knowledge protocol verification"
+    },
+    {
+      "flow": "e",
+      "proof": "Fair allocation without revealing patient identities",
+      "mechanism": "ZK randomization with commitment schemes"
+    },
+    {
+      "flow": "g",
+      "proof": "Safety signal detection without patient re-identification",
+      "mechanism": "Privacy-preserving aggregate statistics"
+    },
+    {
+      "flow": "i",
+      "proof": "Statistical significance without patient exposure",
+      "mechanism": "ZK statistical analysis"
+    },
+    {
+      "flow": "j",
+      "proof": "Safety profile without patient re-identification",
+      "mechanism": "Anonymous adverse event reporting"
+    },
+    {
+      "flow": "k",
+      "proof": "Results validity without competitive intelligence",
+      "mechanism": "ZK publication verification"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "IRB Ethics Approval",
+      "regulation": "45 CFR §46.109",
+      "flow": "b",
+      "description": "Institutional Review Board approval required"
+    },
+    {
+      "requirement": "FDA FAERS Reporting",
+      "regulation": "21 CFR §314.80",
+      "flow": "j",
+      "description": "FDA Adverse Event Reporting System compliance"
+    },
+    {
+      "requirement": "HIPAA Privacy Rule",
+      "regulation": "45 CFR §164.502",
+      "flows": ["c", "d", "h"],
+      "description": "Protected health information privacy"
+    },
+    {
+      "requirement": "GCP Guidelines",
+      "regulation": "ICH E6",
+      "flows": ["all"],
+      "description": "Good Clinical Practice compliance"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Cross-site data leakage prevention",
+      "constraint": "Hospital_A_data ∩ Hospital_B_data = ∅",
+      "enforcement": "ZK proof verification"
+    },
+    {
+      "rule": "FDA reporting bypass prevention",
+      "constraint": "IF (publication_attempted) THEN FDA_safety_review = REQUIRED",
+      "enforcement": "Regulatory compliance check"
+    },
+    {
+      "rule": "Patient identity protection",
+      "constraint": "Patient_identities CANNOT leave source_sites",
+      "enforcement": "Privacy boundary enforcement"
+    },
+    {
+      "rule": "Protocol integrity maintenance",
+      "constraint": "Protocol_modifications REQUIRE IRB_re_approval",
+      "enforcement": "Ethics compliance verification"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 13,
+    "branchCount": 1,
+    "joinCount": 1,
+    "complexityLevel": "High",
+    "securityLevel": "Maximum",
+    "privacyLevel": "HIPAA + ZK",
+    "regulatoryComplexity": "FDA + IRB + GCP"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'ab(c|d)efghijkl' --functionName 'verifyProcessHC1CLNTL' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC1CLNTL",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-1-CLNTL-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-1-CLNTL-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG1CLNTL ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-1-CLNTL-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-1-CLNTL-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

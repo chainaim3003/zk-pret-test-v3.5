@@ -1,4 +1,4 @@
-import { verifyProcessSCF, verifyProcessSTABLECOIN, verifyProcessDVP } from '../../contracts/bpmnCircuit.js';
+import { verifyProcessSCF, verifyProcessSTABLECOIN, verifyProcessDVP, verifyProcessHC1CLNTL } from '../../contracts/bpmnCircuit.js';
 import {
    Field,
    Signature,
@@ -354,6 +354,129 @@ export const BusinessProcessIntegrityOptimMerkleZKProgram = ZkProgram({
             // Assert final result
             allValid.assertTrue('DVP process verification failed');
 
+            return new BusinessProcessIntegrityOptimMerklePublicOutput({
+               businessProcessID: businessProcessIntegrityData.businessProcessID,
+               out: allValid,
+               merkleRoot: merkleRoot,
+               processHash: processHash,
+               timestamp: businessProcessIntegrityData.timestamp
+            });
+         }
+      },
+
+      proveComplianceHC1CLNTL: {
+         privateInputs: [
+            BusinessProcessIntegrityOptimMerkleData,
+            Signature,
+            MerkleWitness8
+         ],
+         async method(
+            businessProcessIntegrityToProve: Field,
+            businessProcessIntegrityData: BusinessProcessIntegrityOptimMerkleData,
+            oracleSignature: Signature,
+            merkleWitness: MerkleWitness8
+         ): Promise<BusinessProcessIntegrityOptimMerklePublicOutput> {
+            
+            // ===== STEP 1: INPUT VALIDATION (O1JS BEST PRACTICE) =====
+            Provable.asProver(() => {
+                console.log('🔍 Starting HC1CLNTL compliance verification with o1js optimization...');
+            });
+
+            // Validate circuit strings
+            validateCircuitString(businessProcessIntegrityData.actualContent, 128);
+            validateCircuitString(businessProcessIntegrityData.businessProcessType, 32);
+            validateCircuitString(businessProcessIntegrityData.expectedContent, 128);
+            validateCircuitString(businessProcessIntegrityData.executorID, 32);
+
+            // ===== STEP 2: ZK REGEX VALIDATION WITH O1JS VALIDATION =====
+            const actualContent = businessProcessIntegrityData.actualContent;
+            const businessProcessType = businessProcessIntegrityData.businessProcessType;
+
+            // PRESERVE EXACT LOGGING FORMAT from working implementation
+            Provable.asProver(() => {
+              console.log('actual ||||||||||||||| content |||||||||||||||||', actualContent.length(), "BP Type ", businessProcessType.length());
+            });
+
+            // EXACT SAME ZK REGEX INPUT FORMAT as working implementation
+            const zkRegexInputs = actualContent.values.map((c) => UInt8.from(c.toField()));
+            
+            // Additional validation for ZK regex inputs (hierarchical hashing can handle large content)
+            Provable.asProver(() => {
+                if (zkRegexInputs.length === 0) {
+                    throw new Error('ZK regex inputs cannot be empty');
+                }
+                if (zkRegexInputs.length > 256) {
+                    console.warn(`ZK regex input length ${zkRegexInputs.length} is very large, using hierarchical processing`);
+                }
+            });
+            
+            const out = verifyProcessHC1CLNTL(zkRegexInputs);
+            
+            Provable.asProver(() => {
+                console.log('in verifyProcessHC1CLNTL in');
+                console.log('in verifyProcessHC1CLNTL out ', out);
+                console.log('out ', out.toBoolean());
+            });
+
+            // ===== STEP 3: OPTIMIZED ORACLE SIGNATURE VERIFICATION =====
+            // Use hierarchical hashing for large data structures (o1js best practice)
+            const dataFields = BusinessProcessIntegrityOptimMerkleData.toFields(businessProcessIntegrityData);
+            const complianceDataHash = hierarchicalHash(dataFields);
+            
+            // Use existing BPMN key for backward compatibility
+            const registryPublicKey = getPublicKeyFor('BPMN');
+            
+            const isValidSignature = oracleSignature.verify(
+               registryPublicKey,
+               [complianceDataHash]
+            );
+
+            // Assert signature validity with proper error handling
+            isValidSignature.assertTrue('Oracle signature verification failed');
+
+            Provable.asProver(() => {
+               console.log('🔐 OptimMerkle HC1CLNTL Oracle Signature Valid');
+            });
+
+            // ===== STEP 4: OPTIMIZED MERKLE WITNESS VERIFICATION =====
+            const merkleRoot = businessProcessIntegrityData.merkleRoot;
+            const processHash = businessProcessIntegrityData.processHash;
+            
+            // Validate merkle inputs are non-zero
+            Provable.asProver(() => {
+                const rootValue = merkleRoot.toBigInt();
+                const hashValue = processHash.toBigInt();
+                if (rootValue === 0n) {
+                    throw new Error('Merkle root cannot be zero');
+                }
+                if (hashValue === 0n) {
+                    throw new Error('Process hash cannot be zero');
+                }
+            });
+            
+            // Verify that the process hash is included in the Merkle tree
+            const calculatedRoot = merkleWitness.calculateRoot(processHash);
+            calculatedRoot.assertEquals(merkleRoot, 'Merkle witness verification failed');
+
+            Provable.asProver(() => {
+               console.log('🌳 OptimMerkle HC1CLNTL Merkle verification complete');
+            });
+
+            // ===== STEP 5: COMBINE RESULTS WITH PROPER BOOLEAN LOGIC =====
+            // CRITICAL: Assert that ZK regex validation passed
+            out.assertTrue('ZK regex validation failed - HC1CLNTL process does not match expected pattern');
+            
+            // Ensure all components are valid before combining
+            const allValid = out.and(isValidSignature);
+            
+            // The final result should be true only if BOTH regex and signature are valid
+            allValid.assertTrue('HC1CLNTL process verification failed - either regex or signature validation failed');
+
+            Provable.asProver(() => {
+               console.log('✅ OptimMerkle HC1CLNTL Final Result:', allValid.toBoolean());
+            });
+
+            // ===== STEP 6: RETURN OPTIMIZED PUBLIC OUTPUT =====
             return new BusinessProcessIntegrityOptimMerklePublicOutput({
                businessProcessID: businessProcessIntegrityData.businessProcessID,
                out: allValid,

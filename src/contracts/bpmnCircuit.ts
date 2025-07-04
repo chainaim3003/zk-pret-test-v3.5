@@ -22,14 +22,13 @@ export class bpmnCircuit extends SmartContract {
     this.accepted.set(out)
   }
 
-  @method async verifyTraceDVP(trace : Bytes50) {
+  @method async verifyProcessHC1CLNTL(trace : Bytes50) {
 	// console.log("calling verifiyTrace for, ")
-    let out = verifyProcessDVP(trace.bytes);
+    let out = verifyProcessHC1CLNTL(trace.bytes);
     this.accepted.set(out)
   }
 
 }
-
 
 // Command used: 'a(cb|bc)d(ef|f)g' '--functionName' 'verifyProcess' '--filePath' './src/bpmnCircuit.ts'
 export function verifyProcessSCF(input: UInt8[]) {
@@ -387,6 +386,101 @@ export function verifyProcessDVP(input: UInt8[]) {
 	Provable.asProver(() => {
 		console.log( 'in verifyProcessDVP out  ', out );
 	  });
+
+	return out;
+}
+
+// Command used: 'ab(c|d)efghijkl' '--functionName' 'verifyProcessHC1CLNTL' '--filePath' './src/contracts/bpmnCircuit.ts'
+export function verifyProcessHC1CLNTL(input: UInt8[]) {
+	const num_bytes = input.length;
+	let states: Bool[][] = Array.from({ length: num_bytes + 1 }, () => []);
+	let state_changed: Bool[] = Array.from({ length: num_bytes }, () => Bool(false));
+	
+	states[0][0] = Bool(true);
+	for (let i = 1; i < 13; i++) {
+		states[0][i] = Bool(false);
+	}
+	
+	for (let i = 0; i < num_bytes; i++) {
+		// a (97)
+		const eq0 = input[i].value.equals(97);
+		const and0 = states[i][0].and(eq0);
+		states[i+1][1] = and0;
+		state_changed[i] = state_changed[i].or(states[i+1][1]);
+		
+		// b (98)
+		const eq1 = input[i].value.equals(98);
+		const and1 = states[i][1].and(eq1);
+		states[i+1][2] = and1;
+		state_changed[i] = state_changed[i].or(states[i+1][2]);
+		
+		// c (99) or d (100)
+		const eq2 = input[i].value.equals(99);
+		const eq3 = input[i].value.equals(100);
+		const and2 = states[i][2].and(eq2);
+		const and3 = states[i][2].and(eq3);
+		let multi_or0 = Bool(false);
+		multi_or0 = multi_or0.or(and2);
+		multi_or0 = multi_or0.or(and3);
+		states[i+1][3] = multi_or0;
+		state_changed[i] = state_changed[i].or(states[i+1][3]);
+		
+		// e (101)
+		const eq4 = input[i].value.equals(101);
+		const and4 = states[i][3].and(eq4);
+		states[i+1][4] = and4;
+		state_changed[i] = state_changed[i].or(states[i+1][4]);
+		
+		// f (102)
+		const eq5 = input[i].value.equals(102);
+		const and5 = states[i][4].and(eq5);
+		states[i+1][5] = and5;
+		state_changed[i] = state_changed[i].or(states[i+1][5]);
+		
+		// g (103)
+		const eq6 = input[i].value.equals(103);
+		const and6 = states[i][5].and(eq6);
+		states[i+1][6] = and6;
+		state_changed[i] = state_changed[i].or(states[i+1][6]);
+		
+		// h (104)
+		const eq7 = input[i].value.equals(104);
+		const and7 = states[i][6].and(eq7);
+		states[i+1][7] = and7;
+		state_changed[i] = state_changed[i].or(states[i+1][7]);
+		
+		// i (105)
+		const eq8 = input[i].value.equals(105);
+		const and8 = states[i][7].and(eq8);
+		states[i+1][8] = and8;
+		state_changed[i] = state_changed[i].or(states[i+1][8]);
+		
+		// j (106)
+		const eq9 = input[i].value.equals(106);
+		const and9 = states[i][8].and(eq9);
+		states[i+1][9] = and9;
+		state_changed[i] = state_changed[i].or(states[i+1][9]);
+		
+		// k (107)
+		const eq10 = input[i].value.equals(107);
+		const and10 = states[i][9].and(eq10);
+		states[i+1][10] = and10;
+		state_changed[i] = state_changed[i].or(states[i+1][10]);
+		
+		// l (108)
+		const eq11 = input[i].value.equals(108);
+		const and11 = states[i][10].and(eq11);
+		states[i+1][11] = and11;
+		state_changed[i] = state_changed[i].or(states[i+1][11]);
+		
+		states[i+1][0] = state_changed[i].not();
+	}
+	
+	let final_state_result = Bool(false);
+	for (let i = 0; i <= num_bytes; i++) {
+		final_state_result = final_state_result.or(states[i][11]);
+	}
+	const out = final_state_result;
 
 	return out;
 }

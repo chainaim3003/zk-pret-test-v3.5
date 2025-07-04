@@ -347,6 +347,11 @@ export class BusinessProcessIntegrityOptimMerkleTestUtils {
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceDVP(
           Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
         );
+      } else if (businessProcessType === 'HC1CLNTL') {
+        console.log('🏥 Using HC1CLNTL verification circuit');
+        proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHC1CLNTL(
+          Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
+        );
       } else {
         console.log('🔄 Using default SCF verification circuit');
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceSCF(
