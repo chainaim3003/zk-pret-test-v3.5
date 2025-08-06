@@ -1,0 +1,258 @@
+<svg width="1900" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .node { fill: #e1f5fe; stroke: #0277bd; stroke-width: 2; }
+      .start-end { fill: #c8e6c9; stroke: #388e3c; stroke-width: 2; }
+      .branch { fill: #fff3e0; stroke: #f57c00; stroke-width: 2; }
+      .join { fill: #fce4ec; stroke: #c2185b; stroke-width: 2; }
+      .edge { stroke: #424242; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .edge-label { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; font-weight: bold; }
+      .legend-text { font-family: Arial, sans-serif; font-size: 11px; }
+      .legend-title { font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#424242"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="950" y="25" class="title">HC-AG-6-RSRCH: Multi-Institution Research Collaboration Workflow</text>
+  
+  <!-- Start Node -->
+  <circle cx="80" cy="130" r="20" class="start-end"/>
+  <text x="80" y="135" class="edge-label">Start</text>
+  
+  <!-- Process Nodes -->
+  <circle cx="160" cy="130" r="15" class="node"/>
+  <text x="160" y="135" class="edge-label">1</text>
+  
+  <circle cx="240" cy="130" r="15" class="node"/>
+  <text x="240" y="135" class="edge-label">2</text>
+  
+  <!-- Branch Point 1: Institution Type -->
+  <circle cx="320" cy="130" r="15" class="branch"/>
+  <text x="320" y="135" class="edge-label">3</text>
+  
+  <circle cx="400" cy="90" r="15" class="node"/>
+  <text x="400" y="95" class="edge-label">4</text>
+  
+  <circle cx="400" cy="130" r="15" class="node"/>
+  <text x="400" y="135" class="edge-label">5</text>
+  
+  <circle cx="400" cy="170" r="15" class="node"/>
+  <text x="400" y="175" class="edge-label">6</text>
+  
+  <!-- Join Point 1 -->
+  <circle cx="480" cy="130" r="15" class="join"/>
+  <text x="480" y="135" class="edge-label">7</text>
+  
+  <!-- Branch Point 2: Data Sharing Method -->
+  <circle cx="560" cy="130" r="15" class="branch"/>
+  <text x="560" y="135" class="edge-label">8</text>
+  
+  <circle cx="640" cy="90" r="15" class="node"/>
+  <text x="640" y="95" class="edge-label">9</text>
+  
+  <circle cx="640" cy="130" r="15" class="node"/>
+  <text x="640" y="135" class="edge-label">10</text>
+  
+  <circle cx="640" cy="170" r="15" class="node"/>
+  <text x="640" y="175" class="edge-label">11</text>
+  
+  <!-- Join Point 2 -->
+  <circle cx="720" cy="130" r="15" class="join"/>
+  <text x="720" y="135" class="edge-label">12</text>
+  
+  <!-- Branch Point 3: IP Management -->
+  <circle cx="800" cy="130" r="15" class="branch"/>
+  <text x="800" y="135" class="edge-label">13</text>
+  
+  <circle cx="880" cy="105" r="15" class="node"/>
+  <text x="880" y="110" class="edge-label">14</text>
+  
+  <circle cx="880" cy="155" r="15" class="node"/>
+  <text x="880" y="160" class="edge-label">15</text>
+  
+  <!-- Join Point 3 -->
+  <circle cx="960" cy="130" r="15" class="join"/>
+  <text x="960" y="135" class="edge-label">17</text>
+  
+  <!-- Branch Point 4: Publication Model -->
+  <circle cx="1040" cy="130" r="15" class="branch"/>
+  <text x="1040" y="135" class="edge-label">18</text>
+  
+  <circle cx="1120" cy="90" r="15" class="node"/>
+  <text x="1120" y="95" class="edge-label">19</text>
+  
+  <circle cx="1120" cy="130" r="15" class="node"/>
+  <text x="1120" y="135" class="edge-label">20</text>
+  
+  <circle cx="1120" cy="170" r="15" class="node"/>
+  <text x="1120" y="175" class="edge-label">21</text>
+  
+  <!-- Join Point 4 -->
+  <circle cx="1200" cy="130" r="15" class="join"/>
+  <text x="1200" y="135" class="edge-label">22</text>
+  
+  <!-- Final Nodes -->
+  <circle cx="1280" cy="130" r="15" class="node"/>
+  <text x="1280" y="135" class="edge-label">23</text>
+  
+  <circle cx="1360" cy="130" r="15" class="node"/>
+  <text x="1360" y="135" class="edge-label">24</text>
+  
+  <!-- End Node -->
+  <circle cx="1440" cy="130" r="20" class="start-end"/>
+  <text x="1440" y="135" class="edge-label">End</text>
+  
+  <!-- Edges with Labels -->
+  <line x1="100" y1="130" x2="145" y2="130" class="edge"/>
+  <text x="122" y="125" class="edge-label">a</text>
+  
+  <line x1="175" y1="130" x2="225" y2="130" class="edge"/>
+  <text x="200" y="125" class="edge-label">b</text>
+  
+  <line x1="255" y1="130" x2="305" y2="130" class="edge"/>
+  <text x="280" y="125" class="edge-label">c</text>
+  
+  <path d="M 335 130 Q 350 110 385 90" class="edge"/>
+  <text x="360" y="105" class="edge-label">d</text>
+  
+  <line x1="335" y1="130" x2="385" y2="130" class="edge"/>
+  <text x="360" y="125" class="edge-label">e</text>
+  
+  <path d="M 335 130 Q 350 150 385 170" class="edge"/>
+  <text x="360" y="155" class="edge-label">f</text>
+  
+  <path d="M 415 90 Q 430 110 465 130" class="edge"/>
+  <text x="440" y="105" class="edge-label">g</text>
+  
+  <line x1="415" y1="130" x2="465" y2="130" class="edge"/>
+  <text x="440" y="125" class="edge-label">g</text>
+  
+  <path d="M 415 170 Q 430 150 465 130" class="edge"/>
+  <text x="440" y="155" class="edge-label">g</text>
+  
+  <line x1="495" y1="130" x2="545" y2="130" class="edge"/>
+  <text x="520" y="125" class="edge-label">h</text>
+  
+  <path d="M 575 130 Q 590 110 625 90" class="edge"/>
+  <text x="600" y="105" class="edge-label">i</text>
+  
+  <line x1="575" y1="130" x2="625" y2="130" class="edge"/>
+  <text x="600" y="125" class="edge-label">j</text>
+  
+  <path d="M 575 130 Q 590 150 625 170" class="edge"/>
+  <text x="600" y="155" class="edge-label">k</text>
+  
+  <path d="M 655 90 Q 670 110 705 130" class="edge"/>
+  <text x="680" y="105" class="edge-label">l</text>
+  
+  <line x1="655" y1="130" x2="705" y2="130" class="edge"/>
+  <text x="680" y="125" class="edge-label">l</text>
+  
+  <path d="M 655 170 Q 670 150 705 130" class="edge"/>
+  <text x="680" y="155" class="edge-label">l</text>
+  
+  <line x1="735" y1="130" x2="785" y2="130" class="edge"/>
+  <text x="760" y="125" class="edge-label">m</text>
+  
+  <path d="M 815 130 Q 830 115 865 105" class="edge"/>
+  <text x="840" y="115" class="edge-label">n</text>
+  
+  <path d="M 815 130 Q 830 145 865 155" class="edge"/>
+  <text x="840" y="145" class="edge-label">o</text>
+  
+  <path d="M 895 105 Q 910 120 945 130" class="edge"/>
+  <text x="920" y="115" class="edge-label">p</text>
+  
+  <path d="M 895 155 Q 910 140 945 130" class="edge"/>
+  <text x="920" y="145" class="edge-label">p</text>
+  
+  <line x1="975" y1="130" x2="1025" y2="130" class="edge"/>
+  <text x="1000" y="125" class="edge-label">q</text>
+  
+  <path d="M 1055 130 Q 1070 110 1105 90" class="edge"/>
+  <text x="1080" y="105" class="edge-label">r</text>
+  
+  <line x1="1055" y1="130" x2="1105" y2="130" class="edge"/>
+  <text x="1080" y="125" class="edge-label">s</text>
+  
+  <path d="M 1055 130 Q 1070 150 1105 170" class="edge"/>
+  <text x="1080" y="155" class="edge-label">t</text>
+  
+  <path d="M 1135 90 Q 1150 110 1185 130" class="edge"/>
+  <text x="1160" y="105" class="edge-label">u</text>
+  
+  <line x1="1135" y1="130" x2="1185" y2="130" class="edge"/>
+  <text x="1160" y="125" class="edge-label">u</text>
+  
+  <path d="M 1135 170 Q 1150 150 1185 130" class="edge"/>
+  <text x="1160" y="155" class="edge-label">u</text>
+  
+  <line x1="1215" y1="130" x2="1265" y2="130" class="edge"/>
+  <text x="1240" y="125" class="edge-label">v</text>
+  
+  <line x1="1295" y1="130" x2="1345" y2="130" class="edge"/>
+  <text x="1320" y="125" class="edge-label">w</text>
+  
+  <line x1="1375" y1="130" x2="1420" y2="130" class="edge"/>
+  <text x="1397" y="125" class="edge-label">x</text>
+  
+  <!-- Legend -->
+  <g transform="translate(50, 250)">
+    <text x="750" y="0" class="legend-title">MULTI-INSTITUTION RESEARCH COLLABORATION WORKFLOW LEGEND</text>
+    
+    <text x="0" y="25" class="legend-title">START → END PATHWAY:</text>
+    <text x="0" y="45" class="legend-text">Start: Multi-Institution Research Coordinator → ... → End: Research Collaboration Complete</text>
+    
+    <text x="0" y="75" class="legend-title">EDGE SEQUENCE FLOWS (a-x):</text>
+    <text x="0" y="95" class="legend-text">a: Research Proposal Agent (🔒 PRIVATE Proprietary research hypotheses)</text>
+    <text x="0" y="110" class="legend-text">b: IP Protection Agent (🔒 PRIVATE Patent landscapes and prior art)</text>
+    <text x="0" y="125" class="legend-text">c: Institution Type Router (🔐 ZK PROOF Route to institution leadership)</text>
+    <text x="0" y="140" class="legend-text">d: Academic Lead Processing (🔒 PRIVATE Academic research protocols)</text>
+    <text x="0" y="155" class="legend-text">e: Industry Lead Processing (🔒 PRIVATE Commercial research objectives)</text>
+    <text x="0" y="170" class="legend-text">f: Government Lead Processing (🟦 REGULATORY Federal research compliance)</text>
+    <text x="0" y="185" class="legend-text">g: IRB Central Review (🟦 REGULATORY Multi-site ethics approval)</text>
+    <text x="0" y="200" class="legend-text">h: Data Sharing Method Router (🔐 ZK PROOF Route to data sharing approach)</text>
+    <text x="0" y="215" class="legend-text">i: Federated Learning Setup (🔐 ZK PROOF Distributed ML without centralization)</text>
+    <text x="0" y="230" class="legend-text">j: Centralized Data Sharing (🔒 PRIVATE Secure centralized repository)</text>
+    <text x="0" y="245" class="legend-text">k: Hybrid Data Approach (🔐 ZK PROOF Mixed federated and centralized)</text>
+    <text x="0" y="260" class="legend-text">l: Funding Allocation Agent (🔒 PRIVATE Budget distribution and tracking)</text>
+    <text x="0" y="275" class="legend-text">m: Data Harmonization Agent (🔐 ZK PROOF Data compatibility verification)</text>
+    <text x="0" y="290" class="legend-text">n: Joint IP Management (🔒 PRIVATE Shared intellectual property agreements)</text>
+    <text x="0" y="305" class="legend-text">o: Individual IP Management (🔒 PRIVATE Separate IP ownership and licensing)</text>
+    <text x="0" y="320" class="legend-text">p: Result Validation Agent (🔐 ZK PROOF Statistical significance across sites)</text>
+    <text x="0" y="335" class="legend-text">q: Publication Coordination Router (🔐 ZK PROOF Route to publication model)</text>
+    <text x="0" y="350" class="legend-text">r: Open Publication Processing (🔒 PRIVATE Open access publication preparation)</text>
+    <text x="0" y="365" class="legend-text">s: Restricted Publication Processing (🔒 PRIVATE Limited access with embargos)</text>
+    <text x="0" y="380" class="legend-text">t: Commercial Publication Processing (🔒 PRIVATE Commercial licensing preparation)</text>
+    <text x="0" y="395" class="legend-text">u: Patent Filing Agent (🔒 PRIVATE Patent application and IP protection)</text>
+    <text x="0" y="410" class="legend-text">v: NIH Reporting Agent (🟦 REGULATORY Grant compliance and milestone reporting)</text>
+    <text x="0" y="425" class="legend-text">w: Technology Transfer Coordination (🔒 PRIVATE Commercialization and licensing)</text>
+    <text x="0" y="440" class="legend-text">x: Final Research Verification (🔐 ZK PROOF Complete collaboration integrity)</text>
+    
+    <text x="1000" y="95" class="legend-title">BRANCHING POINTS (3,8,13,18):</text>
+    <text x="1000" y="115" class="legend-text">3: Institution Type (Academic/Industry/Government)</text>
+    <text x="1000" y="130" class="legend-text">8: Data Sharing (Federated/Centralized/Hybrid)</text>
+    <text x="1000" y="145" class="legend-text">13: IP Management (Joint/Individual)</text>
+    <text x="1000" y="160" class="legend-text">18: Publication Model (Open/Restricted/Commercial)</text>
+    
+    <text x="1000" y="190" class="legend-title">JOIN POINTS (7,12,17,22):</text>
+    <text x="1000" y="210" class="legend-text">7: IRB Central Review Join</text>
+    <text x="1000" y="225" class="legend-text">12: Funding Allocation Join</text>
+    <text x="1000" y="240" class="legend-text">17: Result Validation Join</text>
+    <text x="1000" y="255" class="legend-text">22: Patent Filing Join</text>
+    
+    <text x="1000" y="285" class="legend-title">REGULATORY FRAMEWORKS:</text>
+    <text x="1000" y="305" class="legend-text">🔒 PRIVATE: Academic and Commercial IP Protection</text>
+    <text x="1000" y="320" class="legend-text">🟦 REGULATORY: NIH, IRB, USPTO, Export Control</text>
+    <text x="1000" y="335" class="legend-text">🔐 ZK PROOF: Zero-Knowledge Federated Learning</text>
+    <text x="1000" y="350" class="legend-text">📊 RESEARCH: Multi-Institution Data Protection</text>
+    
+    <text x="1000" y="380" class="legend-title">VALID PATHS (36 total):</text>
+    <text x="1000" y="400" class="legend-text">Example: a→b→c→d→g→h→i→l→m→n→p→q→r→u→v→w→x</text>
+    <text x="1000" y="415" class="legend-text">(Academic + Federated + Joint IP + Open Publication)</text>
+  </g>
+</svg>

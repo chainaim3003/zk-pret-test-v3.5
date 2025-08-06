@@ -1,0 +1,210 @@
+{
+  "processId": "HC11_ECLNTL_Accepted1_Process",
+  "processName": "Enhanced Clinical Trial Coordination - Accepted Path 1",
+  "description": "Valid enhanced clinical trial workflow following proper IRB approval and complete process execution",
+  "processType": "HEALTHCARE",
+  "subType": "ECLNTL",
+  "status": "ACCEPTED",
+  "version": "1.0",
+  "expectedPattern": "ab(c|d)e(f|g|h)(i|j)k(l|m|n)opqr",
+  "actualPath": "abcefjlmpqrst",
+  "pathValidation": {
+    "isValid": true,
+    "matchesExpected": true,
+    "complianceScore": 100
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "StartEvent_Start",
+      "name": "Start",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "EndEvent_End", 
+      "name": "End",
+      "type": "endEvent"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "description": "Trial Protocol Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_2",
+        "name": "2", 
+        "description": "IRB Approval Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "description": "Hospital A Enrollment (Branch C)",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "description": "Patient Randomization",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "description": "Mild Cases (Branch F)",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "description": "Drug Distribution Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "description": "Simple Randomization (Branch I)",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "description": "Adverse Event Monitoring",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "description": "Weekly Data Collection (Branch L)",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_16",
+        "name": "16",
+        "description": "Data Collection Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "description": "Efficacy Analysis Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "description": "Safety Database Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "description": "Publication Preparation",
+        "type": "intermediateThrowEvent"
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_6_to_9",
+        "name": "i",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_9_to_10",
+        "name": "j",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_10_to_12",
+        "name": "l",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_12_to_13",
+        "name": "m",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_13"
+      },
+      {
+        "id": "Flow_13_to_16",
+        "name": "p",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_16"
+      },
+      {
+        "id": "Flow_16_to_17",
+        "name": "q",
+        "sourceRef": "Event_16",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "r",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19"
+      },
+      {
+        "id": "Flow_19_to_End",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  "businessRules": {
+    "irbApprovalRequired": true,
+    "irbApprovalCompleted": true,
+    "siteSelectionValid": true,
+    "patientStratificationValid": true,
+    "randomizationMethodValid": true,
+    "dataCollectionFrequencyValid": true,
+    "complianceViolations": []
+  },
+  "metadata": {
+    "createdDate": "2025-07-08",
+    "lastModified": "2025-07-08",
+    "version": "1.0",
+    "author": "Healthcare Process Validator",
+    "tags": ["healthcare", "clinical-trial", "accepted", "valid-path"]
+  }
+}

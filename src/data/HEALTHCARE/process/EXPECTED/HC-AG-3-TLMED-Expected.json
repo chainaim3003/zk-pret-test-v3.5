@@ -1,0 +1,889 @@
+{
+  "processId": "HC-AG-3-TLMED",
+  "processName": "Enhanced Cross-Border Telemedicine with Multi-Jurisdiction Compliance",
+  "version": "3.0.0",
+  "description": "Zero-knowledge proof enabled cross-border telemedicine workflow with GDPR/HIPAA compliance, multi-hospital routing, and federated learning capabilities",
+  "created": "2025-01-04T16:00:00Z",
+  "lastModified": "2025-01-04T16:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC3_TLMED_Enhanced_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 24,
+    "totalFlows": 25,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 23,
+    "minPathLength": 23
+  },
+  
+  "entities": [
+    {
+      "name": "US Hospital Network",
+      "role": "Primary Care Provider - US",
+      "jurisdiction": "US - Multiple States",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "EU Hospital Network", 
+      "role": "Primary Care Provider - EU",
+      "jurisdiction": "EU - Multiple Countries",
+      "privacyLevel": "GDPR Protected"
+    },
+    {
+      "name": "Cross-Border Specialists",
+      "role": "Specialist Consultation Network",
+      "jurisdiction": "Multi-Jurisdiction",
+      "privacyLevel": "Maximum"
+    },
+    {
+      "name": "Telemedicine Platform",
+      "role": "Technical Infrastructure",
+      "jurisdiction": "Cloud Multi-Region",
+      "privacyLevel": "Platform Secured"
+    },
+    {
+      "name": "Regulatory Authorities",
+      "role": "Compliance Oversight",
+      "jurisdiction": "Multi-National",
+      "privacyLevel": "Regulatory"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-3-TLMED-Expected.bpmn",
+    "svg": "HC-AG-3-TLMED-Expected.svg", 
+    "json": "HC-AG-3-TLMED-Expected.json",
+    "backup": "HC-AG-3-TLMED-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-3-TLMED-Accepted-1.bpmn",
+      "HC-AG-3-TLMED-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-3-TLMED-Rejected-1.bpmn",
+      "HC-AG-3-TLMED-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "abc(d|e)f(g|h)ij(k|l|m)n(o|p)qrstuv",
+  "regexExplanation": {
+    "pattern": "abc(d|e)f(g|h)ij(k|l|m)n(o|p)qrstuv",
+    "meaning": "Complex multi-branch telemedicine flow with compliance, location, data residency, and consultation method variations",
+    "branchPoints": ["After 'c' (d|e) - Compliance Framework", "After 'f' (g|h) - Hospital Location", "After 'j' (k|l|m) - Data Residency", "After 'n' (o|p) - Consultation Method"],
+    "joinPoints": ["At 'f' from compliance", "At 'i' from location", "At 'n' from data residency", "At 'q' from consultation method"],
+    "totalPossiblePaths": 24
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→d→f→g→i→j→k→n→o→q→r→s→t→u→v",
+        "description": "GDPR + US Hospital + Local Data + Video Consultation",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "7", "9", "10", "11", "14", "15", "17", "18", "19", "20", "21", "End"],
+        "regexMatch": "abcdfgijknoqrstuv"
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→c→e→f→h→i→j→l→n→p→q→r→s→t→u→v",
+        "description": "HIPAA + EU Hospital + Cross-Border + Messaging",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "6", "8", "9", "10", "12", "14", "16", "17", "18", "19", "20", "21", "End"],
+        "regexMatch": "abcefhijlnpqrstuv"
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→d→f→h→i→j→m→n→o→q→r→s→t→u→v",
+        "description": "GDPR + EU Hospital + Federated Learning + Video",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "8", "9", "10", "13", "14", "15", "17", "18", "19", "20", "21", "End"],
+        "regexMatch": "abcdfhijmnoqrstuv"
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "a→c→d→...",
+        "violation": "Skip patient consent - ETHICS VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→d→f→...",
+        "violation": "Skip jurisdiction detection - COMPLIANCE VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→g→i→...",
+        "violation": "Skip compliance framework - REGULATORY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→f→(g|h)→j→(k|l|m)→...",
+        "violation": "Skip specialist consultation - MEDICAL VIOLATION",
+        "severity": "High"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3"]
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_4", "Flow_3_to_5"],
+        "isBranchPoint": true,
+        "branchType": "Compliance Framework"
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_4"],
+        "outgoing": ["Flow_4_to_6"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5"],
+        "outgoing": ["Flow_5_to_6"]
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_4_to_6", "Flow_5_to_6"],
+        "outgoing": ["Flow_6_to_7", "Flow_6_to_8"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Hospital Location"
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_7"],
+        "outgoing": ["Flow_7_to_9"]
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_8"],
+        "outgoing": ["Flow_8_to_9"]
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_7_to_9", "Flow_8_to_9"],
+        "outgoing": ["Flow_9_to_10"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_10"],
+        "outgoing": ["Flow_10_to_11", "Flow_10_to_12", "Flow_10_to_13"],
+        "isBranchPoint": true,
+        "branchType": "Data Residency"
+      },
+      {
+        "id": "Event_11",
+        "name": "11",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_11"],
+        "outgoing": ["Flow_11_to_14"]
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_12"],
+        "outgoing": ["Flow_12_to_14"]
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_13"],
+        "outgoing": ["Flow_13_to_14"]
+      },
+      {
+        "id": "Event_14",
+        "name": "14",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_11_to_14", "Flow_12_to_14", "Flow_13_to_14"],
+        "outgoing": ["Flow_14_to_15", "Flow_14_to_16"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Consultation Method"
+      },
+      {
+        "id": "Event_15",
+        "name": "15",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_15"],
+        "outgoing": ["Flow_15_to_17"]
+      },
+      {
+        "id": "Event_16",
+        "name": "16",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_16"],
+        "outgoing": ["Flow_16_to_17"]
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_15_to_17", "Flow_16_to_17"],
+        "outgoing": ["Flow_17_to_18"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_17_to_18"],
+        "outgoing": ["Flow_18_to_19"]
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_19"],
+        "outgoing": ["Flow_19_to_20"]
+      },
+      {
+        "id": "Event_20",
+        "name": "20",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_19_to_20"],
+        "outgoing": ["Flow_20_to_21"]
+      },
+      {
+        "id": "Event_21",
+        "name": "21",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_20_to_21"],
+        "outgoing": ["Flow_21_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_21_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3"
+      },
+      {
+        "id": "Flow_3_to_4",
+        "name": "d",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_4",
+        "branchPath": "GDPR Compliance"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5",
+        "branchPath": "HIPAA Compliance"
+      },
+      {
+        "id": "Flow_4_to_6",
+        "name": "f",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_6_to_7",
+        "name": "g",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_7",
+        "branchPath": "US Hospital"
+      },
+      {
+        "id": "Flow_6_to_8",
+        "name": "h",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_8",
+        "branchPath": "EU Hospital"
+      },
+      {
+        "id": "Flow_7_to_9",
+        "name": "i",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_8_to_9",
+        "name": "i",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_9_to_10",
+        "name": "j",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_10_to_11",
+        "name": "k",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_11",
+        "branchPath": "Local Data Storage"
+      },
+      {
+        "id": "Flow_10_to_12",
+        "name": "l",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_12",
+        "branchPath": "Cross-Border Transfer"
+      },
+      {
+        "id": "Flow_10_to_13",
+        "name": "m",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_13",
+        "branchPath": "Federated Learning"
+      },
+      {
+        "id": "Flow_11_to_14",
+        "name": "n",
+        "sourceRef": "Event_11",
+        "targetRef": "Event_14"
+      },
+      {
+        "id": "Flow_12_to_14",
+        "name": "n",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_14"
+      },
+      {
+        "id": "Flow_13_to_14",
+        "name": "n",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_14"
+      },
+      {
+        "id": "Flow_14_to_15",
+        "name": "o",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_15",
+        "branchPath": "Video Consultation"
+      },
+      {
+        "id": "Flow_14_to_16",
+        "name": "p",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_16",
+        "branchPath": "Messaging Platform"
+      },
+      {
+        "id": "Flow_15_to_17",
+        "name": "q",
+        "sourceRef": "Event_15",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_16_to_17",
+        "name": "q",
+        "sourceRef": "Event_16",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "r",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19"
+      },
+      {
+        "id": "Flow_19_to_20",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "Event_20"
+      },
+      {
+        "id": "Flow_20_to_21",
+        "name": "u",
+        "sourceRef": "Event_20",
+        "targetRef": "Event_21"
+      },
+      {
+        "id": "Flow_21_to_End",
+        "name": "v",
+        "sourceRef": "Event_21",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "Cross-Border Telemedicine Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Patient Consent Agent",
+        "description": "🔒 PRIVATE: Patient consent for cross-border telemedicine",
+        "privacy": "Patient Protected",
+        "stakeholder": "Patient"
+      },
+      "b": {
+        "name": "Jurisdiction Detection Agent",
+        "description": "🟦 REGULATORY: Auto-detect patient and provider jurisdictions",
+        "privacy": "Regulatory Required",
+        "stakeholder": "Compliance Systems"
+      },
+      "c": {
+        "name": "Compliance Router Agent",
+        "description": "🔐 ZK PROOF: Route to appropriate compliance framework",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      },
+      "d": {
+        "name": "GDPR Compliance Agent",
+        "description": "🟦 REGULATORY: EU GDPR compliance verification",
+        "privacy": "GDPR Required",
+        "stakeholder": "EU Regulatory"
+      },
+      "e": {
+        "name": "HIPAA Compliance Agent",
+        "description": "🟦 REGULATORY: US HIPAA compliance verification",
+        "privacy": "HIPAA Required",
+        "stakeholder": "US Regulatory"
+      },
+      "f": {
+        "name": "Primary Care Router",
+        "description": "🔐 ZK PROOF: Route to appropriate hospital network",
+        "privacy": "ZK Protected",
+        "stakeholder": "Hospital Networks"
+      },
+      "g": {
+        "name": "US Hospital Primary",
+        "description": "🔒 PRIVATE: US hospital network patient handling",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "US Hospital Network"
+      },
+      "h": {
+        "name": "EU Hospital Primary",
+        "description": "🔒 PRIVATE: EU hospital network patient handling",
+        "privacy": "GDPR Protected",
+        "stakeholder": "EU Hospital Network"
+      },
+      "i": {
+        "name": "Specialist Consultation Request",
+        "description": "🔐 ZK PROOF: Cross-border specialist matching",
+        "privacy": "ZK Protected",
+        "stakeholder": "Specialist Network"
+      },
+      "j": {
+        "name": "Enhanced Medical License Verification",
+        "description": "🟦 REGULATORY: Multi-jurisdiction license validation",
+        "privacy": "Regulatory Required",
+        "stakeholder": "Medical Boards"
+      },
+      "k": {
+        "name": "Local Data Storage Only",
+        "description": "🔒 PRIVATE: Keep all data within origin jurisdiction",
+        "privacy": "Maximum Protected",
+        "stakeholder": "Origin Hospital"
+      },
+      "l": {
+        "name": "Encrypted Cross-Border Transfer",
+        "description": "🔐 ZK PROOF: Secure cross-border data transfer",
+        "privacy": "ZK Protected",
+        "stakeholder": "Both Hospitals"
+      },
+      "m": {
+        "name": "Federated Learning Approach",
+        "description": "🔐 ZK PROOF: ML without data movement",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Networks"
+      },
+      "n": {
+        "name": "Data Residency Join",
+        "description": "🔐 ZK PROOF: Unified data handling post-residency",
+        "privacy": "ZK Protected",
+        "stakeholder": "Platform"
+      },
+      "o": {
+        "name": "Secure Video Consultation",
+        "description": "🔒 PRIVATE: End-to-end encrypted video",
+        "privacy": "Platform Secured",
+        "stakeholder": "Telemedicine Platform"
+      },
+      "p": {
+        "name": "Encrypted Messaging Platform",
+        "description": "🔒 PRIVATE: Secure asynchronous communication",
+        "privacy": "Platform Secured",
+        "stakeholder": "Telemedicine Platform"
+      },
+      "q": {
+        "name": "Consultation Method Join",
+        "description": "🔐 ZK PROOF: Unified consultation handling",
+        "privacy": "ZK Protected",
+        "stakeholder": "Platform"
+      },
+      "r": {
+        "name": "Clinical Data Anonymization",
+        "description": "🔐 ZK PROOF: De-identification for cross-border sharing",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      },
+      "s": {
+        "name": "Expert Opinion Agent",
+        "description": "🔒 PRIVATE: Specialist diagnosis and recommendations",
+        "privacy": "Medical Protected",
+        "stakeholder": "Specialists"
+      },
+      "t": {
+        "name": "Treatment Recommendation",
+        "description": "🔐 ZK PROOF: Evidence-based treatment suggestions",
+        "privacy": "ZK Protected",
+        "stakeholder": "Medical Team"
+      },
+      "u": {
+        "name": "Audit Trail & Payment Validation",
+        "description": "🟦 REGULATORY: Complete compliance audit trail",
+        "privacy": "Regulatory Required",
+        "stakeholder": "All Regulators"
+      },
+      "v": {
+        "name": "Final Cross-Border Verification",
+        "description": "🔐 ZK PROOF: Complete process integrity validation",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Patient Consent Processing",
+        "description": "Capture and validate patient consent for cross-border care"
+      },
+      "2": {
+        "name": "Jurisdiction Detection",
+        "description": "Automatically detect patient and provider jurisdictions"
+      },
+      "3": {
+        "name": "Compliance Framework Router",
+        "description": "Branch point - route to GDPR or HIPAA compliance"
+      },
+      "4": {
+        "name": "GDPR Compliance Processing",
+        "description": "EU GDPR compliance verification and documentation"
+      },
+      "5": {
+        "name": "HIPAA Compliance Processing",
+        "description": "US HIPAA compliance verification and documentation"
+      },
+      "6": {
+        "name": "Primary Care Router",
+        "description": "Join compliance, then branch to US or EU hospitals"
+      },
+      "7": {
+        "name": "US Hospital Network Handler",
+        "description": "Handle patients through US hospital network"
+      },
+      "8": {
+        "name": "EU Hospital Network Handler",
+        "description": "Handle patients through EU hospital network"
+      },
+      "9": {
+        "name": "Specialist Consultation Request",
+        "description": "Join hospital paths, request specialist consultation"
+      },
+      "10": {
+        "name": "Medical License Verification",
+        "description": "Branch point - verify licenses and determine data handling"
+      },
+      "11": {
+        "name": "Local Data Storage",
+        "description": "Keep all data within origin jurisdiction"
+      },
+      "12": {
+        "name": "Cross-Border Data Transfer",
+        "description": "Secure encrypted cross-border data transfer"
+      },
+      "13": {
+        "name": "Federated Learning",
+        "description": "ML-based consultation without data movement"
+      },
+      "14": {
+        "name": "Data Residency Join",
+        "description": "Join data paths, then branch consultation methods"
+      },
+      "15": {
+        "name": "Video Consultation Setup",
+        "description": "Set up secure video consultation"
+      },
+      "16": {
+        "name": "Messaging Platform Setup",
+        "description": "Set up secure messaging platform"
+      },
+      "17": {
+        "name": "Consultation Method Join",
+        "description": "Join consultation methods for unified handling"
+      },
+      "18": {
+        "name": "Clinical Data Anonymization",
+        "description": "Anonymize clinical data for cross-border sharing"
+      },
+      "19": {
+        "name": "Expert Opinion Generation",
+        "description": "Generate specialist expert opinion"
+      },
+      "20": {
+        "name": "Treatment Recommendation",
+        "description": "Provide evidence-based treatment recommendations"
+      },
+      "21": {
+        "name": "Audit Trail & Payment",
+        "description": "Complete audit trail and payment validation"
+      }
+    },
+    "end": {
+      "End": "Cross-Border Telemedicine Consultation Complete"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "GDPR + US Hospital + Local Data + Video",
+      "sequence": "a→b→c→d→f→g→i→j→k→n→o→q→r→s→t→u→v",
+      "regexMatch": "abcdfgijknoqrstuv"
+    },
+    {
+      "pathId": 2,
+      "description": "HIPAA + EU Hospital + Cross-Border + Messaging",
+      "sequence": "a→b→c→e→f→h→i→j→l→n→p→q→r→s→t→u→v",
+      "regexMatch": "abcefhijlnpqrstuv"
+    },
+    {
+      "pathId": 3,
+      "description": "GDPR + EU Hospital + Federated Learning + Video",
+      "sequence": "a→b→c→d→f→h→i→j→m→n→o→q→r→s→t→u→v",
+      "regexMatch": "abcdfhijmnoqrstuv"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "US Hospital Network": {
+      "sees": ["US patients only", "US medical data", "Anonymized consultation results"],
+      "hidden": ["EU patient data", "EU medical records", "Patient identities across borders"],
+      "zkProofs": ["Cross-border specialist matching", "Treatment recommendation validity"]
+    },
+    "EU Hospital Network": {
+      "sees": ["EU patients only", "EU medical data", "Anonymized consultation results"],
+      "hidden": ["US patient data", "US medical records", "Patient identities across borders"],
+      "zkProofs": ["Cross-border specialist matching", "Treatment recommendation validity"]
+    },
+    "Cross-Border Specialists": {
+      "sees": ["Anonymized clinical data", "Medical cases", "Treatment outcomes"],
+      "hidden": ["Patient identities", "Hospital identities", "Jurisdiction specifics"],
+      "zkProofs": ["Medical license validity", "Clinical expertise verification"]
+    },
+    "Telemedicine Platform": {
+      "sees": ["Platform usage", "Technical metadata", "Performance metrics"],
+      "hidden": ["Medical content", "Patient identities", "Clinical decisions"],
+      "zkProofs": ["Platform security", "Encryption integrity"]
+    },
+    "Regulatory Authorities": {
+      "sees": ["Compliance status", "Audit trails", "Violation reports"],
+      "hidden": ["Patient identities", "Clinical details", "Commercial arrangements"],
+      "zkProofs": ["Compliance verification", "Regulatory adherence"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "c",
+      "proof": "Compliance routing without revealing patient data",
+      "mechanism": "Zero-knowledge jurisdiction detection"
+    },
+    {
+      "flow": "f",
+      "proof": "Hospital routing without exposing patient location",
+      "mechanism": "ZK hospital network selection"
+    },
+    {
+      "flow": "i",
+      "proof": "Specialist matching without revealing patient identity",
+      "mechanism": "Anonymous specialist matching"
+    },
+    {
+      "flow": "l",
+      "proof": "Cross-border transfer without data exposure",
+      "mechanism": "ZK encrypted data transfer"
+    },
+    {
+      "flow": "m",
+      "proof": "ML consultation without data movement",
+      "mechanism": "Federated learning with ZK proofs"
+    },
+    {
+      "flow": "q",
+      "proof": "Unified consultation without method exposure",
+      "mechanism": "ZK consultation aggregation"
+    },
+    {
+      "flow": "r",
+      "proof": "Data anonymization without information loss",
+      "mechanism": "ZK anonymization verification"
+    },
+    {
+      "flow": "t",
+      "proof": "Treatment recommendation without bias exposure",
+      "mechanism": "ZK evidence-based recommendation"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "GDPR Article 44-49",
+      "regulation": "EU GDPR Cross-Border Transfer",
+      "flow": "d",
+      "description": "EU General Data Protection Regulation compliance"
+    },
+    {
+      "requirement": "HIPAA Privacy Rule",
+      "regulation": "45 CFR §164.502",
+      "flow": "e",
+      "description": "US Health Insurance Portability and Accountability Act"
+    },
+    {
+      "requirement": "Medical License Reciprocity",
+      "regulation": "Multi-State Medical Compact",
+      "flow": "j",
+      "description": "Cross-border medical license verification"
+    },
+    {
+      "requirement": "Telemedicine Standards",
+      "regulation": "ISO 27799:2016",
+      "flows": ["o", "p"],
+      "description": "Health informatics security management"
+    },
+    {
+      "requirement": "Cross-Border Data Transfer",
+      "regulation": "EU-US Privacy Shield/SCCs",
+      "flow": "l",
+      "description": "Standard Contractual Clauses compliance"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Cross-jurisdiction data leakage prevention",
+      "constraint": "US_patient_data ∩ EU_systems = ∅ AND EU_patient_data ∩ US_systems = ∅",
+      "enforcement": "ZK proof verification with jurisdiction boundaries"
+    },
+    {
+      "rule": "Medical license jurisdiction bypass prevention",
+      "constraint": "IF (cross_border_consultation) THEN valid_license_in_both_jurisdictions = REQUIRED",
+      "enforcement": "Multi-jurisdiction license verification"
+    },
+    {
+      "rule": "Patient identity protection across borders",
+      "constraint": "Patient_identities CANNOT cross jurisdiction_boundaries",
+      "enforcement": "ZK anonymization enforcement"
+    },
+    {
+      "rule": "Compliance framework consistency",
+      "constraint": "GDPR_path XOR HIPAA_path = TRUE",
+      "enforcement": "Exclusive compliance framework selection"
+    },
+    {
+      "rule": "Data residency requirement enforcement",
+      "constraint": "Patient_data MUST comply_with source_jurisdiction_data_residency",
+      "enforcement": "Data localization verification"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 24,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "Maximum",
+    "securityLevel": "Cross-Border Maximum",
+    "privacyLevel": "GDPR + HIPAA + ZK",
+    "regulatoryComplexity": "Multi-Jurisdiction + Medical Licensing"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'abc(d|e)f(g|h)ij(k|l|m)n(o|p)qrstuv' --functionName 'verifyProcessHC3TLMED' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC3TLMED",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-3-TLMED-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-3-TLMED-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG3TLMED ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-3-TLMED-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-3-TLMED-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

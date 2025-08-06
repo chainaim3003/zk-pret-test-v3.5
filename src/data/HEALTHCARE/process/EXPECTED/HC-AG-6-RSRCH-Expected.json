@@ -1,0 +1,976 @@
+{
+  "processId": "HC-AG-6-RSRCH",
+  "processName": "Multi-Institution Research Collaboration Workflow",
+  "version": "6.0.0",
+  "description": "Zero-knowledge proof enabled multi-institution research collaboration workflow with federated learning, IP protection, NIH compliance, and patent management",
+  "created": "2025-07-07T21:00:00Z",
+  "lastModified": "2025-07-07T21:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC6_RSRCH_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 25,
+    "totalFlows": 27,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 24,
+    "minPathLength": 24
+  },
+  
+  "entities": [
+    {
+      "name": "University A",
+      "role": "Academic Research Institution - Lead",
+      "jurisdiction": "US - State University System",
+      "privacyLevel": "Academic Protected"
+    },
+    {
+      "name": "University B",
+      "role": "Academic Research Institution - Partner",
+      "jurisdiction": "US - Private University",
+      "privacyLevel": "Academic Protected"
+    },
+    {
+      "name": "Pharma Research Division",
+      "role": "Industry Research Partner",
+      "jurisdiction": "US - Corporate",
+      "privacyLevel": "Commercial Protected"
+    },
+    {
+      "name": "NIH (National Institutes of Health)",
+      "role": "Federal Funding Agency",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Federal Regulatory"
+    },
+    {
+      "name": "IRB Central Review Committee",
+      "role": "Multi-Site Ethics Oversight",
+      "jurisdiction": "US - Regulatory",
+      "privacyLevel": "Ethics Regulatory"
+    },
+    {
+      "name": "USPTO (Patent Office)",
+      "role": "Intellectual Property Authority",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "IP Regulatory"
+    },
+    {
+      "name": "Technology Transfer Offices",
+      "role": "IP Commercialization",
+      "jurisdiction": "US - Institutional",
+      "privacyLevel": "Commercial Protected"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-6-RSRCH-Expected.bpmn",
+    "svg": "HC-AG-6-RSRCH-Expected.svg", 
+    "json": "HC-AG-6-RSRCH-Expected.json",
+    "backup": "HC-AG-6-RSRCH-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-6-RSRCH-Accepted-1.bpmn",
+      "HC-AG-6-RSRCH-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-6-RSRCH-Rejected-1.bpmn",
+      "HC-AG-6-RSRCH-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "abc(d|e|f)gh(i|j|k)lm(n|o)pq(r|s|t)uvw",
+  "regexExplanation": {
+    "pattern": "abc(d|e|f)gh(i|j|k)lm(n|o)pq(r|s|t)uvw",
+    "meaning": "Complex multi-branch research collaboration flow with institution type, data sharing method, IP management, and publication model variations",
+    "branchPoints": ["After 'c' (d|e|f) - Institution Type", "After 'h' (i|j|k) - Data Sharing Method", "After 'm' (n|o) - IP Management", "After 'q' (r|s|t) - Publication Model"],
+    "joinPoints": ["At 'g' from institution type", "At 'l' from data sharing method", "At 'p' from IP management", "At 'u' from publication model"],
+    "totalPossiblePaths": 36
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→d→g→h→i→l→m→n→p→q→r→u→v→w",
+        "description": "Academic Lead + Federated Learning + Joint IP + Open Publication",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "7", "8", "9", "12", "13", "14", "17", "18", "19", "22", "23", "24", "End"],
+        "regexMatch": "abcdghilmnpqruvw"
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→c→e→g→h→j→l→m→o→p→q→s→u→v→w",
+        "description": "Industry Lead + Centralized Data + Individual IP + Restricted Publication",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "7", "8", "10", "12", "13", "15", "17", "18", "20", "22", "23", "24", "End"],
+        "regexMatch": "abceghijlmopqsuvw"
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→f→g→h→k→l→m→n→p→q→t→u→v→w",
+        "description": "Government Lead + Hybrid Data + Joint IP + Commercial Publication",
+        "nodeSequence": ["Start", "1", "2", "3", "6", "7", "8", "11", "12", "13", "14", "17", "18", "21", "22", "23", "24", "End"],
+        "regexMatch": "abcfghklmnpqtuvw"
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "a→c→d→...",
+        "violation": "Skip research proposal documentation - IP VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→d→g→...",
+        "violation": "Skip IP protection review - PATENT VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e|f)→h→(i|j|k)→...",
+        "violation": "Skip IRB approval - ETHICS VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e|f)→g→(i|j|k)→l→m→p→q→...",
+        "violation": "Skip funding allocation - REGULATORY VIOLATION",
+        "severity": "High"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3"]
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_4", "Flow_3_to_5", "Flow_3_to_6"],
+        "isBranchPoint": true,
+        "branchType": "Institution Type"
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_4"],
+        "outgoing": ["Flow_4_to_7"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5"],
+        "outgoing": ["Flow_5_to_7"]
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_6"],
+        "outgoing": ["Flow_6_to_7"]
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_4_to_7", "Flow_5_to_7", "Flow_6_to_7"],
+        "outgoing": ["Flow_7_to_8"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_7_to_8"],
+        "outgoing": ["Flow_8_to_9", "Flow_8_to_10", "Flow_8_to_11"],
+        "isBranchPoint": true,
+        "branchType": "Data Sharing Method"
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_9"],
+        "outgoing": ["Flow_9_to_12"]
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_10"],
+        "outgoing": ["Flow_10_to_12"]
+      },
+      {
+        "id": "Event_11",
+        "name": "11",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_11"],
+        "outgoing": ["Flow_11_to_12"]
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_12", "Flow_10_to_12", "Flow_11_to_12"],
+        "outgoing": ["Flow_12_to_13"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_13"],
+        "outgoing": ["Flow_13_to_14", "Flow_13_to_15"],
+        "isBranchPoint": true,
+        "branchType": "IP Management"
+      },
+      {
+        "id": "Event_14",
+        "name": "14",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_13_to_14"],
+        "outgoing": ["Flow_14_to_17"]
+      },
+      {
+        "id": "Event_15",
+        "name": "15",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_13_to_15"],
+        "outgoing": ["Flow_15_to_17"]
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_17", "Flow_15_to_17"],
+        "outgoing": ["Flow_17_to_18"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_17_to_18"],
+        "outgoing": ["Flow_18_to_19", "Flow_18_to_20", "Flow_18_to_21"],
+        "isBranchPoint": true,
+        "branchType": "Publication Model"
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_19"],
+        "outgoing": ["Flow_19_to_22"]
+      },
+      {
+        "id": "Event_20",
+        "name": "20",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_20"],
+        "outgoing": ["Flow_20_to_22"]
+      },
+      {
+        "id": "Event_21",
+        "name": "21",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_21"],
+        "outgoing": ["Flow_21_to_22"]
+      },
+      {
+        "id": "Event_22",
+        "name": "22",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_19_to_22", "Flow_20_to_22", "Flow_21_to_22"],
+        "outgoing": ["Flow_22_to_23"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_23",
+        "name": "23",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_22_to_23"],
+        "outgoing": ["Flow_23_to_24"]
+      },
+      {
+        "id": "Event_24",
+        "name": "24",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_23_to_24"],
+        "outgoing": ["Flow_24_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_24_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3"
+      },
+      {
+        "id": "Flow_3_to_4",
+        "name": "d",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_4",
+        "branchPath": "Academic Lead Institution"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5",
+        "branchPath": "Industry Lead Institution"
+      },
+      {
+        "id": "Flow_3_to_6",
+        "name": "f",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_6",
+        "branchPath": "Government Lead Institution"
+      },
+      {
+        "id": "Flow_4_to_7",
+        "name": "g",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_5_to_7",
+        "name": "g",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_6_to_7",
+        "name": "g",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_7_to_8",
+        "name": "h",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_8"
+      },
+      {
+        "id": "Flow_8_to_9",
+        "name": "i",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_9",
+        "branchPath": "Federated Learning"
+      },
+      {
+        "id": "Flow_8_to_10",
+        "name": "j",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_10",
+        "branchPath": "Centralized Data Sharing"
+      },
+      {
+        "id": "Flow_8_to_11",
+        "name": "k",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_11",
+        "branchPath": "Hybrid Data Approach"
+      },
+      {
+        "id": "Flow_9_to_12",
+        "name": "l",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_10_to_12",
+        "name": "l",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_11_to_12",
+        "name": "l",
+        "sourceRef": "Event_11",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_12_to_13",
+        "name": "m",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_13"
+      },
+      {
+        "id": "Flow_13_to_14",
+        "name": "n",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_14",
+        "branchPath": "Joint IP Management"
+      },
+      {
+        "id": "Flow_13_to_15",
+        "name": "o",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_15",
+        "branchPath": "Individual IP Management"
+      },
+      {
+        "id": "Flow_14_to_17",
+        "name": "p",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_15_to_17",
+        "name": "p",
+        "sourceRef": "Event_15",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "q",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "r",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19",
+        "branchPath": "Open Publication"
+      },
+      {
+        "id": "Flow_18_to_20",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_20",
+        "branchPath": "Restricted Publication"
+      },
+      {
+        "id": "Flow_18_to_21",
+        "name": "t",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_21",
+        "branchPath": "Commercial Publication"
+      },
+      {
+        "id": "Flow_19_to_22",
+        "name": "u",
+        "sourceRef": "Event_19",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_20_to_22",
+        "name": "u",
+        "sourceRef": "Event_20",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_21_to_22",
+        "name": "u",
+        "sourceRef": "Event_21",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_22_to_23",
+        "name": "v",
+        "sourceRef": "Event_22",
+        "targetRef": "Event_23"
+      },
+      {
+        "id": "Flow_23_to_24",
+        "name": "w",
+        "sourceRef": "Event_23",
+        "targetRef": "Event_24"
+      },
+      {
+        "id": "Flow_24_to_End",
+        "name": "x",
+        "sourceRef": "Event_24",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "Multi-Institution Research Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Research Proposal Agent",
+        "description": "🔒 PRIVATE: Proprietary research hypotheses and methodology",
+        "privacy": "Academic Protected",
+        "stakeholder": "Lead Institution"
+      },
+      "b": {
+        "name": "IP Protection Agent",
+        "description": "🔒 PRIVATE: Patent landscapes and prior art analysis",
+        "privacy": "IP Protected",
+        "stakeholder": "USPTO + Patent Attorneys"
+      },
+      "c": {
+        "name": "Institution Type Router",
+        "description": "🔐 ZK PROOF: Route to appropriate institution leadership model",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Institutions"
+      },
+      "d": {
+        "name": "Academic Lead Processing",
+        "description": "🔒 PRIVATE: Academic research protocols and IRB requirements",
+        "privacy": "Academic Protected",
+        "stakeholder": "Universities"
+      },
+      "e": {
+        "name": "Industry Lead Processing", 
+        "description": "🔒 PRIVATE: Commercial research objectives and IP strategy",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Pharma Research"
+      },
+      "f": {
+        "name": "Government Lead Processing",
+        "description": "🟦 REGULATORY: Federal research compliance and oversight",
+        "privacy": "Federal Required",
+        "stakeholder": "NIH"
+      },
+      "g": {
+        "name": "IRB Central Review",
+        "description": "🟦 REGULATORY: Multi-site ethics approval and compliance",
+        "privacy": "Ethics Required",
+        "stakeholder": "IRB Central"
+      },
+      "h": {
+        "name": "Data Sharing Method Router",
+        "description": "🔐 ZK PROOF: Route to appropriate data sharing approach",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Partners"
+      },
+      "i": {
+        "name": "Federated Learning Setup",
+        "description": "🔐 ZK PROOF: Distributed ML without data centralization",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Institutions"
+      },
+      "j": {
+        "name": "Centralized Data Sharing",
+        "description": "🔒 PRIVATE: Secure centralized data repository",
+        "privacy": "Data Protected",
+        "stakeholder": "Lead Institution"
+      },
+      "k": {
+        "name": "Hybrid Data Approach",
+        "description": "🔐 ZK PROOF: Mixed federated and centralized methods",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Partners"
+      },
+      "l": {
+        "name": "Funding Allocation Agent",
+        "description": "🔒 PRIVATE: Budget distribution and milestone tracking",
+        "privacy": "Financial Protected",
+        "stakeholder": "NIH + Lead Institution"
+      },
+      "m": {
+        "name": "Data Harmonization Agent",
+        "description": "🔐 ZK PROOF: Data compatibility without data exposure",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Partners"
+      },
+      "n": {
+        "name": "Joint IP Management",
+        "description": "🔒 PRIVATE: Shared intellectual property agreements",
+        "privacy": "IP Protected",
+        "stakeholder": "All Institutions"
+      },
+      "o": {
+        "name": "Individual IP Management",
+        "description": "🔒 PRIVATE: Separate IP ownership and licensing",
+        "privacy": "IP Protected",
+        "stakeholder": "Individual Institutions"
+      },
+      "p": {
+        "name": "Result Validation Agent",
+        "description": "🔐 ZK PROOF: Statistical significance across all sites",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Partners"
+      },
+      "q": {
+        "name": "Publication Coordination Router",
+        "description": "🔐 ZK PROOF: Route to appropriate publication model",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Partners"
+      },
+      "r": {
+        "name": "Open Publication Processing",
+        "description": "🔒 PRIVATE: Open access publication preparation",
+        "privacy": "Academic Protected",
+        "stakeholder": "Academic Institutions"
+      },
+      "s": {
+        "name": "Restricted Publication Processing",
+        "description": "🔒 PRIVATE: Limited access publication with embargos",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Commercial Partners"
+      },
+      "t": {
+        "name": "Commercial Publication Processing",
+        "description": "🔒 PRIVATE: Commercial licensing and patent preparation",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Industry Partners"
+      },
+      "u": {
+        "name": "Patent Filing Agent",
+        "description": "🔒 PRIVATE: Patent application and IP protection",
+        "privacy": "IP Protected",
+        "stakeholder": "USPTO + Patent Attorneys"
+      },
+      "v": {
+        "name": "NIH Reporting Agent",
+        "description": "🟦 REGULATORY: Grant compliance and milestone reporting",
+        "privacy": "Federal Required",
+        "stakeholder": "NIH"
+      },
+      "w": {
+        "name": "Technology Transfer Coordination",
+        "description": "🔒 PRIVATE: Commercialization and licensing coordination",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Technology Transfer Offices"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Research Proposal Processing",
+        "description": "Document and validate research hypotheses and methodology"
+      },
+      "2": {
+        "name": "IP Protection Review",
+        "description": "Analyze patent landscape and establish IP protection strategy"
+      },
+      "3": {
+        "name": "Institution Type Router",
+        "description": "Branch point - determine lead institution type and governance"
+      },
+      "4": {
+        "name": "Academic Lead Handler",
+        "description": "Handle academic-led research protocols and requirements"
+      },
+      "5": {
+        "name": "Industry Lead Handler",
+        "description": "Handle industry-led research objectives and IP strategy"
+      },
+      "6": {
+        "name": "Government Lead Handler",
+        "description": "Handle government-led research compliance and oversight"
+      },
+      "7": {
+        "name": "IRB Central Review",
+        "description": "Join institution paths, conduct multi-site ethics review"
+      },
+      "8": {
+        "name": "Data Sharing Method Router",
+        "description": "Branch point - determine data sharing and analysis approach"
+      },
+      "9": {
+        "name": "Federated Learning Handler",
+        "description": "Set up distributed machine learning without data sharing"
+      },
+      "10": {
+        "name": "Centralized Data Handler",
+        "description": "Set up secure centralized data repository and analysis"
+      },
+      "11": {
+        "name": "Hybrid Data Handler",
+        "description": "Set up mixed federated and centralized data approach"
+      },
+      "12": {
+        "name": "Funding Allocation",
+        "description": "Join data paths, allocate funding and track milestones"
+      },
+      "13": {
+        "name": "Data Harmonization",
+        "description": "Branch point - determine IP management strategy"
+      },
+      "14": {
+        "name": "Joint IP Handler",
+        "description": "Manage shared intellectual property agreements"
+      },
+      "15": {
+        "name": "Individual IP Handler",
+        "description": "Manage separate IP ownership and licensing"
+      },
+      "17": {
+        "name": "Result Validation",
+        "description": "Join IP paths, validate statistical significance"
+      },
+      "18": {
+        "name": "Publication Coordination Router",
+        "description": "Branch point - determine publication and dissemination model"
+      },
+      "19": {
+        "name": "Open Publication Handler",
+        "description": "Prepare open access publication and data sharing"
+      },
+      "20": {
+        "name": "Restricted Publication Handler",
+        "description": "Prepare restricted access publication with embargos"
+      },
+      "21": {
+        "name": "Commercial Publication Handler",
+        "description": "Prepare commercial licensing and patent applications"
+      },
+      "22": {
+        "name": "Patent Filing",
+        "description": "Join publication paths, file patent applications"
+      },
+      "23": {
+        "name": "NIH Reporting",
+        "description": "Complete grant compliance and milestone reporting"
+      },
+      "24": {
+        "name": "Technology Transfer",
+        "description": "Coordinate commercialization and licensing activities"
+      }
+    },
+    "end": {
+      "End": "Research Collaboration Complete"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "Academic Lead + Federated Learning + Joint IP + Open Publication",
+      "sequence": "a→b→c→d→g→h→i→l→m→n→p→q→r→u→v→w",
+      "regexMatch": "abcdghilmnpqruvw"
+    },
+    {
+      "pathId": 2,
+      "description": "Industry Lead + Centralized Data + Individual IP + Restricted Publication",
+      "sequence": "a→b→c→e→g→h→j→l→m→o→p→q→s→u→v→w",
+      "regexMatch": "abceghijlmopqsuvw"
+    },
+    {
+      "pathId": 3,
+      "description": "Government Lead + Hybrid Data + Joint IP + Commercial Publication",
+      "sequence": "a→b→c→f→g→h→k→l→m→n→p→q→t→u→v→w",
+      "regexMatch": "abcfghklmnpqtuvw"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "University A": {
+      "sees": ["Own research data", "Academic protocols", "Student/faculty data", "Joint publication results"],
+      "hidden": ["Industry proprietary methods", "Other universities' raw data", "Commercial terms", "Patent strategies"],
+      "zkProofs": ["Research contribution verification", "Data quality validation", "Academic compliance"]
+    },
+    "University B": {
+      "sees": ["Own research data", "Academic protocols", "Student/faculty data", "Joint publication results"],
+      "hidden": ["Industry proprietary methods", "Other universities' raw data", "Commercial terms", "Patent strategies"],
+      "zkProofs": ["Research contribution verification", "Data quality validation", "Academic compliance"]
+    },
+    "Pharma Research Division": {
+      "sees": ["Proprietary methods", "Commercial objectives", "IP strategy", "Market analysis"],
+      "hidden": ["Academic internal processes", "University raw data", "Student information", "Grant details"],
+      "zkProofs": ["Commercial contribution verification", "IP validity", "Regulatory compliance"]
+    },
+    "NIH": {
+      "sees": ["Grant compliance", "Milestone progress", "Aggregate results", "Public benefit assessment"],
+      "hidden": ["Proprietary methods", "Individual participant data", "Commercial strategies", "Patent details"],
+      "zkProofs": ["Grant compliance verification", "Milestone achievement", "Public benefit validation"]
+    },
+    "IRB Central": {
+      "sees": ["Ethics compliance", "Participant protection", "Risk assessment", "Multi-site coordination"],
+      "hidden": ["Commercial objectives", "Proprietary methods", "Individual research data", "Patent strategies"],
+      "zkProofs": ["Ethics compliance verification", "Participant protection validation"]
+    },
+    "USPTO": {
+      "sees": ["Patent applications", "IP ownership", "Prior art analysis", "Novelty assessment"],
+      "hidden": ["Research participant data", "Internal collaboration terms", "Grant information", "Academic processes"],
+      "zkProofs": ["Patent novelty verification", "IP ownership validation"]
+    },
+    "Technology Transfer Offices": {
+      "sees": ["Commercialization opportunities", "Licensing terms", "Market potential", "IP portfolios"],
+      "hidden": ["Research participant data", "Academic internal processes", "Federal grant details", "Competitor strategies"],
+      "zkProofs": ["Commercial viability verification", "Licensing validity"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "c",
+      "proof": "Institution routing without revealing research details",
+      "mechanism": "Zero-knowledge institution type determination"
+    },
+    {
+      "flow": "g",
+      "proof": "Ethics compliance without exposing research specifics",
+      "mechanism": "ZK IRB compliance verification"
+    },
+    {
+      "flow": "h",
+      "proof": "Data sharing routing without revealing data content",
+      "mechanism": "ZK data sharing method selection"
+    },
+    {
+      "flow": "i",
+      "proof": "Federated learning without data centralization",
+      "mechanism": "ZK federated machine learning protocols"
+    },
+    {
+      "flow": "k",
+      "proof": "Hybrid data approach without full data exposure",
+      "mechanism": "ZK hybrid data sharing verification"
+    },
+    {
+      "flow": "m",
+      "proof": "Data compatibility without revealing data structure",
+      "mechanism": "ZK data harmonization verification"
+    },
+    {
+      "flow": "p",
+      "proof": "Statistical significance without raw data exposure",
+      "mechanism": "ZK statistical validation across sites"
+    },
+    {
+      "flow": "q",
+      "proof": "Publication routing without revealing content",
+      "mechanism": "ZK publication model determination"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "NIH Grant Compliance",
+      "regulation": "45 CFR Parts 74 & 92",
+      "flows": ["l", "v"],
+      "description": "Federal grant administration and reporting requirements"
+    },
+    {
+      "requirement": "IRB Multi-Site Ethics Review",
+      "regulation": "45 CFR §46.114",
+      "flow": "g",
+      "description": "Multi-institutional research ethics oversight"
+    },
+    {
+      "requirement": "Patent and IP Protection",
+      "regulation": "35 USC §101-103",
+      "flows": ["b", "n", "o", "u"],
+      "description": "Federal patent law and intellectual property protection"
+    },
+    {
+      "requirement": "Export Control Compliance",
+      "regulation": "22 CFR Parts 120-130",
+      "flows": ["i", "j", "k"],
+      "description": "International technology transfer restrictions"
+    },
+    {
+      "requirement": "Data Security and Privacy",
+      "regulation": "NIST Cybersecurity Framework",
+      "flows": ["i", "j", "k", "m"],
+      "description": "Federal data security requirements for research"
+    },
+    {
+      "requirement": "Technology Transfer Regulations",
+      "regulation": "37 CFR Parts 401-404",
+      "flow": "w",
+      "description": "Bayh-Dole Act compliance for federally funded research"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Academic-industry data leakage prevention",
+      "constraint": "Academic_patient_data CANNOT leave federated_learning_framework",
+      "enforcement": "ZK federated learning with cryptographic isolation"
+    },
+    {
+      "rule": "Publication bypass prevention",
+      "constraint": "IF (patent_filing) THEN publication_coordination = REQUIRED",
+      "enforcement": "Mandatory publication coordination before patent filing"
+    },
+    {
+      "rule": "IP ownership protection",
+      "constraint": "Institution_IP_contributions MUST be tracked_and_attributed",
+      "enforcement": "Cryptographic contribution tracking system"
+    },
+    {
+      "rule": "NIH grant compliance enforcement",
+      "constraint": "IF (NIH_funded) THEN milestone_reporting = MANDATORY",
+      "enforcement": "Automated NIH compliance verification"
+    },
+    {
+      "rule": "IRB oversight enforcement",
+      "constraint": "Multi_site_research REQUIRES central_IRB_approval",
+      "enforcement": "Central IRB approval verification system"
+    },
+    {
+      "rule": "Export control compliance",
+      "constraint": "IF (international_collaboration) THEN export_control_review = REQUIRED",
+      "enforcement": "Export control compliance verification"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 25,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "Maximum",
+    "securityLevel": "Academic + Commercial + Federal",
+    "privacyLevel": "Academic + IP + ZK",
+    "regulatoryComplexity": "NIH + IRB + USPTO + Export Control"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'abc(d|e|f)gh(i|j|k)lm(n|o)pq(r|s|t)uvw' --functionName 'verifyProcessHC6RSRCH' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC6RSRCH",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-6-RSRCH-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-6-RSRCH-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG6RSRCH ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-6-RSRCH-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-6-RSRCH-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

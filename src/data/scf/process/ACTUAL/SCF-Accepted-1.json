@@ -1,0 +1,153 @@
+{
+  "processId": "SCF_Accepted1_Process",
+  "processName": "Supply Chain Finance - Accepted Path 1",
+  "description": "Valid SCF workflow following B→C cross-connection with direct F completion",
+  "processType": "SCF",
+  "subType": "SUPPLY_CHAIN_FINANCE",
+  "status": "ACCEPTED",
+  "version": "1.0",
+  "expectedPattern": "a(b|c)(c|b)d(e|f)fg",
+  "actualPath": "abcdfg",
+  "pathValidation": {
+    "isValid": true,
+    "matchesExpected": true,
+    "complianceScore": 100
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "Event_1e6mvux",
+      "name": "0",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "Event_0d8ci30", 
+      "name": "8",
+      "type": "endEvent"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_0ckb2yy",
+        "name": "1",
+        "description": "Initial Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0orj063",
+        "name": "2", 
+        "description": "Branch B Processing (EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0s7vpsv",
+        "name": "3",
+        "description": "Branch C Processing (NOT EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": false
+      },
+      {
+        "id": "Event_09jlpil",
+        "name": "4",
+        "description": "First Join Point",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_1ooatwj",
+        "name": "5",
+        "description": "Second Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0zmkq57",
+        "name": "6",
+        "description": "Branch E Processing (NOT EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": false
+      },
+      {
+        "id": "Event_024ls17",
+        "name": "7",
+        "description": "Final Join Point",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_1e1jt09",
+        "name": "a",
+        "sourceRef": "Event_1e6mvux",
+        "targetRef": "Event_0ckb2yy",
+        "executed": true
+      },
+      {
+        "id": "Flow_1mcdovg",
+        "name": "b",
+        "sourceRef": "Event_0ckb2yy",
+        "targetRef": "Event_0orj063",
+        "executed": true
+      },
+      {
+        "id": "Flow_0uxr7s1",
+        "name": "c",
+        "sourceRef": "Event_0orj063",
+        "targetRef": "Event_09jlpil",
+        "executed": true
+      },
+      {
+        "id": "Flow_16doo4t",
+        "name": "d",
+        "sourceRef": "Event_09jlpil",
+        "targetRef": "Event_1ooatwj",
+        "executed": true
+      },
+      {
+        "id": "Flow_0wslkb9",
+        "name": "f",
+        "sourceRef": "Event_1ooatwj",
+        "targetRef": "Event_024ls17",
+        "executed": true
+      },
+      {
+        "id": "Flow_01qx9za",
+        "name": "g",
+        "sourceRef": "Event_024ls17",
+        "targetRef": "Event_0d8ci30",
+        "executed": true
+      }
+    ],
+    "pathChoices": {
+      "firstBranch": {
+        "selected": "b",
+        "alternative": "c",
+        "description": "Selected Branch B processing"
+      },
+      "crossConnection": {
+        "selected": "c",
+        "description": "Cross-connected to C as required by pattern (b→c)"
+      },
+      "secondBranch": {
+        "selected": "f",
+        "alternative": "e",
+        "description": "Selected direct F route, bypassing E processing"
+      }
+    }
+  },
+  "businessRules": {
+    "crossConnectionFollowed": true,
+    "branchingChoicesValid": true,
+    "patternCompliance": true,
+    "allRequiredStepsExecuted": true,
+    "complianceViolations": []
+  },
+  "metadata": {
+    "createdDate": "2025-07-09",
+    "lastModified": "2025-07-09",
+    "version": "1.0",
+    "author": "SCF Process Validator",
+    "tags": ["scf", "supply-chain", "finance", "accepted", "valid-path", "b-c-connection"]
+  }
+}

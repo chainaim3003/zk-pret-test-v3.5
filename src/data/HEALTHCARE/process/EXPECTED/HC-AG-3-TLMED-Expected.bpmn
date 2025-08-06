@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HC3_TLMED_Enhanced_Expected" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HC3_TLMED_Enhanced_Process" isExecutable="false">
+    <!-- START: Enhanced Cross-Border Telemedicine with Full Regulatory Compliance -->
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <!-- Enhanced Cross-Border Telemedicine workflow: abc(d|e)f(g|h)ij(k|l|m)n(o|p)qrstuv -->
+    <!-- Node 1: Patient Consent Agent -->
+    <intermediateThrowEvent id="Event_1" name="1">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 2: Jurisdiction Detection Agent -->
+    <intermediateThrowEvent id="Event_2" name="2">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 3: Compliance Router (Branch Point 1) -->
+    <intermediateThrowEvent id="Event_3" name="3">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_4</outgoing>
+      <outgoing>Flow_3_to_5</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FIRST BRANCH: Compliance Framework (d|e) -->
+    <!-- Node 4: GDPR Compliance Agent (Branch D) -->
+    <intermediateThrowEvent id="Event_4" name="4">
+      <incoming>Flow_3_to_4</incoming>
+      <outgoing>Flow_4_to_6</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 5: HIPAA Compliance Agent (Branch E) -->
+    <intermediateThrowEvent id="Event_5" name="5">
+      <incoming>Flow_3_to_5</incoming>
+      <outgoing>Flow_5_to_6</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 6: Primary Care Router (Join Point 1 + Branch Point 2) -->
+    <intermediateThrowEvent id="Event_6" name="6">
+      <incoming>Flow_4_to_6</incoming>
+      <incoming>Flow_5_to_6</incoming>
+      <outgoing>Flow_6_to_7</outgoing>
+      <outgoing>Flow_6_to_8</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- SECOND BRANCH: Primary Care Location (g|h) -->
+    <!-- Node 7: US Hospital Primary (Branch G) -->
+    <intermediateThrowEvent id="Event_7" name="7">
+      <incoming>Flow_6_to_7</incoming>
+      <outgoing>Flow_7_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 8: EU Hospital Primary (Branch H) -->
+    <intermediateThrowEvent id="Event_8" name="8">
+      <incoming>Flow_6_to_8</incoming>
+      <outgoing>Flow_8_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 9: Specialist Consultation Request (Join Point 2) -->
+    <intermediateThrowEvent id="Event_9" name="9">
+      <incoming>Flow_7_to_9</incoming>
+      <incoming>Flow_8_to_9</incoming>
+      <outgoing>Flow_9_to_10</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 10: Enhanced Medical License Verification (Branch Point 3) -->
+    <intermediateThrowEvent id="Event_10" name="10">
+      <incoming>Flow_9_to_10</incoming>
+      <outgoing>Flow_10_to_11</outgoing>
+      <outgoing>Flow_10_to_12</outgoing>
+      <outgoing>Flow_10_to_13</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- THIRD BRANCH: Data Residency (k|l|m) -->
+    <!-- Node 11: Local Data Storage Only (Branch K) -->
+    <intermediateThrowEvent id="Event_11" name="11">
+      <incoming>Flow_10_to_11</incoming>
+      <outgoing>Flow_11_to_14</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 12: Encrypted Cross-Border Transfer (Branch L) -->
+    <intermediateThrowEvent id="Event_12" name="12">
+      <incoming>Flow_10_to_12</incoming>
+      <outgoing>Flow_12_to_14</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 13: Federated Learning Approach (Branch M) -->
+    <intermediateThrowEvent id="Event_13" name="13">
+      <incoming>Flow_10_to_13</incoming>
+      <outgoing>Flow_13_to_14</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 14: Data Residency Join (Join Point 3 + Branch Point 4) -->
+    <intermediateThrowEvent id="Event_14" name="14">
+      <incoming>Flow_11_to_14</incoming>
+      <incoming>Flow_12_to_14</incoming>
+      <incoming>Flow_13_to_14</incoming>
+      <outgoing>Flow_14_to_15</outgoing>
+      <outgoing>Flow_14_to_16</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FOURTH BRANCH: Consultation Method (o|p) -->
+    <!-- Node 15: Secure Video Consultation (Branch O) -->
+    <intermediateThrowEvent id="Event_15" name="15">
+      <incoming>Flow_14_to_15</incoming>
+      <outgoing>Flow_15_to_17</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 16: Encrypted Messaging Platform (Branch P) -->
+    <intermediateThrowEvent id="Event_16" name="16">
+      <incoming>Flow_14_to_16</incoming>
+      <outgoing>Flow_16_to_17</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 17: Consultation Method Join (Join Point 4) -->
+    <intermediateThrowEvent id="Event_17" name="17">
+      <incoming>Flow_15_to_17</incoming>
+      <incoming>Flow_16_to_17</incoming>
+      <outgoing>Flow_17_to_18</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 18: Clinical Data Anonymization -->
+    <intermediateThrowEvent id="Event_18" name="18">
+      <incoming>Flow_17_to_18</incoming>
+      <outgoing>Flow_18_to_19</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 19: Expert Opinion Agent -->
+    <intermediateThrowEvent id="Event_19" name="19">
+      <incoming>Flow_18_to_19</incoming>
+      <outgoing>Flow_19_to_20</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 20: Treatment Recommendation -->
+    <intermediateThrowEvent id="Event_20" name="20">
+      <incoming>Flow_19_to_20</incoming>
+      <outgoing>Flow_20_to_21</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 21: Audit Trail & Payment Validation -->
+    <intermediateThrowEvent id="Event_21" name="21">
+      <incoming>Flow_20_to_21</incoming>
+      <outgoing>Flow_21_to_End</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- END: Enhanced Cross-Border Consultation Complete -->
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_21_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows for Enhanced Cross-Border Telemedicine: abc(d|e)f(g|h)ij(k|l|m)n(o|p)qrstuv -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Event_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Event_1" targetRef="Event_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Event_2" targetRef="Event_3" />
+    <sequenceFlow id="Flow_3_to_4" name="d" sourceRef="Event_3" targetRef="Event_4" />
+    <sequenceFlow id="Flow_3_to_5" name="e" sourceRef="Event_3" targetRef="Event_5" />
+    <sequenceFlow id="Flow_4_to_6" name="f" sourceRef="Event_4" targetRef="Event_6" />
+    <sequenceFlow id="Flow_5_to_6" name="f" sourceRef="Event_5" targetRef="Event_6" />
+    <sequenceFlow id="Flow_6_to_7" name="g" sourceRef="Event_6" targetRef="Event_7" />
+    <sequenceFlow id="Flow_6_to_8" name="h" sourceRef="Event_6" targetRef="Event_8" />
+    <sequenceFlow id="Flow_7_to_9" name="i" sourceRef="Event_7" targetRef="Event_9" />
+    <sequenceFlow id="Flow_8_to_9" name="i" sourceRef="Event_8" targetRef="Event_9" />
+    <sequenceFlow id="Flow_9_to_10" name="j" sourceRef="Event_9" targetRef="Event_10" />
+    <sequenceFlow id="Flow_10_to_11" name="k" sourceRef="Event_10" targetRef="Event_11" />
+    <sequenceFlow id="Flow_10_to_12" name="l" sourceRef="Event_10" targetRef="Event_12" />
+    <sequenceFlow id="Flow_10_to_13" name="m" sourceRef="Event_10" targetRef="Event_13" />
+    <sequenceFlow id="Flow_11_to_14" name="n" sourceRef="Event_11" targetRef="Event_14" />
+    <sequenceFlow id="Flow_12_to_14" name="n" sourceRef="Event_12" targetRef="Event_14" />
+    <sequenceFlow id="Flow_13_to_14" name="n" sourceRef="Event_13" targetRef="Event_14" />
+    <sequenceFlow id="Flow_14_to_15" name="o" sourceRef="Event_14" targetRef="Event_15" />
+    <sequenceFlow id="Flow_14_to_16" name="p" sourceRef="Event_14" targetRef="Event_16" />
+    <sequenceFlow id="Flow_15_to_17" name="q" sourceRef="Event_15" targetRef="Event_17" />
+    <sequenceFlow id="Flow_16_to_17" name="q" sourceRef="Event_16" targetRef="Event_17" />
+    <sequenceFlow id="Flow_17_to_18" name="r" sourceRef="Event_17" targetRef="Event_18" />
+    <sequenceFlow id="Flow_18_to_19" name="s" sourceRef="Event_18" targetRef="Event_19" />
+    <sequenceFlow id="Flow_19_to_20" name="t" sourceRef="Event_19" targetRef="Event_20" />
+    <sequenceFlow id="Flow_20_to_21" name="u" sourceRef="Event_20" targetRef="Event_21" />
+    <sequenceFlow id="Flow_21_to_End" name="v" sourceRef="Event_21" targetRef="EndEvent_End" />
+    
+  </process>
+  
+  <!-- BPMN Diagram Information for BPMN.io visualization -->
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="HC3_TLMED_Enhanced_Process">
+      
+      <!-- Start Event Shape -->
+      <bpmndi:BPMNShape id="StartEvent_Start_di" bpmnElement="StartEvent_Start">
+        <omgdc:Bounds x="152" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="158" y="345" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 1 Shape -->
+      <bpmndi:BPMNShape id="Event_1_di" bpmnElement="Event_1">
+        <omgdc:Bounds x="252" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="267" y="345" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 2 Shape -->
+      <bpmndi:BPMNShape id="Event_2_di" bpmnElement="Event_2">
+        <omgdc:Bounds x="352" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="367" y="345" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 3 Shape (First Branch Point) -->
+      <bpmndi:BPMNShape id="Event_3_di" bpmnElement="Event_3">
+        <omgdc:Bounds x="452" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="467" y="345" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 4 Shape (GDPR Branch) -->
+      <bpmndi:BPMNShape id="Event_4_di" bpmnElement="Event_4">
+        <omgdc:Bounds x="552" y="217" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="567" y="260" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 5 Shape (HIPAA Branch) -->
+      <bpmndi:BPMNShape id="Event_5_di" bpmnElement="Event_5">
+        <omgdc:Bounds x="552" y="387" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="567" y="430" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 6 Shape (First Join + Second Branch) -->
+      <bpmndi:BPMNShape id="Event_6_di" bpmnElement="Event_6">
+        <omgdc:Bounds x="652" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="667" y="345" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 7 Shape (US Hospital Branch) -->
+      <bpmndi:BPMNShape id="Event_7_di" bpmnElement="Event_7">
+        <omgdc:Bounds x="752" y="217" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="767" y="260" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 8 Shape (EU Hospital Branch) -->
+      <bpmndi:BPMNShape id="Event_8_di" bpmnElement="Event_8">
+        <omgdc:Bounds x="752" y="387" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="767" y="430" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 9 Shape (Second Join) -->
+      <bpmndi:BPMNShape id="Event_9_di" bpmnElement="Event_9">
+        <omgdc:Bounds x="852" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="867" y="345" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 10 Shape (Third Branch Point) -->
+      <bpmndi:BPMNShape id="Event_10_di" bpmnElement="Event_10">
+        <omgdc:Bounds x="952" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="965" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 11 Shape (Local Data Branch) -->
+      <bpmndi:BPMNShape id="Event_11_di" bpmnElement="Event_11">
+        <omgdc:Bounds x="1052" y="167" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1065" y="210" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 12 Shape (Cross-Border Branch) -->
+      <bpmndi:BPMNShape id="Event_12_di" bpmnElement="Event_12">
+        <omgdc:Bounds x="1052" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1065" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 13 Shape (Federated Learning Branch) -->
+      <bpmndi:BPMNShape id="Event_13_di" bpmnElement="Event_13">
+        <omgdc:Bounds x="1052" y="437" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1065" y="480" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 14 Shape (Third Join + Fourth Branch) -->
+      <bpmndi:BPMNShape id="Event_14_di" bpmnElement="Event_14">
+        <omgdc:Bounds x="1152" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1165" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 15 Shape (Video Consultation Branch) -->
+      <bpmndi:BPMNShape id="Event_15_di" bpmnElement="Event_15">
+        <omgdc:Bounds x="1252" y="217" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1265" y="260" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 16 Shape (Messaging Platform Branch) -->
+      <bpmndi:BPMNShape id="Event_16_di" bpmnElement="Event_16">
+        <omgdc:Bounds x="1252" y="387" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1265" y="430" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 17 Shape (Fourth Join) -->
+      <bpmndi:BPMNShape id="Event_17_di" bpmnElement="Event_17">
+        <omgdc:Bounds x="1352" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1365" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 18 Shape -->
+      <bpmndi:BPMNShape id="Event_18_di" bpmnElement="Event_18">
+        <omgdc:Bounds x="1452" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1465" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 19 Shape -->
+      <bpmndi:BPMNShape id="Event_19_di" bpmnElement="Event_19">
+        <omgdc:Bounds x="1552" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1565" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 20 Shape -->
+      <bpmndi:BPMNShape id="Event_20_di" bpmnElement="Event_20">
+        <omgdc:Bounds x="1652" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1665" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 21 Shape -->
+      <bpmndi:BPMNShape id="Event_21_di" bpmnElement="Event_21">
+        <omgdc:Bounds x="1752" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1765" y="345" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- End Event Shape -->
+      <bpmndi:BPMNShape id="EndEvent_End_di" bpmnElement="EndEvent_End">
+        <omgdc:Bounds x="1852" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1861" y="345" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flow Edges -->
+      
+      <!-- Flow Start to 1 -->
+      <bpmndi:BPMNEdge id="Flow_Start_to_1_di" bpmnElement="Flow_Start_to_1">
+        <omgdi:waypoint x="188" y="320" />
+        <omgdi:waypoint x="252" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="217" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 1 to 2 -->
+      <bpmndi:BPMNEdge id="Flow_1_to_2_di" bpmnElement="Flow_1_to_2">
+        <omgdi:waypoint x="288" y="320" />
+        <omgdi:waypoint x="352" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="317" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 2 to 3 -->
+      <bpmndi:BPMNEdge id="Flow_2_to_3_di" bpmnElement="Flow_2_to_3">
+        <omgdi:waypoint x="388" y="320" />
+        <omgdi:waypoint x="452" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="417" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 3 to 4 (GDPR Branch) -->
+      <bpmndi:BPMNEdge id="Flow_3_to_4_di" bpmnElement="Flow_3_to_4">
+        <omgdi:waypoint x="480" y="310" />
+        <omgdi:waypoint x="520" y="270" />
+        <omgdi:waypoint x="552" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="527" y="287" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 3 to 5 (HIPAA Branch) -->
+      <bpmndi:BPMNEdge id="Flow_3_to_5_di" bpmnElement="Flow_3_to_5">
+        <omgdi:waypoint x="480" y="330" />
+        <omgdi:waypoint x="520" y="370" />
+        <omgdi:waypoint x="552" y="405" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="527" y="353" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 4 to 6 -->
+      <bpmndi:BPMNEdge id="Flow_4_to_6_di" bpmnElement="Flow_4_to_6">
+        <omgdi:waypoint x="588" y="235" />
+        <omgdi:waypoint x="620" y="270" />
+        <omgdi:waypoint x="660" y="302" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="627" y="253" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 5 to 6 -->
+      <bpmndi:BPMNEdge id="Flow_5_to_6_di" bpmnElement="Flow_5_to_6">
+        <omgdi:waypoint x="588" y="405" />
+        <omgdi:waypoint x="620" y="370" />
+        <omgdi:waypoint x="660" y="338" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="627" y="387" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 6 to 7 (US Hospital Branch) -->
+      <bpmndi:BPMNEdge id="Flow_6_to_7_di" bpmnElement="Flow_6_to_7">
+        <omgdi:waypoint x="680" y="310" />
+        <omgdi:waypoint x="720" y="270" />
+        <omgdi:waypoint x="752" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="727" y="287" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 6 to 8 (EU Hospital Branch) -->
+      <bpmndi:BPMNEdge id="Flow_6_to_8_di" bpmnElement="Flow_6_to_8">
+        <omgdi:waypoint x="680" y="330" />
+        <omgdi:waypoint x="720" y="370" />
+        <omgdi:waypoint x="752" y="405" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="727" y="353" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 7 to 9 -->
+      <bpmndi:BPMNEdge id="Flow_7_to_9_di" bpmnElement="Flow_7_to_9">
+        <omgdi:waypoint x="788" y="235" />
+        <omgdi:waypoint x="820" y="270" />
+        <omgdi:waypoint x="860" y="302" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="827" y="253" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 8 to 9 -->
+      <bpmndi:BPMNEdge id="Flow_8_to_9_di" bpmnElement="Flow_8_to_9">
+        <omgdi:waypoint x="788" y="405" />
+        <omgdi:waypoint x="820" y="370" />
+        <omgdi:waypoint x="860" y="338" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="827" y="387" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 9 to 10 -->
+      <bpmndi:BPMNEdge id="Flow_9_to_10_di" bpmnElement="Flow_9_to_10">
+        <omgdi:waypoint x="888" y="320" />
+        <omgdi:waypoint x="952" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="917" y="302" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 10 to 11 (Local Data Branch) -->
+      <bpmndi:BPMNEdge id="Flow_10_to_11_di" bpmnElement="Flow_10_to_11">
+        <omgdi:waypoint x="980" y="310" />
+        <omgdi:waypoint x="1015" y="240" />
+        <omgdi:waypoint x="1052" y="185" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1022" y="258" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 10 to 12 (Cross-Border Branch) -->
+      <bpmndi:BPMNEdge id="Flow_10_to_12_di" bpmnElement="Flow_10_to_12">
+        <omgdi:waypoint x="988" y="320" />
+        <omgdi:waypoint x="1052" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1017" y="302" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 10 to 13 (Federated Learning Branch) -->
+      <bpmndi:BPMNEdge id="Flow_10_to_13_di" bpmnElement="Flow_10_to_13">
+        <omgdi:waypoint x="980" y="330" />
+        <omgdi:waypoint x="1015" y="400" />
+        <omgdi:waypoint x="1052" y="455" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1020" y="383" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 11 to 14 -->
+      <bpmndi:BPMNEdge id="Flow_11_to_14_di" bpmnElement="Flow_11_to_14">
+        <omgdi:waypoint x="1088" y="185" />
+        <omgdi:waypoint x="1120" y="240" />
+        <omgdi:waypoint x="1160" y="302" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1127" y="203" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 12 to 14 -->
+      <bpmndi:BPMNEdge id="Flow_12_to_14_di" bpmnElement="Flow_12_to_14">
+        <omgdi:waypoint x="1088" y="320" />
+        <omgdi:waypoint x="1152" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1117" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 13 to 14 -->
+      <bpmndi:BPMNEdge id="Flow_13_to_14_di" bpmnElement="Flow_13_to_14">
+        <omgdi:waypoint x="1088" y="455" />
+        <omgdi:waypoint x="1120" y="400" />
+        <omgdi:waypoint x="1160" y="338" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1127" y="418" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 14 to 15 (Video Consultation Branch) -->
+      <bpmndi:BPMNEdge id="Flow_14_to_15_di" bpmnElement="Flow_14_to_15">
+        <omgdi:waypoint x="1180" y="310" />
+        <omgdi:waypoint x="1220" y="270" />
+        <omgdi:waypoint x="1252" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1227" y="287" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 14 to 16 (Messaging Platform Branch) -->
+      <bpmndi:BPMNEdge id="Flow_14_to_16_di" bpmnElement="Flow_14_to_16">
+        <omgdi:waypoint x="1180" y="330" />
+        <omgdi:waypoint x="1220" y="370" />
+        <omgdi:waypoint x="1252" y="405" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1227" y="353" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 15 to 17 -->
+      <bpmndi:BPMNEdge id="Flow_15_to_17_di" bpmnElement="Flow_15_to_17">
+        <omgdi:waypoint x="1288" y="235" />
+        <omgdi:waypoint x="1320" y="270" />
+        <omgdi:waypoint x="1360" y="302" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1327" y="253" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 16 to 17 -->
+      <bpmndi:BPMNEdge id="Flow_16_to_17_di" bpmnElement="Flow_16_to_17">
+        <omgdi:waypoint x="1288" y="405" />
+        <omgdi:waypoint x="1320" y="370" />
+        <omgdi:waypoint x="1360" y="338" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1327" y="387" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 17 to 18 -->
+      <bpmndi:BPMNEdge id="Flow_17_to_18_di" bpmnElement="Flow_17_to_18">
+        <omgdi:waypoint x="1388" y="320" />
+        <omgdi:waypoint x="1452" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1417" y="302" width="6" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 18 to 19 -->
+      <bpmndi:BPMNEdge id="Flow_18_to_19_di" bpmnElement="Flow_18_to_19">
+        <omgdi:waypoint x="1488" y="320" />
+        <omgdi:waypoint x="1552" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1517" y="302" width="6" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 19 to 20 -->
+      <bpmndi:BPMNEdge id="Flow_19_to_20_di" bpmnElement="Flow_19_to_20">
+        <omgdi:waypoint x="1588" y="320" />
+        <omgdi:waypoint x="1652" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1617" y="302" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 20 to 21 -->
+      <bpmndi:BPMNEdge id="Flow_20_to_21_di" bpmnElement="Flow_20_to_21">
+        <omgdi:waypoint x="1688" y="320" />
+        <omgdi:waypoint x="1752" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1717" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Flow 21 to End -->
+      <bpmndi:BPMNEdge id="Flow_21_to_End_di" bpmnElement="Flow_21_to_End">
+        <omgdi:waypoint x="1788" y="320" />
+        <omgdi:waypoint x="1852" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1817" y="302" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

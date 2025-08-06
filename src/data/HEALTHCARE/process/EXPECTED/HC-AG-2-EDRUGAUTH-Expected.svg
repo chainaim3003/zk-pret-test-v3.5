@@ -1,0 +1,245 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1900 700">
+  <!-- Background -->
+  <rect width="1900" height="700" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="950" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#2563eb">
+    HC-AG-12: Enhanced Drug Authorization (EDRUGAUTH)
+  </text>
+  <text x="950" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#64748b">
+    Pattern: abc(d|e|f)(g|h)(i|j|k)(l|m)nopqr (24 possible paths)
+  </text>
+  
+  <!-- Start Event -->
+  <circle cx="80" cy="250" r="18" fill="#10b981" stroke="#059669" stroke-width="2"/>
+  <text x="80" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">S</text>
+  <text x="80" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Start</text>
+  
+  <!-- Node 1: Patient Identity Verification -->
+  <circle cx="160" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="160" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">1</text>
+  <text x="160" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#374151">Identity</text>
+  
+  <!-- Node 2: Clinical Assessment -->
+  <circle cx="240" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="240" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">2</text>
+  <text x="240" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#374151">Clinical</text>
+  
+  <!-- Node 3: Insurance Coverage -->
+  <circle cx="320" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="320" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">3</text>
+  <text x="320" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#374151">Insurance</text>
+  
+  <!-- FIRST BRANCH: Payer Hierarchy (d|e|f) -->
+  <circle cx="420" cy="190" r="15" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <text x="420" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">4</text>
+  <text x="420" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Primary</text>
+  
+  <circle cx="420" cy="250" r="15" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <text x="420" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">5</text>
+  <text x="420" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Secondary</text>
+  
+  <circle cx="420" cy="310" r="15" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <text x="420" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">6</text>
+  <text x="420" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Government</text>
+  
+  <!-- Node 7: Prior Authorization (Join) -->
+  <circle cx="500" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="500" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">7</text>
+  <text x="500" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Prior Auth</text>
+  
+  <!-- SECOND BRANCH: Formulary Status (g|h) -->
+  <circle cx="600" cy="220" r="15" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+  <text x="600" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">8</text>
+  <text x="600" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">On Form</text>
+  
+  <circle cx="600" cy="280" r="15" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+  <text x="600" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">9</text>
+  <text x="600" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Prior Req</text>
+  
+  <!-- Node 10: Drug Interaction Screening (Join) -->
+  <circle cx="680" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="680" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">10</text>
+  <text x="680" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Screening</text>
+  
+  <!-- THIRD BRANCH: Drug Source (i|j|k) -->
+  <circle cx="780" cy="190" r="15" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="780" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">11</text>
+  <text x="780" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Brand</text>
+  
+  <circle cx="780" cy="250" r="15" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="780" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">12</text>
+  <text x="780" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Generic</text>
+  
+  <circle cx="780" cy="310" r="15" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="780" y="315" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">13</text>
+  <text x="780" y="335" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Biosimilar</text>
+  
+  <!-- Node 14: Manufacturer Supply (Join) -->
+  <circle cx="860" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="860" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">14</text>
+  <text x="860" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Supply</text>
+  
+  <!-- FOURTH BRANCH: Pharmacy Network (l|m) -->
+  <circle cx="960" cy="220" r="15" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="960" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">15</text>
+  <text x="960" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">In-Network</text>
+  
+  <circle cx="960" cy="280" r="15" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="960" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">16</text>
+  <text x="960" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Out-Network</text>
+  
+  <!-- Node 17: State Board Verification (Join) -->
+  <circle cx="1040" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1040" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">17</text>
+  <text x="1040" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">State Board</text>
+  
+  <!-- Final Sequential Nodes -->
+  <circle cx="1140" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1140" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">18</text>
+  <text x="1140" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Dispensing</text>
+  
+  <circle cx="1240" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1240" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">19</text>
+  <text x="1240" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Payment</text>
+  
+  <circle cx="1340" cy="250" r="15" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1340" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="white">20</text>
+  <text x="1340" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Audit</text>
+  
+  <!-- End Event -->
+  <circle cx="1420" cy="250" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="2"/>
+  <text x="1420" y="255" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">E</text>
+  <text x="1420" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">End</text>
+  
+  <!-- Sequential Flow Lines -->
+  <line x1="98" y1="250" x2="142" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="120" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">a</text>
+  
+  <line x1="175" y1="250" x2="222" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="200" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">b</text>
+  
+  <line x1="255" y1="250" x2="302" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="280" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">c</text>
+  
+  <!-- Branch Lines (d|e|f) -->
+  <line x1="335" y1="240" x2="405" y2="200" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="365" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f59e0b">d</text>
+  
+  <line x1="335" y1="250" x2="402" y2="250" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="370" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f59e0b">e</text>
+  
+  <line x1="335" y1="260" x2="405" y2="300" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="365" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f59e0b">f</text>
+  
+  <!-- Join Lines -->
+  <line x1="435" y1="200" x2="485" y2="240" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="455" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">g</text>
+  
+  <line x1="435" y1="250" x2="482" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="460" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">g</text>
+  
+  <line x1="435" y1="300" x2="485" y2="260" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="455" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">g</text>
+  
+  <!-- Branch Lines (h|i) -->
+  <line x1="515" y1="240" x2="585" y2="230" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="545" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#ef4444">h</text>
+  
+  <line x1="515" y1="260" x2="585" y2="270" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="545" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#ef4444">i</text>
+  
+  <!-- Join Lines -->
+  <line x1="615" y1="230" x2="665" y2="240" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="635" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">j</text>
+  
+  <line x1="615" y1="270" x2="665" y2="260" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="635" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">j</text>
+  
+  <!-- Branch Lines (k|l|m) -->
+  <line x1="695" y1="240" x2="765" y2="200" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="725" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8b5cf6">k</text>
+  
+  <line x1="695" y1="250" x2="762" y2="250" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="730" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8b5cf6">l</text>
+  
+  <line x1="695" y1="260" x2="765" y2="300" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="725" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8b5cf6">m</text>
+  
+  <!-- Join Lines -->
+  <line x1="795" y1="200" x2="845" y2="240" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="815" y="215" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">n</text>
+  
+  <line x1="795" y1="250" x2="842" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="820" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">n</text>
+  
+  <line x1="795" y1="300" x2="845" y2="260" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="815" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">n</text>
+  
+  <!-- Branch Lines (o|p) -->
+  <line x1="875" y1="240" x2="945" y2="230" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="905" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#06b6d4">o</text>
+  
+  <line x1="875" y1="260" x2="945" y2="270" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="905" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#06b6d4">p</text>
+  
+  <!-- Join Lines -->
+  <line x1="975" y1="230" x2="1025" y2="240" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="995" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">q</text>
+  
+  <line x1="975" y1="270" x2="1025" y2="260" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="995" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">q</text>
+  
+  <!-- Final Sequential Lines -->
+  <line x1="1055" y1="250" x2="1122" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="1090" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">r</text>
+  
+  <line x1="1155" y1="250" x2="1222" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="1190" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">s</text>
+  
+  <line x1="1255" y1="250" x2="1322" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="1290" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">t</text>
+  
+  <line x1="1355" y1="250" x2="1402" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="1380" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">u</text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#374151"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend positioned below the diagram -->
+  <rect x="100" y="430" width="1700" height="200" fill="white" stroke="#e5e7eb" stroke-width="1" rx="5"/>
+  <text x="950" y="455" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#374151">Process Components Legend</text>
+  
+  <!-- Legend items arranged horizontally in rows -->
+  <!-- Row 1 -->
+  <circle cx="150" cy="485" r="10" fill="#f59e0b"/>
+  <text x="170" y="490" font-family="Arial, sans-serif" font-size="12" fill="#374151">Payer Hierarchy (d|e|f): Primary, Secondary, Government</text>
+  
+  <circle cx="850" cy="485" r="10" fill="#ef4444"/>
+  <text x="870" y="490" font-family="Arial, sans-serif" font-size="12" fill="#374151">Formulary Status (h|i): On Formulary vs Prior Auth Required</text>
+  
+  <!-- Row 2 -->
+  <circle cx="150" cy="515" r="10" fill="#8b5cf6"/>
+  <text x="170" y="520" font-family="Arial, sans-serif" font-size="12" fill="#374151">Drug Source (k|l|m): Brand, Generic, Biosimilar</text>
+  
+  <circle cx="850" cy="515" r="10" fill="#06b6d4"/>
+  <text x="870" y="520" font-family="Arial, sans-serif" font-size="12" fill="#374151">Pharmacy Network (o|p): In-Network vs Out-of-Network</text>
+  
+  <!-- Row 3 -->
+  <circle cx="150" cy="545" r="10" fill="#3b82f6"/>
+  <text x="170" y="550" font-family="Arial, sans-serif" font-size="12" fill="#374151">Sequential Steps: Identity verification, clinical assessment, dispensing</text>
+  
+  <circle cx="850" cy="545" r="10" fill="#10b981"/>
+  <text x="870" y="550" font-family="Arial, sans-serif" font-size="12" fill="#374151">Start Event: Drug authorization process initiation</text>
+  
+  <!-- Row 4 -->
+  <circle cx="150" cy="575" r="10" fill="#dc2626"/>
+  <text x="170" y="580" font-family="Arial, sans-serif" font-size="12" fill="#374151">End Event: Drug authorization completion</text>
+  
+  <circle cx="850" cy="575" r="10" fill="#6b7280"/>
+  <text x="870" y="580" font-family="Arial, sans-serif" font-size="12" fill="#374151">Join Points: Decision branch convergence points</text>
+</svg>

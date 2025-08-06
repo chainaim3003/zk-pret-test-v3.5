@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 800">
+  <!-- Background with subtle grid for better visual organization -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Arrow markers for better visibility -->
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#374151" stroke="#374151" stroke-width="1"/>
+    </marker>
+    
+    <!-- Different arrow for branch flows -->
+    <marker id="branchArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#059669" stroke="#059669" stroke-width="1"/>
+    </marker>
+    
+    <!-- Fonts and styles -->
+    <style>
+      .title-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 22px; font-weight: bold; fill: #1e40af; }
+      .subtitle-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; fill: #64748b; }
+      .node-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; font-weight: bold; fill: white; text-anchor: middle; }
+      .node-desc { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px; fill: #374151; text-anchor: middle; }
+      .flow-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: bold; fill: #374151; text-anchor: middle; }
+      .branch-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; font-weight: bold; fill: #059669; text-anchor: middle; }
+      .legend-title { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; font-weight: bold; fill: #374151; }
+      .legend-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; fill: #374151; }
+      .legend-small { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px; fill: #64748b; }
+    </style>
+  </defs>
+  
+  <!-- Grid background -->
+  <rect width="2000" height="800" fill="url(#grid)"/>
+  <rect width="2000" height="800" fill="#fafafa" opacity="0.8"/>
+  
+  <!-- Title Section -->
+  <text x="1000" y="40" class="title-text" text-anchor="middle">
+    HC-AG-1-ECLNTL: Enhanced Clinical Trial Coordination (Expected Pattern)
+  </text>
+  <text x="1000" y="65" class="subtitle-text" text-anchor="middle">
+    Pattern: ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst — 36 Possible Valid Execution Paths
+  </text>
+  
+  <!-- Process Flow Diagram -->
+  
+  <!-- Start Event -->
+  <circle cx="100" cy="300" r="22" fill="#10b981" stroke="#059669" stroke-width="3"/>
+  <text x="100" y="306" class="node-label" font-size="16">S</text>
+  <text x="100" y="335" class="node-desc" font-weight="bold">START</text>
+  
+  <!-- Node 1: Trial Protocol Agent (a) -->
+  <circle cx="220" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="220" y="306" class="node-label">1</text>
+  <text x="220" y="330" class="node-desc">Protocol</text>
+  <text x="220" y="343" class="node-desc">Agent</text>
+  
+  <!-- Node 2: IRB Approval Agent (b) -->
+  <circle cx="340" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="340" y="306" class="node-label">2</text>
+  <text x="340" y="330" class="node-desc">IRB</text>
+  <text x="340" y="343" class="node-desc">Approval</text>
+  
+  <!-- FIRST BRANCH: Site Selection (c|d) -->
+  <circle cx="480" cy="240" r="18" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <text x="480" y="246" class="node-label">3</text>
+  <text x="480" y="270" class="node-desc">Hospital A</text>
+  <text x="480" y="283" class="node-desc">(Site C)</text>
+  
+  <circle cx="480" cy="360" r="18" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+  <text x="480" y="366" class="node-label">4</text>
+  <text x="480" y="390" class="node-desc">Hospital B</text>
+  <text x="480" y="403" class="node-desc">(Site D)</text>
+  
+  <!-- Node 5: Patient Randomization (Join - e) -->
+  <circle cx="600" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="600" y="306" class="node-label">5</text>
+  <text x="600" y="330" class="node-desc">Patient</text>
+  <text x="600" y="343" class="node-desc">Randomization</text>
+  
+  <!-- SECOND BRANCH: Patient Stratification (f|g|h) -->
+  <circle cx="740" cy="200" r="18" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+  <text x="740" y="206" class="node-label">6</text>
+  <text x="740" y="230" class="node-desc">Mild Cases</text>
+  <text x="740" y="243" class="node-desc">(Strat F)</text>
+  
+  <circle cx="740" cy="300" r="18" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+  <text x="740" y="306" class="node-label">7</text>
+  <text x="740" y="330" class="node-desc">Moderate</text>
+  <text x="740" y="343" class="node-desc">(Strat G)</text>
+  
+  <circle cx="740" cy="400" r="18" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+  <text x="740" y="406" class="node-label">8</text>
+  <text x="740" y="430" class="node-desc">Severe</text>
+  <text x="740" y="443" class="node-desc">(Strat H)</text>
+  
+  <!-- Node 9: Drug Distribution (Join - i) -->
+  <circle cx="860" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="860" y="306" class="node-label">9</text>
+  <text x="860" y="330" class="node-desc">Drug</text>
+  <text x="860" y="343" class="node-desc">Distribution</text>
+  
+  <!-- THIRD BRANCH: Randomization Method (j|k) -->
+  <circle cx="1000" cy="260" r="18" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="1000" y="266" class="node-label">10</text>
+  <text x="1000" y="290" class="node-desc">Simple</text>
+  <text x="1000" y="303" class="node-desc">Random (J)</text>
+  
+  <circle cx="1000" cy="340" r="18" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+  <text x="1000" y="346" class="node-label">11</text>
+  <text x="1000" y="370" class="node-desc">Block</text>
+  <text x="1000" y="383" class="node-desc">Random (K)</text>
+  
+  <!-- Node 12: Adverse Event Monitoring (Join - l) -->
+  <circle cx="1120" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1120" y="306" class="node-label">12</text>
+  <text x="1120" y="330" class="node-desc">Adverse Event</text>
+  <text x="1120" y="343" class="node-desc">Monitoring</text>
+  
+  <!-- FOURTH BRANCH: Data Collection Frequency (m|n|o) -->
+  <circle cx="1260" cy="220" r="18" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="1260" y="226" class="node-label">13</text>
+  <text x="1260" y="250" class="node-desc">Weekly</text>
+  <text x="1260" y="263" class="node-desc">Data (M)</text>
+  
+  <circle cx="1260" cy="300" r="18" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="1260" y="306" class="node-label">14</text>
+  <text x="1260" y="330" class="node-desc">Bi-weekly</text>
+  <text x="1260" y="343" class="node-desc">Data (N)</text>
+  
+  <circle cx="1260" cy="380" r="18" fill="#06b6d4" stroke="#0891b2" stroke-width="2"/>
+  <text x="1260" y="386" class="node-label">15</text>
+  <text x="1260" y="410" class="node-desc">Monthly</text>
+  <text x="1260" y="423" class="node-desc">Data (O)</text>
+  
+  <!-- Node 16: Data Collection (Join - p) -->
+  <circle cx="1380" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1380" y="306" class="node-label">16</text>
+  <text x="1380" y="330" class="node-desc">Data</text>
+  <text x="1380" y="343" class="node-desc">Collection</text>
+  
+  <!-- Final Sequential Nodes -->
+  <circle cx="1500" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1500" y="306" class="node-label">17</text>
+  <text x="1500" y="330" class="node-desc">Efficacy</text>
+  <text x="1500" y="343" class="node-desc">Analysis (Q)</text>
+  
+  <circle cx="1620" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1620" y="306" class="node-label">18</text>
+  <text x="1620" y="330" class="node-desc">Safety</text>
+  <text x="1620" y="343" class="node-desc">Database (R)</text>
+  
+  <circle cx="1740" cy="300" r="18" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="1740" y="306" class="node-label">19</text>
+  <text x="1740" y="330" class="node-desc">Publication</text>
+  <text x="1740" y="343" class="node-desc">Prep (S)</text>
+  
+  <!-- End Event -->
+  <circle cx="1860" cy="300" r="22" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="1860" y="306" class="node-label" font-size="16">E</text>
+  <text x="1860" y="335" class="node-desc" font-weight="bold">END</text>
+  
+  <!-- Flow Lines with Clear Labels -->
+  
+  <!-- Sequential flows -->
+  <line x1="122" y1="300" x2="198" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="160" y="290" class="flow-label">a</text>
+  
+  <line x1="238" y1="300" x2="318" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="278" y="290" class="flow-label">b</text>
+  
+  <!-- Branch flows (c|d) -->
+  <line x1="358" y1="290" x2="462" y2="250" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="405" y="265" class="branch-label">c</text>
+  
+  <line x1="358" y1="310" x2="462" y2="350" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="405" y="335" class="branch-label">d</text>
+  
+  <!-- Join flows (e) -->
+  <line x1="498" y1="250" x2="582" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="535" y="265" class="flow-label">e</text>
+  
+  <line x1="498" y1="350" x2="582" y2="310" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="535" y="335" class="flow-label">e</text>
+  
+  <!-- Branch flows (f|g|h) -->
+  <line x1="618" y1="290" x2="722" y2="210" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="665" y="245" class="branch-label">f</text>
+  
+  <line x1="618" y1="300" x2="722" y2="300" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="670" y="290" class="branch-label">g</text>
+  
+  <line x1="618" y1="310" x2="722" y2="390" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="665" y="355" class="branch-label">h</text>
+  
+  <!-- Join flows (i) -->
+  <line x1="758" y1="210" x2="842" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="795" y="245" class="flow-label">i</text>
+  
+  <line x1="758" y1="300" x2="842" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="800" y="290" class="flow-label">i</text>
+  
+  <line x1="758" y1="390" x2="842" y2="310" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="795" y="355" class="flow-label">i</text>
+  
+  <!-- Branch flows (j|k) -->
+  <line x1="878" y1="290" x2="982" y2="270" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="925" y="275" class="branch-label">j</text>
+  
+  <line x1="878" y1="310" x2="982" y2="330" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="925" y="325" class="branch-label">k</text>
+  
+  <!-- Join flows (l) -->
+  <line x1="1018" y1="270" x2="1102" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1055" y="275" class="flow-label">l</text>
+  
+  <line x1="1018" y1="330" x2="1102" y2="310" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1055" y="325" class="flow-label">l</text>
+  
+  <!-- Branch flows (m|n|o) -->
+  <line x1="1138" y1="290" x2="1242" y2="230" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="1185" y="255" class="branch-label">m</text>
+  
+  <line x1="1138" y1="300" x2="1242" y2="300" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="1190" y="290" class="branch-label">n</text>
+  
+  <line x1="1138" y1="310" x2="1242" y2="370" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+  <text x="1185" y="345" class="branch-label">o</text>
+  
+  <!-- Join flows (p) -->
+  <line x1="1278" y1="230" x2="1362" y2="290" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1315" y="255" class="flow-label">p</text>
+  
+  <line x1="1278" y1="300" x2="1362" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1320" y="290" class="flow-label">p</text>
+  
+  <line x1="1278" y1="370" x2="1362" y2="310" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1315" y="345" class="flow-label">p</text>
+  
+  <!-- Final sequential flows -->
+  <line x1="1398" y1="300" x2="1482" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1440" y="290" class="flow-label">q</text>
+  
+  <line x1="1518" y1="300" x2="1602" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1560" y="290" class="flow-label">r</text>
+  
+  <line x1="1638" y1="300" x2="1722" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1680" y="290" class="flow-label">s</text>
+  
+  <line x1="1758" y1="300" x2="1838" y2="300" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="1798" y="290" class="flow-label">t</text>
+  
+  <!-- Legend Section -->
+  <rect x="120" y="520" width="1760" height="240" fill="white" stroke="#e5e7eb" stroke-width="2" rx="8"/>
+  <text x="1000" y="550" class="legend-title" text-anchor="middle">Clinical Trial Process Components Legend</text>
+  
+  <!-- Legend Items in organized rows -->
+  <g transform="translate(150, 580)">
+    <!-- Row 1: Branch Types -->
+    <circle cx="20" cy="0" r="12" fill="#f59e0b"/>
+    <text x="45" y="5" class="legend-text">Site Selection (c|d): Hospital A vs Hospital B enrollment</text>
+    
+    <circle cx="450" cy="0" r="12" fill="#ef4444"/>
+    <text x="475" y="5" class="legend-text">Patient Stratification (f|g|h): Mild, Moderate, Severe cases</text>
+    
+    <circle cx="900" cy="0" r="12" fill="#8b5cf6"/>
+    <text x="925" y="5" class="legend-text">Randomization Method (j|k): Simple vs Block randomization</text>
+    
+    <circle cx="1350" cy="0" r="12" fill="#06b6d4"/>
+    <text x="1375" y="5" class="legend-text">Data Collection (m|n|o): Weekly, Bi-weekly, Monthly frequency</text>
+    
+    <!-- Row 2: Process Elements -->
+    <circle cx="20" cy="35" r="12" fill="#3b82f6"/>
+    <text x="45" y="40" class="legend-text">Sequential Steps: Required process flow elements and join points</text>
+    
+    <circle cx="450" cy="35" r="12" fill="#10b981"/>
+    <text x="475" y="40" class="legend-text">Start Event: Clinical trial initiation</text>
+    
+    <circle cx="900" cy="35" r="12" fill="#dc2626"/>
+    <text x="925" y="40" class="legend-text">End Event: Trial completion and publication</text>
+    
+    <!-- Row 3: Flow Information -->
+    <line x1="20" y1="65" x2="60" y2="65" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+    <text x="80" y="70" class="legend-text">Sequential Flow: Required process progression</text>
+    
+    <line x1="450" y1="65" x2="490" y2="65" stroke="#059669" stroke-width="3" marker-end="url(#branchArrow)"/>
+    <text x="510" y="70" class="legend-text">Branch Flow: Alternative pathway selection</text>
+    
+    <!-- Row 4: Pattern Summary -->
+    <text x="20" y="105" class="legend-text" font-weight="bold" font-size="13">Complete Pattern: ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst</text>
+    <text x="20" y="125" class="legend-small">• Total possible valid execution paths: 36 (2×3×2×3 branch combinations)</text>
+    <text x="20" y="145" class="legend-small">• All paths ensure proper IRB approval, patient safety monitoring, and regulatory compliance</text>
+    <text x="20" y="165" class="legend-small">• Zero-knowledge verification ensures process integrity without exposing sensitive patient data</text>
+  </g>
+</svg>

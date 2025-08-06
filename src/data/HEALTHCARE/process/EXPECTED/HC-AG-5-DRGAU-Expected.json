@@ -1,0 +1,929 @@
+{
+  "processId": "HC-AG-5-DRGAU",
+  "processName": "Insurance-Hospital-Pharmacy Drug Authorization Workflow",
+  "version": "5.0.0",
+  "description": "Zero-knowledge proof enabled multi-entity drug authorization workflow with insurance coverage verification, prior authorization, pharmacy dispensing, and regulatory compliance",
+  "created": "2025-07-07T20:00:00Z",
+  "lastModified": "2025-07-07T20:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC5_DRGAU_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 24,
+    "totalFlows": 26,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 23,
+    "minPathLength": 23
+  },
+  
+  "entities": [
+    {
+      "name": "Insurance Company",
+      "role": "Coverage and Prior Authorization",
+      "jurisdiction": "US - State Regulated",
+      "privacyLevel": "Financial Protected"
+    },
+    {
+      "name": "Hospital System",
+      "role": "Clinical Assessment and Prescribing",
+      "jurisdiction": "US - State Licensed",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "Pharmacy Network",
+      "role": "Drug Dispensing and Safety",
+      "jurisdiction": "US - State and Federal Licensed",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "Patient",
+      "role": "Healthcare Consumer",
+      "jurisdiction": "US - Consumer Protected",
+      "privacyLevel": "Maximum"
+    },
+    {
+      "name": "Drug Manufacturer",
+      "role": "Supply and Pricing",
+      "jurisdiction": "US - FDA Regulated",
+      "privacyLevel": "Commercial Protected"
+    },
+    {
+      "name": "State Medical Board",
+      "role": "Prescription Oversight",
+      "jurisdiction": "US - State Authority",
+      "privacyLevel": "Regulatory"
+    },
+    {
+      "name": "DEA",
+      "role": "Controlled Substance Authority",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Federal Regulatory"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-5-DRGAU-Expected.bpmn",
+    "svg": "HC-AG-5-DRGAU-Expected.svg", 
+    "json": "HC-AG-5-DRGAU-Expected.json",
+    "backup": "HC-AG-5-DRGAU-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-5-DRGAU-Accepted-1.bpmn",
+      "HC-AG-5-DRGAU-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-5-DRGAU-Rejected-1.bpmn",
+      "HC-AG-5-DRGAU-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "abc(d|e|f)gh(i|j)kl(m|n)op(q|r|s)tuv",
+  "regexExplanation": {
+    "pattern": "abc(d|e|f)gh(i|j)kl(m|n)op(q|r|s)tuv",
+    "meaning": "Complex multi-branch drug authorization flow with drug class, authorization type, payment method, and dispensing location variations",
+    "branchPoints": ["After 'c' (d|e|f) - Drug Class", "After 'h' (i|j) - Authorization Type", "After 'l' (m|n) - Payment Method", "After 'p' (q|r|s) - Dispensing Location"],
+    "joinPoints": ["At 'g' from drug class", "At 'k' from authorization type", "At 'o' from payment method", "At 't' from dispensing location"],
+    "totalPossiblePaths": 36
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→d→g→h→i→k→l→m→o→p→q→t→u→v",
+        "description": "Generic Drug + Prior Authorization + Insurance Payment + Retail Pharmacy",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "7", "8", "9", "12", "13", "14", "17", "18", "19", "22", "23", "End"],
+        "regexMatch": "abcdghiklmopqtuv"
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→c→e→g→h→j→k→l→n→o→p→r→t→u→v",
+        "description": "Specialty Drug + Standard Authorization + Cash Payment + Hospital Pharmacy",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "7", "8", "10", "12", "13", "15", "17", "18", "20", "22", "23", "End"],
+        "regexMatch": "abceghjklnoprtv"
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→f→g→h→i→k→l→m→o→p→s→t→u→v",
+        "description": "Controlled Substance + Prior Authorization + Insurance + Specialty Pharmacy",
+        "nodeSequence": ["Start", "1", "2", "3", "6", "7", "8", "9", "12", "13", "14", "17", "18", "21", "22", "23", "End"],
+        "regexMatch": "abcfghiklmopstuv"
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "a→c→d→...",
+        "violation": "Skip patient identity verification - PRIVACY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→d→g→...",
+        "violation": "Skip clinical assessment - MEDICAL VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e|f)→h→(i|j)→...",
+        "violation": "Skip insurance coverage verification - FINANCIAL VIOLATION",
+        "severity": "High"
+      },
+      {
+        "sequence": "...→f→g→h→j→...",
+        "violation": "Controlled substance without prior authorization - DEA VIOLATION",
+        "severity": "Federal Crime"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3"]
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_4", "Flow_3_to_5", "Flow_3_to_6"],
+        "isBranchPoint": true,
+        "branchType": "Drug Class"
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_4"],
+        "outgoing": ["Flow_4_to_7"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5"],
+        "outgoing": ["Flow_5_to_7"]
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_6"],
+        "outgoing": ["Flow_6_to_7"]
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_4_to_7", "Flow_5_to_7", "Flow_6_to_7"],
+        "outgoing": ["Flow_7_to_8"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_7_to_8"],
+        "outgoing": ["Flow_8_to_9", "Flow_8_to_10"],
+        "isBranchPoint": true,
+        "branchType": "Authorization Type"
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_9"],
+        "outgoing": ["Flow_9_to_12"]
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_8_to_10"],
+        "outgoing": ["Flow_10_to_12"]
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_12", "Flow_10_to_12"],
+        "outgoing": ["Flow_12_to_13"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_13"],
+        "outgoing": ["Flow_13_to_14", "Flow_13_to_15"],
+        "isBranchPoint": true,
+        "branchType": "Payment Method"
+      },
+      {
+        "id": "Event_14",
+        "name": "14",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_13_to_14"],
+        "outgoing": ["Flow_14_to_17"]
+      },
+      {
+        "id": "Event_15",
+        "name": "15",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_13_to_15"],
+        "outgoing": ["Flow_15_to_17"]
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_17", "Flow_15_to_17"],
+        "outgoing": ["Flow_17_to_18"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_17_to_18"],
+        "outgoing": ["Flow_18_to_19", "Flow_18_to_20", "Flow_18_to_21"],
+        "isBranchPoint": true,
+        "branchType": "Dispensing Location"
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_19"],
+        "outgoing": ["Flow_19_to_22"]
+      },
+      {
+        "id": "Event_20",
+        "name": "20",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_20"],
+        "outgoing": ["Flow_20_to_22"]
+      },
+      {
+        "id": "Event_21",
+        "name": "21",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_21"],
+        "outgoing": ["Flow_21_to_22"]
+      },
+      {
+        "id": "Event_22",
+        "name": "22",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_19_to_22", "Flow_20_to_22", "Flow_21_to_22"],
+        "outgoing": ["Flow_22_to_23"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_23",
+        "name": "23",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_22_to_23"],
+        "outgoing": ["Flow_23_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_23_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3"
+      },
+      {
+        "id": "Flow_3_to_4",
+        "name": "d",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_4",
+        "branchPath": "Generic Drug"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5",
+        "branchPath": "Specialty Drug"
+      },
+      {
+        "id": "Flow_3_to_6",
+        "name": "f",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_6",
+        "branchPath": "Controlled Substance"
+      },
+      {
+        "id": "Flow_4_to_7",
+        "name": "g",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_5_to_7",
+        "name": "g",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_6_to_7",
+        "name": "g",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_7"
+      },
+      {
+        "id": "Flow_7_to_8",
+        "name": "h",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_8"
+      },
+      {
+        "id": "Flow_8_to_9",
+        "name": "i",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_9",
+        "branchPath": "Prior Authorization Required"
+      },
+      {
+        "id": "Flow_8_to_10",
+        "name": "j",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_10",
+        "branchPath": "Standard Authorization"
+      },
+      {
+        "id": "Flow_9_to_12",
+        "name": "k",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_10_to_12",
+        "name": "k",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_12_to_13",
+        "name": "l",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_13"
+      },
+      {
+        "id": "Flow_13_to_14",
+        "name": "m",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_14",
+        "branchPath": "Insurance Payment"
+      },
+      {
+        "id": "Flow_13_to_15",
+        "name": "n",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_15",
+        "branchPath": "Cash Payment"
+      },
+      {
+        "id": "Flow_14_to_17",
+        "name": "o",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_15_to_17",
+        "name": "o",
+        "sourceRef": "Event_15",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "p",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "q",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19",
+        "branchPath": "Retail Pharmacy"
+      },
+      {
+        "id": "Flow_18_to_20",
+        "name": "r",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_20",
+        "branchPath": "Hospital Pharmacy"
+      },
+      {
+        "id": "Flow_18_to_21",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_21",
+        "branchPath": "Specialty Pharmacy"
+      },
+      {
+        "id": "Flow_19_to_22",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_20_to_22",
+        "name": "t",
+        "sourceRef": "Event_20",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_21_to_22",
+        "name": "t",
+        "sourceRef": "Event_21",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_22_to_23",
+        "name": "u",
+        "sourceRef": "Event_22",
+        "targetRef": "Event_23"
+      },
+      {
+        "id": "Flow_23_to_End",
+        "name": "v",
+        "sourceRef": "Event_23",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "Multi-Entity Drug Authorization Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Patient Identity Verification Agent",
+        "description": "🔒 PRIVATE: Patient insurance and identity details",
+        "privacy": "Patient Protected",
+        "stakeholder": "Patient + Insurance"
+      },
+      "b": {
+        "name": "Clinical Assessment Agent",
+        "description": "🔒 PRIVATE: Patient medical data and diagnosis",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital System"
+      },
+      "c": {
+        "name": "Drug Classification Router",
+        "description": "🔐 ZK PROOF: Route to appropriate drug class handling",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      },
+      "d": {
+        "name": "Generic Drug Processing",
+        "description": "🔒 PRIVATE: Generic drug formulary and pricing",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Pharmacy + Insurance"
+      },
+      "e": {
+        "name": "Specialty Drug Processing",
+        "description": "🔒 PRIVATE: Specialty drug protocols and restrictions",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Specialty Pharmacy + Insurance"
+      },
+      "f": {
+        "name": "Controlled Substance Processing",
+        "description": "🟦 REGULATORY: DEA controlled substance verification",
+        "privacy": "Federal Required",
+        "stakeholder": "DEA + State Board"
+      },
+      "g": {
+        "name": "Insurance Coverage Verification",
+        "description": "🔒 PRIVATE: Coverage algorithms and benefit determination",
+        "privacy": "Financial Protected",
+        "stakeholder": "Insurance Company"
+      },
+      "h": {
+        "name": "Authorization Type Router",
+        "description": "🔐 ZK PROOF: Route to prior auth or standard processing",
+        "privacy": "ZK Protected",
+        "stakeholder": "Insurance + Hospital"
+      },
+      "i": {
+        "name": "Prior Authorization Agent",
+        "description": "🔐 ZK PROOF: Medical necessity without revealing criteria",
+        "privacy": "ZK Protected",
+        "stakeholder": "Insurance + Hospital"
+      },
+      "j": {
+        "name": "Standard Authorization Agent",
+        "description": "🔒 PRIVATE: Standard formulary approval process",
+        "privacy": "Commercial Protected",
+        "stakeholder": "Insurance Company"
+      },
+      "k": {
+        "name": "Authorization Decision Join",
+        "description": "🔐 ZK PROOF: Unified authorization completion",
+        "privacy": "ZK Protected",
+        "stakeholder": "Insurance System"
+      },
+      "l": {
+        "name": "Drug Interaction Screening",
+        "description": "🔒 PRIVATE: Patient medication history analysis",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Pharmacy Network"
+      },
+      "m": {
+        "name": "Insurance Payment Processing",
+        "description": "🔒 PRIVATE: Insurance payment and copay calculation",
+        "privacy": "Financial Protected",
+        "stakeholder": "Insurance + Patient"
+      },
+      "n": {
+        "name": "Cash Payment Processing",
+        "description": "🔒 PRIVATE: Patient financial transaction",
+        "privacy": "Financial Protected",
+        "stakeholder": "Patient + Pharmacy"
+      },
+      "o": {
+        "name": "Payment Processing Join",
+        "description": "🔐 ZK PROOF: Unified payment verification",
+        "privacy": "ZK Protected",
+        "stakeholder": "Payment System"
+      },
+      "p": {
+        "name": "Dispensing Location Router",
+        "description": "🔐 ZK PROOF: Route to appropriate pharmacy type",
+        "privacy": "ZK Protected",
+        "stakeholder": "Pharmacy Network"
+      },
+      "q": {
+        "name": "Retail Pharmacy Dispensing",
+        "description": "🔒 PRIVATE: Retail pharmacy inventory and dispensing",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Retail Pharmacy"
+      },
+      "r": {
+        "name": "Hospital Pharmacy Dispensing",
+        "description": "🔒 PRIVATE: Hospital pharmacy inventory and protocols",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital Pharmacy"
+      },
+      "s": {
+        "name": "Specialty Pharmacy Dispensing",
+        "description": "🔒 PRIVATE: Specialty pharmacy handling and monitoring",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Specialty Pharmacy"
+      },
+      "t": {
+        "name": "Dispensing Verification Join",
+        "description": "🔐 ZK PROOF: Unified dispensing completion",
+        "privacy": "ZK Protected",
+        "stakeholder": "Pharmacy System"
+      },
+      "u": {
+        "name": "Regulatory Audit Documentation",
+        "description": "🟦 REGULATORY: Multi-entity compliance audit trail",
+        "privacy": "Regulatory Required",
+        "stakeholder": "All Regulators"
+      },
+      "v": {
+        "name": "Final Authorization Verification",
+        "description": "🔐 ZK PROOF: Complete drug authorization integrity",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Patient Identity Processing",
+        "description": "Verify patient identity and insurance coverage"
+      },
+      "2": {
+        "name": "Clinical Assessment",
+        "description": "Clinical evaluation and prescription generation"
+      },
+      "3": {
+        "name": "Drug Classification Router",
+        "description": "Branch point - classify drug type for appropriate handling"
+      },
+      "4": {
+        "name": "Generic Drug Handler",
+        "description": "Process generic drug authorization"
+      },
+      "5": {
+        "name": "Specialty Drug Handler",
+        "description": "Process specialty drug authorization and restrictions"
+      },
+      "6": {
+        "name": "Controlled Substance Handler",
+        "description": "Process controlled substance with DEA compliance"
+      },
+      "7": {
+        "name": "Insurance Coverage Join",
+        "description": "Join drug paths, verify insurance coverage"
+      },
+      "8": {
+        "name": "Authorization Type Router",
+        "description": "Branch point - determine if prior authorization needed"
+      },
+      "9": {
+        "name": "Prior Authorization Handler",
+        "description": "Process prior authorization requirements"
+      },
+      "10": {
+        "name": "Standard Authorization Handler",
+        "description": "Process standard formulary authorization"
+      },
+      "12": {
+        "name": "Authorization Decision Join",
+        "description": "Join authorization paths, screen for interactions"
+      },
+      "13": {
+        "name": "Drug Interaction Screening",
+        "description": "Branch point - determine payment method"
+      },
+      "14": {
+        "name": "Insurance Payment Handler",
+        "description": "Process insurance payment and copay"
+      },
+      "15": {
+        "name": "Cash Payment Handler",
+        "description": "Process patient cash payment"
+      },
+      "17": {
+        "name": "Payment Processing Join",
+        "description": "Join payment paths, route to dispensing location"
+      },
+      "18": {
+        "name": "Dispensing Location Router",
+        "description": "Branch point - route to appropriate pharmacy type"
+      },
+      "19": {
+        "name": "Retail Pharmacy Handler",
+        "description": "Handle retail pharmacy dispensing"
+      },
+      "20": {
+        "name": "Hospital Pharmacy Handler",
+        "description": "Handle hospital pharmacy dispensing"
+      },
+      "21": {
+        "name": "Specialty Pharmacy Handler",
+        "description": "Handle specialty pharmacy dispensing and monitoring"
+      },
+      "22": {
+        "name": "Dispensing Verification Join",
+        "description": "Join dispensing paths, generate audit documentation"
+      },
+      "23": {
+        "name": "Regulatory Audit Documentation",
+        "description": "Complete multi-entity compliance documentation"
+      }
+    },
+    "end": {
+      "End": "Drug Authorization Complete"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "Generic Drug + Prior Authorization + Insurance + Retail",
+      "sequence": "a→b→c→d→g→h→i→k→l→m→o→p→q→t→u→v",
+      "regexMatch": "abcdghiklmopqtuv"
+    },
+    {
+      "pathId": 2,
+      "description": "Specialty Drug + Standard Authorization + Cash + Hospital",
+      "sequence": "a→b→c→e→g→h→j→k→l→n→o→p→r→t→u→v",
+      "regexMatch": "abceghjklnoprtv"
+    },
+    {
+      "pathId": 3,
+      "description": "Controlled Substance + Prior Authorization + Insurance + Specialty",
+      "sequence": "a→b→c→f→g→h→i→k→l→m→o→p→s→t→u→v",
+      "regexMatch": "abcfghiklmopstuv"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "Insurance Company": {
+      "sees": ["Coverage status", "Claims data", "Financial reserves", "Payment processing"],
+      "hidden": ["Patient clinical details", "Pharmacy operations", "Competitor pricing", "DEA processes"],
+      "zkProofs": ["Medical necessity verification", "Coverage eligibility", "Payment authorization"]
+    },
+    "Hospital System": {
+      "sees": ["Patient medical data", "Clinical protocols", "Treatment outcomes", "Insurance coverage status"],
+      "hidden": ["Insurance algorithms", "Pharmacy inventory", "Competitor protocols", "Patient financial data"],
+      "zkProofs": ["Treatment efficacy", "Clinical necessity", "Prescription validity"]
+    },
+    "Pharmacy Network": {
+      "sees": ["Prescription data", "Drug inventory", "Patient medication history", "Dispensing records"],
+      "hidden": ["Insurance coverage details", "Clinical diagnosis details", "Competitor inventory", "Manufacturer pricing"],
+      "zkProofs": ["Drug interaction screening", "Dispensing verification", "Inventory availability"]
+    },
+    "Patient": {
+      "sees": ["Own medical records", "Coverage details", "Payment obligations", "Prescription information"],
+      "hidden": ["Insurance algorithms", "Pharmacy operations", "Manufacturer pricing", "Provider business logic"],
+      "zkProofs": ["Identity verification", "Consent validation", "Payment capability"]
+    },
+    "Drug Manufacturer": {
+      "sees": ["Supply chain data", "Product specifications", "Market demand", "Regulatory approvals"],
+      "hidden": ["Patient identities", "Insurance negotiations", "Competitor strategies", "Pharmacy margins"],
+      "zkProofs": ["Product authenticity", "Supply availability", "Regulatory compliance"]
+    },
+    "State Medical Board": {
+      "sees": ["Prescription oversight", "Provider licensing", "Controlled substance monitoring", "Violation reports"],
+      "hidden": ["Patient identities", "Commercial terms", "Insurance details", "Proprietary methods"],
+      "zkProofs": ["Prescription legitimacy", "Provider authorization", "Regulatory compliance"]
+    },
+    "DEA": {
+      "sees": ["Controlled substance tracking", "DEA registrations", "Prescription monitoring", "Violation enforcement"],
+      "hidden": ["Patient identities", "Medical conditions", "Commercial arrangements", "Non-controlled prescriptions"],
+      "zkProofs": ["DEA registration validity", "Controlled substance authorization", "Tracking compliance"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "c",
+      "proof": "Drug classification without revealing patient condition",
+      "mechanism": "Zero-knowledge drug class routing"
+    },
+    {
+      "flow": "g",
+      "proof": "Coverage verification without exposing algorithms",
+      "mechanism": "ZK insurance coverage verification"
+    },
+    {
+      "flow": "h",
+      "proof": "Authorization routing without revealing criteria",
+      "mechanism": "ZK authorization type determination"
+    },
+    {
+      "flow": "i",
+      "proof": "Medical necessity without exposing proprietary criteria",
+      "mechanism": "ZK prior authorization verification"
+    },
+    {
+      "flow": "k",
+      "proof": "Authorization completion without revealing decision logic",
+      "mechanism": "ZK authorization aggregation"
+    },
+    {
+      "flow": "o",
+      "proof": "Payment verification without exposing financial details",
+      "mechanism": "ZK payment processing verification"
+    },
+    {
+      "flow": "p",
+      "proof": "Dispensing location routing without revealing preferences",
+      "mechanism": "ZK pharmacy type selection"
+    },
+    {
+      "flow": "t",
+      "proof": "Dispensing verification without revealing inventory",
+      "mechanism": "ZK dispensing completion verification"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "HIPAA Privacy Rule",
+      "regulation": "45 CFR §164.502",
+      "flows": ["b", "l", "q", "r", "s"],
+      "description": "Protected health information privacy in clinical and pharmacy settings"
+    },
+    {
+      "requirement": "DEA Controlled Substances Act",
+      "regulation": "21 USC §801 et seq.",
+      "flow": "f",
+      "description": "Federal controlled substance prescription requirements"
+    },
+    {
+      "requirement": "State Insurance Regulations",
+      "regulation": "Various State Insurance Codes",
+      "flows": ["g", "m"],
+      "description": "State-specific insurance coverage and payment requirements"
+    },
+    {
+      "requirement": "State Board of Pharmacy Regulations",
+      "regulation": "State Pharmacy Practice Acts",
+      "flows": ["q", "r", "s"],
+      "description": "State pharmacy dispensing and safety requirements"
+    },
+    {
+      "requirement": "Medicare/Medicaid Compliance",
+      "regulation": "42 CFR Parts 400-498",
+      "flows": ["g", "i", "m"],
+      "description": "Federal healthcare program compliance for coverage and payment"
+    },
+    {
+      "requirement": "FDA Drug Safety Requirements",
+      "regulation": "21 CFR Parts 200-299",
+      "flow": "l",
+      "description": "Drug interaction screening and safety monitoring"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Insurance-pharmacy collusion prevention",
+      "constraint": "Insurance_coverage_decisions ⊥ Pharmacy_pricing_data",
+      "enforcement": "Independent coverage determination and pricing systems"
+    },
+    {
+      "rule": "Patient identity protection across entities",
+      "constraint": "Patient_identities CANNOT leak between_competitive_entities",
+      "enforcement": "ZK identity verification without exposure"
+    },
+    {
+      "rule": "Controlled substance DEA bypass prevention",
+      "constraint": "IF (controlled_substance) THEN DEA_verification = MANDATORY",
+      "enforcement": "Federal controlled substance verification system"
+    },
+    {
+      "rule": "Prior authorization bypass prevention",
+      "constraint": "IF (specialty_drug OR high_cost) THEN prior_authorization_check = REQUIRED",
+      "enforcement": "Insurance prior authorization enforcement"
+    },
+    {
+      "rule": "Drug interaction screening enforcement",
+      "constraint": "ALL prescriptions MUST undergo_interaction_screening",
+      "enforcement": "Mandatory pharmacy safety screening"
+    },
+    {
+      "rule": "Cross-entity data leakage prevention",
+      "constraint": "Entity_A_proprietary_data ∩ Entity_B_systems = ∅",
+      "enforcement": "ZK proof verification with entity boundaries"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 24,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "Maximum",
+    "securityLevel": "Financial + Medical + Federal",
+    "privacyLevel": "HIPAA + Financial + ZK",
+    "regulatoryComplexity": "DEA + State Insurance + Pharmacy Boards + FDA"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'abc(d|e|f)gh(i|j)kl(m|n)op(q|r|s)tuv' --functionName 'verifyProcessHC5DRGAU' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC5DRGAU",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-5-DRGAU-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-5-DRGAU-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG5DRGAU ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-5-DRGAU-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-5-DRGAU-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

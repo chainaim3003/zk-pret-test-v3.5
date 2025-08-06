@@ -1,0 +1,266 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 700">
+  <!-- Background -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Arrow markers -->
+    <marker id="successArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#059669" stroke="#059669" stroke-width="1"/>
+    </marker>
+    
+    <marker id="inactiveArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+    </marker>
+    
+    <!-- Styles -->
+    <style>
+      .title-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: bold; fill: #059669; }
+      .subtitle-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; fill: #047857; font-weight: bold; }
+      .path-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; fill: #64748b; }
+      .node-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; font-weight: bold; fill: white; text-anchor: middle; }
+      .node-desc { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px; fill: #374151; text-anchor: middle; font-weight: 500; }
+      .flow-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; font-weight: bold; fill: #059669; text-anchor: middle; }
+      .inactive-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; fill: #9ca3af; text-anchor: middle; }
+      .legend-title { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 18px; font-weight: bold; fill: #374151; }
+      .legend-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; fill: #374151; }
+      .legend-small { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; fill: #64748b; }
+      .status-badge { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; font-weight: bold; fill: white; }
+    </style>
+  </defs>
+  
+  <!-- Grid background -->
+  <rect width="2000" height="700" fill="url(#grid)"/>
+  <rect width="2000" height="700" fill="#f8fffe" opacity="0.9"/>
+  
+  <!-- Title Section -->
+  <text x="1000" y="40" class="title-text" text-anchor="middle">
+    HC-AG-1-ECLNTL-Accepted-1: Valid Clinical Trial Execution
+  </text>
+  <text x="1000" y="70" class="subtitle-text" text-anchor="middle">
+    ✅ ACCEPTED - Complete Compliance with Regulatory Requirements
+  </text>
+  <text x="1000" y="95" class="path-text" text-anchor="middle">
+    Execution Path: abcefijlmpqrst (Selected: Hospital A → Mild Cases → Simple Randomization → Weekly Data)
+  </text>
+  
+  <!-- Status Badge -->
+  <rect x="850" y="110" width="300" height="30" rx="15" fill="#059669"/>
+  <text x="1000" y="130" class="status-badge" text-anchor="middle">ZERO-KNOWLEDGE VERIFIED ✓</text>
+  
+  <!-- Process Flow - Active Path -->
+  
+  <!-- Start Event -->
+  <circle cx="120" cy="250" r="22" fill="#10b981" stroke="#059669" stroke-width="4"/>
+  <text x="120" y="256" class="node-label" font-size="16">S</text>
+  <text x="120" y="285" class="node-desc" font-weight="bold">START</text>
+  
+  <!-- Node 1: Trial Protocol Agent (a) - ACTIVE -->
+  <circle cx="240" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="240" y="256" class="node-label">1</text>
+  <text x="240" y="280" class="node-desc" font-weight="bold">Protocol</text>
+  <text x="240" y="293" class="node-desc" font-weight="bold">Agent</text>
+  
+  <!-- Node 2: IRB Approval Agent (b) - ACTIVE -->
+  <circle cx="360" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="360" y="256" class="node-label">2</text>
+  <text x="360" y="280" class="node-desc" font-weight="bold">IRB</text>
+  <text x="360" y="293" class="node-desc" font-weight="bold">Approval</text>
+  
+  <!-- Node 3: Hospital A (c) - ACTIVE -->
+  <circle cx="480" cy="200" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="480" y="206" class="node-label">3</text>
+  <text x="480" y="230" class="node-desc" font-weight="bold">Hospital A</text>
+  <text x="480" y="243" class="node-desc" font-weight="bold">SELECTED</text>
+  
+  <!-- Node 4: Hospital B (d) - INACTIVE -->
+  <circle cx="480" cy="300" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="480" y="306" class="inactive-label">4</text>
+  <text x="480" y="325" class="inactive-label">Hospital B</text>
+  <text x="480" y="338" class="inactive-label">not selected</text>
+  
+  <!-- Node 5: Patient Randomization (e) - ACTIVE -->
+  <circle cx="600" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="600" y="256" class="node-label">5</text>
+  <text x="600" y="280" class="node-desc" font-weight="bold">Patient</text>
+  <text x="600" y="293" class="node-desc" font-weight="bold">Randomization</text>
+  
+  <!-- Node 6: Mild Cases (f) - ACTIVE -->
+  <circle cx="720" cy="180" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="720" y="186" class="node-label">6</text>
+  <text x="720" y="210" class="node-desc" font-weight="bold">Mild Cases</text>
+  <text x="720" y="223" class="node-desc" font-weight="bold">SELECTED</text>
+  
+  <!-- Node 7: Moderate (g) - INACTIVE -->
+  <circle cx="720" cy="250" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="720" y="256" class="inactive-label">7</text>
+  <text x="720" y="275" class="inactive-label">Moderate</text>
+  
+  <!-- Node 8: Severe (h) - INACTIVE -->
+  <circle cx="720" cy="320" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="720" y="326" class="inactive-label">8</text>
+  <text x="720" y="345" class="inactive-label">Severe</text>
+  
+  <!-- Node 9: Drug Distribution (i) - ACTIVE -->
+  <circle cx="840" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="840" y="256" class="node-label">9</text>
+  <text x="840" y="280" class="node-desc" font-weight="bold">Drug</text>
+  <text x="840" y="293" class="node-desc" font-weight="bold">Distribution</text>
+  
+  <!-- Node 10: Simple Random (j) - ACTIVE -->
+  <circle cx="960" cy="220" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="960" y="226" class="node-label">10</text>
+  <text x="960" y="250" class="node-desc" font-weight="bold">Simple</text>
+  <text x="960" y="263" class="node-desc" font-weight="bold">SELECTED</text>
+  
+  <!-- Node 11: Block Random (k) - INACTIVE -->
+  <circle cx="960" cy="280" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="960" y="286" class="inactive-label">11</text>
+  <text x="960" y="305" class="inactive-label">Block Random</text>
+  
+  <!-- Node 12: Adverse Event Monitoring (l) - ACTIVE -->
+  <circle cx="1080" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1080" y="256" class="node-label">12</text>
+  <text x="1080" y="280" class="node-desc" font-weight="bold">Adverse Event</text>
+  <text x="1080" y="293" class="node-desc" font-weight="bold">Monitoring</text>
+  
+  <!-- Node 13: Weekly Data (m) - ACTIVE -->
+  <circle cx="1200" cy="200" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1200" y="206" class="node-label">13</text>
+  <text x="1200" y="230" class="node-desc" font-weight="bold">Weekly Data</text>
+  <text x="1200" y="243" class="node-desc" font-weight="bold">SELECTED</text>
+  
+  <!-- Node 14: Bi-weekly (n) - INACTIVE -->
+  <circle cx="1200" cy="270" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="1200" y="276" class="inactive-label">14</text>
+  <text x="1200" y="295" class="inactive-label">Bi-weekly</text>
+  
+  <!-- Node 15: Monthly (o) - INACTIVE -->
+  <circle cx="1200" cy="320" r="18" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+  <text x="1200" y="326" class="inactive-label">15</text>
+  <text x="1200" y="345" class="inactive-label">Monthly</text>
+  
+  <!-- Node 16: Data Collection (p) - ACTIVE -->
+  <circle cx="1320" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1320" y="256" class="node-label">16</text>
+  <text x="1320" y="280" class="node-desc" font-weight="bold">Data</text>
+  <text x="1320" y="293" class="node-desc" font-weight="bold">Collection</text>
+  
+  <!-- Final Sequential Nodes - ACTIVE -->
+  <circle cx="1440" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1440" y="256" class="node-label">17</text>
+  <text x="1440" y="280" class="node-desc" font-weight="bold">Efficacy</text>
+  <text x="1440" y="293" class="node-desc" font-weight="bold">Analysis</text>
+  
+  <circle cx="1560" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1560" y="256" class="node-label">18</text>
+  <text x="1560" y="280" class="node-desc" font-weight="bold">Safety</text>
+  <text x="1560" y="293" class="node-desc" font-weight="bold">Database</text>
+  
+  <circle cx="1680" cy="250" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="1680" y="256" class="node-label">19</text>
+  <text x="1680" y="280" class="node-desc" font-weight="bold">Publication</text>
+  <text x="1680" y="293" class="node-desc" font-weight="bold">Preparation</text>
+  
+  <!-- End Event -->
+  <circle cx="1800" cy="250" r="22" fill="#dc2626" stroke="#b91c1c" stroke-width="4"/>
+  <text x="1800" y="256" class="node-label" font-size="16">E</text>
+  <text x="1800" y="285" class="node-desc" font-weight="bold">END</text>
+  
+  <!-- Active Flow Lines -->
+  <line x1="142" y1="250" x2="218" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="180" y="240" class="flow-label">a</text>
+  
+  <line x1="258" y1="250" x2="338" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="298" y="240" class="flow-label">b</text>
+  
+  <line x1="378" y1="240" x2="462" y2="210" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="415" y="220" class="flow-label">c</text>
+  
+  <line x1="498" y1="210" x2="582" y2="240" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="535" y="220" class="flow-label">e</text>
+  
+  <line x1="618" y1="240" x2="702" y2="190" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="655" y="210" class="flow-label">f</text>
+  
+  <line x1="738" y1="190" x2="822" y2="240" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="775" y="210" class="flow-label">i</text>
+  
+  <line x1="858" y1="240" x2="942" y2="230" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="895" y="230" class="flow-label">j</text>
+  
+  <line x1="978" y1="230" x2="1062" y2="240" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1015" y="230" class="flow-label">l</text>
+  
+  <line x1="1098" y1="240" x2="1182" y2="210" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1135" y="220" class="flow-label">m</text>
+  
+  <line x1="1218" y1="210" x2="1302" y2="240" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1255" y="220" class="flow-label">p</text>
+  
+  <line x1="1338" y1="250" x2="1422" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1380" y="240" class="flow-label">q</text>
+  
+  <line x1="1458" y1="250" x2="1542" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1500" y="240" class="flow-label">r</text>
+  
+  <line x1="1578" y1="250" x2="1662" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1620" y="240" class="flow-label">s</text>
+  
+  <line x1="1698" y1="250" x2="1778" y2="250" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+  <text x="1738" y="240" class="flow-label">t</text>
+  
+  <!-- Inactive Flow Lines (dotted) -->
+  <line x1="378" y1="260" x2="462" y2="290" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#inactiveArrow)" opacity="0.6"/>
+  <text x="415" y="280" class="inactive-label">d</text>
+  
+  <line x1="618" y1="250" x2="702" y2="250" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="660" y="245" class="inactive-label">g</text>
+  
+  <line x1="618" y1="260" x2="702" y2="310" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="655" y="290" class="inactive-label">h</text>
+  
+  <line x1="858" y1="260" x2="942" y2="270" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="895" y="270" class="inactive-label">k</text>
+  
+  <line x1="1098" y1="250" x2="1182" y2="270" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="1135" y="265" class="inactive-label">n</text>
+  
+  <line x1="1098" y1="260" x2="1182" y2="310" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4" opacity="0.6"/>
+  <text x="1135" y="290" class="inactive-label">o</text>
+  
+  <!-- Legend Section -->
+  <rect x="120" y="450" width="1760" height="200" fill="white" stroke="#e5e7eb" stroke-width="2" rx="8"/>
+  <text x="1000" y="480" class="legend-title" text-anchor="middle">Execution Path Analysis</text>
+  
+  <!-- Legend Content -->
+  <g transform="translate(150, 510)">
+    <!-- Row 1: Execution Status -->
+    <circle cx="20" cy="0" r="12" fill="#059669"/>
+    <text x="45" y="5" class="legend-text">Executed Steps: Process elements that were successfully completed</text>
+    
+    <circle cx="600" cy="0" r="12" fill="#e5e7eb" opacity="0.6"/>
+    <text x="625" y="5" class="legend-text">Alternative Paths: Valid options that were not selected in this execution</text>
+    
+    <!-- Row 2: Path Details -->
+    <line x1="20" y1="30" x2="60" y2="30" stroke="#059669" stroke-width="4" marker-end="url(#successArrow)"/>
+    <text x="80" y="35" class="legend-text">Active Flow: Chosen execution path with ZK verification</text>
+    
+    <line x1="600" y1="30" x2="640" y2="30" stroke="#d1d5db" stroke-width="2" stroke-dasharray="8,4"/>
+    <text x="660" y="35" class="legend-text">Inactive Flow: Alternative paths available but not taken</text>
+    
+    <!-- Row 3: Business Logic -->
+    <text x="20" y="65" class="legend-text" font-weight="bold">Selected Business Choices:</text>
+    <text x="250" y="65" class="legend-text">• Hospital A for patient enrollment (c)</text>
+    <text x="500" y="65" class="legend-text">• Mild case stratification (f)</text>
+    <text x="700" y="65" class="legend-text">• Simple randomization (j)</text>
+    <text x="950" y="65" class="legend-text">• Weekly data collection (m)</text>
+    
+    <!-- Row 4: Compliance Status -->
+    <text x="20" y="95" class="legend-text" font-weight="bold" font-size="14" fill="#059669">✅ COMPLIANCE STATUS: FULLY COMPLIANT</text>
+    <text x="20" y="115" class="legend-small">• All required regulatory checkpoints completed (IRB approval, patient safety monitoring)</text>
+    <text x="20" y="135" class="legend-small">• Complete audit trail with cryptographic verification</text>
+    <text x="20" y="155" class="legend-small">• Zero-knowledge proof confirms pattern compliance: abcefijlmpqrst matches ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst</text>
+  </g>
+</svg>

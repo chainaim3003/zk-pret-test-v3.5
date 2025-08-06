@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 550">
+  <!-- Background -->
+  <rect width="1300" height="550" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="650" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#dc2626">
+    SCF: Supply Chain Finance Process (Rejected-2)
+  </text>
+  <text x="650" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#64748b">
+    Actual Path: acfdbg (INVALID - Pattern sequence violation)
+  </text>
+  
+  <!-- Start Event -->
+  <circle cx="80" cy="200" r="18" fill="#10b981" stroke="#059669" stroke-width="2"/>
+  <text x="80" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">S</text>
+  <text x="80" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Start</text>
+  
+  <!-- Node 1: Active path -->
+  <circle cx="180" cy="200" r="15" fill="#10b981" stroke="#059669" stroke-width="3"/>
+  <text x="180" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">1</text>
+  <text x="180" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#374151">Process</text>
+  
+  <!-- Node 2: Invalid choice (should be branch B if C was selected first) -->
+  <circle cx="280" cy="240" r="15" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="280" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">2</text>
+  <text x="280" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Invalid</text>
+  
+  <!-- Node 3: Not taken (should have been taken) -->
+  <circle cx="280" cy="160" r="15" fill="#fca5a5" stroke="#dc2626" stroke-width="2" opacity="0.7" stroke-dasharray="3,3"/>
+  <text x="280" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#dc2626">3</text>
+  <text x="280" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">Should B</text>
+  
+  <!-- Node 4: Sequence error -->
+  <circle cx="380" cy="200" r="15" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="380" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">4</text>
+  <text x="380" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Seq Error</text>
+  
+  <!-- Node 5: More sequence errors -->
+  <circle cx="480" cy="200" r="15" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="480" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">5</text>
+  <text x="480" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Wrong D</text>
+  
+  <!-- Node 7: Wrong place for B -->
+  <circle cx="680" cy="200" r="15" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="680" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">7</text>
+  <text x="680" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Wrong B</text>
+  
+  <!-- End Event -->
+  <circle cx="780" cy="200" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="2"/>
+  <text x="780" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">E</text>
+  <text x="780" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Invalid End</text>
+  
+  <!-- Actual execution path (red lines for invalid) -->
+  <line x1="98" y1="200" x2="162" y2="200" stroke="#059669" stroke-width="3" marker-end="url(#greenArrowhead)"/>
+  <text x="130" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">a</text>
+  
+  <line x1="195" y1="210" x2="265" y2="230" stroke="#059669" stroke-width="3" marker-end="url(#greenArrowhead)"/>
+  <text x="225" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">c</text>
+  
+  <!-- Invalid sequence starts here -->
+  <line x1="295" y1="230" x2="365" y2="210" stroke="#dc2626" stroke-width="3" marker-end="url(#redArrowhead)"/>
+  <text x="325" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">f</text>
+  <text x="325" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">WRONG!</text>
+  
+  <line x1="395" y1="200" x2="462" y2="200" stroke="#dc2626" stroke-width="3" marker-end="url(#redArrowhead)"/>
+  <text x="428" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">d</text>
+  <text x="428" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">WRONG!</text>
+  
+  <line x1="495" y1="200" x2="662" y2="200" stroke="#dc2626" stroke-width="3" marker-end="url(#redArrowhead)"/>
+  <text x="575" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">b</text>
+  <text x="575" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">WRONG!</text>
+  
+  <line x1="695" y1="200" x2="762" y2="200" stroke="#dc2626" stroke-width="3" marker-end="url(#redArrowhead)"/>
+  <text x="728" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">g</text>
+  
+  <!-- Show correct path that should have been taken -->
+  <line x1="195" y1="190" x2="265" y2="170" stroke="#10b981" stroke-width="2" stroke-dasharray="5,5" opacity="0.7"/>
+  <text x="225" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#10b981">Should: b</text>
+  
+  <!-- Arrow marker definitions -->
+  <defs>
+    <marker id="greenArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+    </marker>
+    <marker id="redArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend positioned below the diagram -->
+  <rect x="100" y="320" width="1100" height="200" fill="white" stroke="#e5e7eb" stroke-width="1" rx="5"/>
+  <text x="650" y="345" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#374151">SCF Rejected-2 Execution Path</text>
+  
+  <!-- Legend items -->
+  <circle cx="150" cy="375" r="10" fill="#059669"/>
+  <text x="170" y="380" font-family="Arial, sans-serif" font-size="12" fill="#374151">Valid Steps: Correctly executed initial steps</text>
+  
+  <circle cx="150" cy="405" r="10" fill="#dc2626"/>
+  <text x="170" y="410" font-family="Arial, sans-serif" font-size="12" fill="#374151">Invalid Steps: Pattern violations and sequence errors</text>
+  
+  <circle cx="150" cy="435" r="10" fill="#fca5a5" stroke="#dc2626" stroke-dasharray="3,3"/>
+  <text x="170" y="440" font-family="Arial, sans-serif" font-size="12" fill="#374151">Missed Steps: Required actions not taken</text>
+  
+  <text x="150" y="470" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#dc2626">REJECTION REASONS:</text>
+  <text x="150" y="490" font-family="Arial, sans-serif" font-size="11" fill="#374151">1. Cross-connection violation: Selected C but used F instead of required B</text>
+  <text x="150" y="510" font-family="Arial, sans-serif" font-size="11" fill="#374151">2. Sequence violation: F appears before D, B appears after D (Expected: a(b|c)(c|b)d(e|f)fg | Actual: acfdbg)</text>
+</svg>

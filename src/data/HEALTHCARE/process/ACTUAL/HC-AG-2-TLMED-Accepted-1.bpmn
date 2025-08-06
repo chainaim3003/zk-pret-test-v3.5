@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HCAG2_TLMED_Accepted1" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HCAG2_TLMED_Accepted1_Process" isExecutable="false">
+    <!-- START: Start -->
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <!-- Valid path: US Hospital route - abcdeghijklm -->
+    <intermediateThrowEvent id="Event_1" name="1">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_2" name="2">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_3" name="3">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_4</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_4" name="4">
+      <incoming>Flow_3_to_4</incoming>
+      <outgoing>Flow_4_to_5</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_5" name="5">
+      <incoming>Flow_4_to_5</incoming>
+      <outgoing>Flow_5_to_7</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_7" name="7">
+      <incoming>Flow_5_to_7</incoming>
+      <outgoing>Flow_7_to_8</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_8" name="8">
+      <incoming>Flow_7_to_8</incoming>
+      <outgoing>Flow_8_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_9" name="9">
+      <incoming>Flow_8_to_9</incoming>
+      <outgoing>Flow_9_to_10</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_10" name="10">
+      <incoming>Flow_9_to_10</incoming>
+      <outgoing>Flow_10_to_11</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_11" name="11">
+      <incoming>Flow_10_to_11</incoming>
+      <outgoing>Flow_11_to_12</outgoing>
+    </intermediateThrowEvent>
+    
+    <intermediateThrowEvent id="Event_12" name="12">
+      <incoming>Flow_11_to_12</incoming>
+      <outgoing>Flow_12_to_End</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- END: End -->
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_12_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows - US Hospital path: abcdeghijklm -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Event_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Event_1" targetRef="Event_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Event_2" targetRef="Event_3" />
+    <sequenceFlow id="Flow_3_to_4" name="d" sourceRef="Event_3" targetRef="Event_4" />
+    <sequenceFlow id="Flow_4_to_5" name="e" sourceRef="Event_4" targetRef="Event_5" />
+    <sequenceFlow id="Flow_5_to_7" name="g" sourceRef="Event_5" targetRef="Event_7" />
+    <sequenceFlow id="Flow_7_to_8" name="h" sourceRef="Event_7" targetRef="Event_8" />
+    <sequenceFlow id="Flow_8_to_9" name="i" sourceRef="Event_8" targetRef="Event_9" />
+    <sequenceFlow id="Flow_9_to_10" name="j" sourceRef="Event_9" targetRef="Event_10" />
+    <sequenceFlow id="Flow_10_to_11" name="k" sourceRef="Event_10" targetRef="Event_11" />
+    <sequenceFlow id="Flow_11_to_12" name="l" sourceRef="Event_11" targetRef="Event_12" />
+    <sequenceFlow id="Flow_12_to_End" name="m" sourceRef="Event_12" targetRef="EndEvent_End" />
+    
+  </process>
+</definitions>

@@ -72,18 +72,27 @@ export const ComposedOptimCompliance = ZkProgram({
         const overallScore = Field(75); // Default score
         const isCompliant = Bool(true); // Default compliance
         
-        // Create proof metadata hash
-        const corpRegHash = Field.random();
+        // Create deterministic proof metadata hash from actual proof data
+        // Fix: Use deterministic operations instead of Field.random()
+        const corpRegHash = Poseidon.hash([
+          corpRegOutput.companyName.hash(),
+          corpRegOutput.CIN.hash(),
+          timestamp
+        ]);
         const underlyingHash = corpRegHash; // Only one proof at this level
         
+        // Create deterministic company identifiers from proof data
+        const companyNameHash = corpRegOutput.companyName.hash();
+        const companyIdentifierHash = corpRegOutput.CIN.hash();
+        
         return new ComposedOptimCompliancePublicOutput({
-          companyNameHash: Field.random(),
-          companyIdentifierHash: Field.random(),
+          companyNameHash,
+          companyIdentifierHash,
           overallComplianceScore: overallScore,
           isFullyCompliant: isCompliant,
           servicesIncluded: Field(1), // Only Corporate Registration (bit 0)
           servicesCompliant: isCompliant.toField(), // 1 if compliant, 0 if not
-          verificationTimestamp: UInt64.from(0),
+          verificationTimestamp: UInt64.from(0), // Use constant for now, can be improved later
           composedProofVersion: Field(1), // Level 1
           underlyingProofsHash: underlyingHash
         });
@@ -126,7 +135,12 @@ export const ComposedOptimCompliance = ZkProgram({
         const servicesCompliant = prevOutput.servicesCompliant.add(eximComplianceBit);
         
         // Update underlying proofs hash
-        const eximHash = Field.random();
+        // Fix: Use deterministic hash instead of Field.random()
+        const eximHash = Poseidon.hash([
+          eximOutput.entityName.hash(),
+          eximOutput.iec.hash(),
+          timestamp
+        ]);
         const combinedUnderlyingHash = Poseidon.hash([
           prevOutput.underlyingProofsHash,
           eximHash
@@ -183,7 +197,12 @@ export const ComposedOptimCompliance = ZkProgram({
         const servicesCompliant = prevOutput.servicesCompliant.add(gleifComplianceBit);
         
         // Update underlying proofs hash
-        const gleifHash = Field.random();
+        // Fix: Use deterministic hash instead of Field.random()
+        const gleifHash = Poseidon.hash([
+          gleifOutput.name.hash(),
+          gleifOutput.lei.hash(),
+          timestamp
+        ]);
         const finalUnderlyingHash = Poseidon.hash([
           prevOutput.underlyingProofsHash,
           gleifHash

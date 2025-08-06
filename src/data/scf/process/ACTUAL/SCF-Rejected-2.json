@@ -1,0 +1,213 @@
+{
+  "processId": "SCF_Rejected2_Process",
+  "processName": "Supply Chain Finance - Rejected Path 2",
+  "description": "Invalid SCF workflow - pattern sequence and cross-connection violations",
+  "processType": "SCF",
+  "subType": "SUPPLY_CHAIN_FINANCE",
+  "status": "REJECTED",
+  "version": "1.0",
+  "expectedPattern": "a(b|c)(c|b)d(e|f)fg",
+  "actualPath": "acfdbg",
+  "pathValidation": {
+    "isValid": false,
+    "matchesExpected": false,
+    "complianceScore": 20,
+    "rejectionReason": "Multiple pattern violations: cross-connection rule broken, sequence order incorrect"
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "Event_1e6mvux",
+      "name": "0",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "Event_0d8ci30", 
+      "name": "8",
+      "type": "endEvent",
+      "note": "Reached through invalid sequence"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_0ckb2yy",
+        "name": "1",
+        "description": "Initial Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0orj063",
+        "name": "2", 
+        "description": "Node 2 Processing (INCORRECTLY REACHED)",
+        "type": "intermediateThrowEvent",
+        "executed": true,
+        "note": "Should have gone to different node for cross-connection"
+      },
+      {
+        "id": "Event_0s7vpsv",
+        "name": "3",
+        "description": "Correct Cross-Connection Target (NOT EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": false,
+        "required": true
+      },
+      {
+        "id": "Event_09jlpil",
+        "name": "4",
+        "description": "Join Point (REACHED VIA WRONG PATH)",
+        "type": "intermediateThrowEvent",
+        "executed": true,
+        "note": "Received incorrect flow sequence"
+      },
+      {
+        "id": "Event_1ooatwj",
+        "name": "5",
+        "description": "Second Gateway (SEQUENCE ERROR)",
+        "type": "intermediateThrowEvent",
+        "executed": true,
+        "note": "D appeared before this, violating expected order"
+      },
+      {
+        "id": "Event_0zmkq57",
+        "name": "6",
+        "description": "Second Branch Option (NOT EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": false,
+        "note": "Proper second branch not taken"
+      },
+      {
+        "id": "Event_024ls17",
+        "name": "7",
+        "description": "Final Point (WRONG CONNECTION)",
+        "type": "intermediateThrowEvent",
+        "executed": true,
+        "note": "Received B at wrong time in sequence"
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_1e1jt09",
+        "name": "a",
+        "sourceRef": "Event_1e6mvux",
+        "targetRef": "Event_0ckb2yy",
+        "executed": true,
+        "valid": true
+      },
+      {
+        "id": "Flow_1mcdovg",
+        "name": "c",
+        "sourceRef": "Event_0ckb2yy",
+        "targetRef": "Event_0orj063",
+        "executed": true,
+        "valid": true,
+        "note": "Valid first branch choice"
+      },
+      {
+        "id": "Flow_0uxr7s1",
+        "name": "f",
+        "sourceRef": "Event_0orj063",
+        "targetRef": "Event_09jlpil",
+        "executed": true,
+        "valid": false,
+        "violation": "Should be 'b' for cross-connection, not 'f'"
+      },
+      {
+        "id": "Flow_16doo4t",
+        "name": "d",
+        "sourceRef": "Event_09jlpil",
+        "targetRef": "Event_1ooatwj",
+        "executed": true,
+        "valid": false,
+        "violation": "D appears after F, violating sequence order"
+      },
+      {
+        "id": "Flow_0wslkb9",
+        "name": "b",
+        "sourceRef": "Event_1ooatwj",
+        "targetRef": "Event_024ls17",
+        "executed": true,
+        "valid": false,
+        "violation": "B appears after D, violating cross-connection rules"
+      },
+      {
+        "id": "Flow_01qx9za",
+        "name": "g",
+        "sourceRef": "Event_024ls17",
+        "targetRef": "Event_0d8ci30",
+        "executed": true,
+        "valid": true,
+        "note": "Final step executed but via invalid path"
+      }
+    ],
+    "expectedFlows": [
+      {
+        "shouldHaveBeen": "Flow_0xad9v9 then Flow_0q6gb9b",
+        "description": "After choosing C, should cross-connect with B",
+        "pattern": "c→b"
+      },
+      {
+        "shouldHaveBeen": "Proper sequence: a(c)(b)d(e|f)fg",
+        "description": "Cross-connection followed by proper sequence",
+        "actualSequence": "acfdbg"
+      }
+    ],
+    "pathChoices": {
+      "firstBranch": {
+        "selected": "c",
+        "alternative": "b",
+        "description": "Selected Branch C processing - VALID"
+      },
+      "crossConnection": {
+        "selected": "f",
+        "shouldHaveSelected": "b",
+        "description": "INVALID - Used F instead of required B cross-connection",
+        "error": "Cross-connection rule violated"
+      },
+      "sequenceOrder": {
+        "expected": "a(c)(b)d(e|f)fg",
+        "actual": "acfdbg",
+        "description": "INVALID - Multiple sequence violations",
+        "errors": [
+          "F appears before D",
+          "B appears after D instead of before D",
+          "Missing proper second branch (e|f)"
+        ]
+      }
+    }
+  },
+  "complianceViolations": [
+    {
+      "violationType": "CROSS_CONNECTION_VIOLATION",
+      "severity": "CRITICAL",
+      "description": "After selecting C in first branch, must use B for cross-connection, but used F instead"
+    },
+    {
+      "violationType": "SEQUENCE_ORDER_VIOLATION",
+      "severity": "CRITICAL", 
+      "description": "Pattern sequence broken: F appears before D, B appears after D"
+    },
+    {
+      "violationType": "PATTERN_STRUCTURE_VIOLATION",
+      "severity": "HIGH",
+      "description": "Expected a(b|c)(c|b)d(e|f)fg but received acfdbg"
+    },
+    {
+      "violationType": "MISSING_REQUIRED_BRANCH",
+      "severity": "MEDIUM",
+      "description": "Proper second branch selection (e|f) not executed correctly"
+    }
+  ],
+  "businessRules": {
+    "crossConnectionFollowed": false,
+    "branchingChoicesValid": false,
+    "patternCompliance": false,
+    "sequenceOrderMaintained": false,
+    "structuralIntegrityMaintained": false
+  },
+  "metadata": {
+    "createdDate": "2025-07-09",
+    "lastModified": "2025-07-09",
+    "version": "1.0",
+    "author": "SCF Process Validator",
+    "tags": ["scf", "supply-chain", "finance", "rejected", "cross-connection-violation", "sequence-error"]
+  }
+}

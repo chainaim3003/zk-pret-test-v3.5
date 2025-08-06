@@ -1,0 +1,274 @@
+<svg width="2100" height="900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; text-anchor: middle; }
+      .legend-title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; }
+      .legend-text { font-family: Arial, sans-serif; font-size: 12px; }
+      .node { fill: #e1f5fe; stroke: #01579b; stroke-width: 2; }
+      .start-node { fill: #c8e6c9; stroke: #1b5e20; stroke-width: 3; }
+      .end-node { fill: #ffcdd2; stroke: #b71c1c; stroke-width: 3; }
+      .branch-node { fill: #fff3e0; stroke: #e65100; stroke-width: 2; }
+      .join-node { fill: #f3e5f5; stroke: #4a148c; stroke-width: 2; }
+      .edge { stroke: #1976d2; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .edge-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+      .node-label { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="1050" y="30" class="title">HC-AG-4-USTLM: US Interstate Telemedicine Process</text>
+  <text x="1050" y="55" class="legend-text" text-anchor="middle">Pattern: abc(d|e)f(g|h|i)jk(l|m)n(o|p|q)rstuv - Multi-State Licensing with 4 Branch/Join Points</text>
+  
+  <!-- Main Process Flow -->
+  
+  <!-- Start Node -->
+  <circle cx="50" cy="350" r="20" class="start-node"/>
+  <text x="50" y="356" class="node-label">START</text>
+  
+  <!-- Node 1 -->
+  <circle cx="150" cy="350" r="15" class="node"/>
+  <text x="150" y="355" class="node-label">1</text>
+  
+  <!-- Node 2 -->
+  <circle cx="250" cy="350" r="15" class="node"/>
+  <text x="250" y="355" class="node-label">2</text>
+  
+  <!-- Node 3 (First Branch Point) -->
+  <circle cx="350" cy="350" r="15" class="branch-node"/>
+  <text x="350" y="355" class="node-label">3</text>
+  
+  <!-- Branch 1: IMLC/Individual State -->
+  <!-- Node 4 (IMLC) -->
+  <circle cx="450" cy="250" r="15" class="node"/>
+  <text x="450" y="255" class="node-label">4</text>
+  
+  <!-- Node 5 (Individual State) -->
+  <circle cx="450" cy="450" r="15" class="node"/>
+  <text x="450" y="455" class="node-label">5</text>
+  
+  <!-- Node 6 (First Join + Second Branch) -->
+  <circle cx="550" cy="350" r="15" class="join-node"/>
+  <text x="550" y="355" class="node-label">6</text>
+  
+  <!-- Branch 2: Facility Type -->
+  <!-- Node 7 (Rural Hospital) -->
+  <circle cx="650" cy="200" r="15" class="node"/>
+  <text x="650" y="205" class="node-label">7</text>
+  
+  <!-- Node 8 (Urban Medical Center) -->
+  <circle cx="650" cy="350" r="15" class="node"/>
+  <text x="650" y="355" class="node-label">8</text>
+  
+  <!-- Node 9 (Specialty Clinic) -->
+  <circle cx="650" cy="500" r="15" class="node"/>
+  <text x="650" y="505" class="node-label">9</text>
+  
+  <!-- Node 10 (Second Join) -->
+  <circle cx="750" cy="350" r="15" class="join-node"/>
+  <text x="750" y="355" class="node-label">10</text>
+  
+  <!-- Node 11 (Third Branch Point) -->
+  <circle cx="850" cy="350" r="15" class="branch-node"/>
+  <text x="850" y="355" class="node-label">11</text>
+  
+  <!-- Branch 3: Prescription Authority -->
+  <!-- Node 12 (Controlled Substance) -->
+  <circle cx="950" cy="250" r="15" class="node"/>
+  <text x="950" y="255" class="node-label">12</text>
+  
+  <!-- Node 13 (Non-Controlled) -->
+  <circle cx="950" cy="450" r="15" class="node"/>
+  <text x="950" y="455" class="node-label">13</text>
+  
+  <!-- Node 14 (Third Join + Fourth Branch) -->
+  <circle cx="1050" cy="350" r="15" class="join-node"/>
+  <text x="1050" y="355" class="node-label">14</text>
+  
+  <!-- Branch 4: Delivery Method -->
+  <!-- Node 15 (Video) -->
+  <circle cx="1150" cy="200" r="15" class="node"/>
+  <text x="1150" y="205" class="node-label">15</text>
+  
+  <!-- Node 16 (Store-and-Forward) -->
+  <circle cx="1150" cy="350" r="15" class="node"/>
+  <text x="1150" y="355" class="node-label">16</text>
+  
+  <!-- Node 17 (Remote Monitoring) -->
+  <circle cx="1150" cy="500" r="15" class="node"/>
+  <text x="1150" y="505" class="node-label">17</text>
+  
+  <!-- Node 18 (Fourth Join) -->
+  <circle cx="1250" cy="350" r="15" class="join-node"/>
+  <text x="1250" y="355" class="node-label">18</text>
+  
+  <!-- Remaining Linear Nodes -->
+  <circle cx="1350" cy="350" r="15" class="node"/>
+  <text x="1350" y="355" class="node-label">19</text>
+  
+  <circle cx="1450" cy="350" r="15" class="node"/>
+  <text x="1450" y="355" class="node-label">20</text>
+  
+  <circle cx="1550" cy="350" r="15" class="node"/>
+  <text x="1550" y="355" class="node-label">21</text>
+  
+  <circle cx="1650" cy="350" r="15" class="node"/>
+  <text x="1650" y="355" class="node-label">22</text>
+  
+  <!-- End Node -->
+  <circle cx="1750" cy="350" r="20" class="end-node"/>
+  <text x="1750" y="356" class="node-label">END</text>
+  
+  <!-- Edges with Labels -->
+  
+  <!-- a: Start to 1 -->
+  <line x1="70" y1="350" x2="130" y2="350" class="edge"/>
+  <text x="100" y="340" class="edge-label">a</text>
+  
+  <!-- b: 1 to 2 -->
+  <line x1="165" y1="350" x2="235" y2="350" class="edge"/>
+  <text x="200" y="340" class="edge-label">b</text>
+  
+  <!-- c: 2 to 3 -->
+  <line x1="265" y1="350" x2="335" y2="350" class="edge"/>
+  <text x="300" y="340" class="edge-label">c</text>
+  
+  <!-- d: 3 to 4 -->
+  <line x1="360" y1="340" x2="440" y2="260" class="edge"/>
+  <text x="400" y="295" class="edge-label">d</text>
+  
+  <!-- e: 3 to 5 -->
+  <line x1="360" y1="360" x2="440" y2="440" class="edge"/>
+  <text x="400" y="405" class="edge-label">e</text>
+  
+  <!-- f: 4 to 6 -->
+  <line x1="465" y1="260" x2="540" y2="340" class="edge"/>
+  <text x="500" y="295" class="edge-label">f</text>
+  
+  <!-- f: 5 to 6 -->
+  <line x1="465" y1="440" x2="540" y2="360" class="edge"/>
+  <text x="500" y="405" class="edge-label">f</text>
+  
+  <!-- g: 6 to 7 -->
+  <line x1="560" y1="340" x2="640" y2="210" class="edge"/>
+  <text x="600" y="270" class="edge-label">g</text>
+  
+  <!-- h: 6 to 8 -->
+  <line x1="565" y1="350" x2="635" y2="350" class="edge"/>
+  <text x="600" y="340" class="edge-label">h</text>
+  
+  <!-- i: 6 to 9 -->
+  <line x1="560" y1="360" x2="640" y2="490" class="edge"/>
+  <text x="600" y="430" class="edge-label">i</text>
+  
+  <!-- j: 7 to 10 -->
+  <line x1="665" y1="210" x2="740" y2="340" class="edge"/>
+  <text x="700" y="270" class="edge-label">j</text>
+  
+  <!-- j: 8 to 10 -->
+  <line x1="665" y1="350" x2="735" y2="350" class="edge"/>
+  <text x="700" y="340" class="edge-label">j</text>
+  
+  <!-- j: 9 to 10 -->
+  <line x1="665" y1="490" x2="740" y2="360" class="edge"/>
+  <text x="700" y="430" class="edge-label">j</text>
+  
+  <!-- k: 10 to 11 -->
+  <line x1="765" y1="350" x2="835" y2="350" class="edge"/>
+  <text x="800" y="340" class="edge-label">k</text>
+  
+  <!-- l: 11 to 12 -->
+  <line x1="860" y1="340" x2="940" y2="260" class="edge"/>
+  <text x="900" y="295" class="edge-label">l</text>
+  
+  <!-- m: 11 to 13 -->
+  <line x1="860" y1="360" x2="940" y2="440" class="edge"/>
+  <text x="900" y="405" class="edge-label">m</text>
+  
+  <!-- n: 12 to 14 -->
+  <line x1="965" y1="260" x2="1040" y2="340" class="edge"/>
+  <text x="1000" y="295" class="edge-label">n</text>
+  
+  <!-- n: 13 to 14 -->
+  <line x1="965" y1="440" x2="1040" y2="360" class="edge"/>
+  <text x="1000" y="405" class="edge-label">n</text>
+  
+  <!-- o: 14 to 15 -->
+  <line x1="1060" y1="340" x2="1140" y2="210" class="edge"/>
+  <text x="1100" y="270" class="edge-label">o</text>
+  
+  <!-- p: 14 to 16 -->
+  <line x1="1065" y1="350" x2="1135" y2="350" class="edge"/>
+  <text x="1100" y="340" class="edge-label">p</text>
+  
+  <!-- q: 14 to 17 -->
+  <line x1="1060" y1="360" x2="1140" y2="490" class="edge"/>
+  <text x="1100" y="430" class="edge-label">q</text>
+  
+  <!-- r: 15 to 18 -->
+  <line x1="1165" y1="210" x2="1240" y2="340" class="edge"/>
+  <text x="1200" y="270" class="edge-label">r</text>
+  
+  <!-- r: 16 to 18 -->
+  <line x1="1165" y1="350" x2="1235" y2="350" class="edge"/>
+  <text x="1200" y="340" class="edge-label">r</text>
+  
+  <!-- r: 17 to 18 -->
+  <line x1="1165" y1="490" x2="1240" y2="360" class="edge"/>
+  <text x="1200" y="430" class="edge-label">r</text>
+  
+  <!-- s: 18 to 19 -->
+  <line x1="1265" y1="350" x2="1335" y2="350" class="edge"/>
+  <text x="1300" y="340" class="edge-label">s</text>
+  
+  <!-- t: 19 to 20 -->
+  <line x1="1365" y1="350" x2="1435" y2="350" class="edge"/>
+  <text x="1400" y="340" class="edge-label">t</text>
+  
+  <!-- u: 20 to 21 -->
+  <line x1="1465" y1="350" x2="1535" y2="350" class="edge"/>
+  <text x="1500" y="340" class="edge-label">u</text>
+  
+  <!-- v: 21 to 22 -->
+  <line x1="1565" y1="350" x2="1635" y2="350" class="edge"/>
+  <text x="1600" y="340" class="edge-label">v</text>
+  
+  <!-- w: 22 to End -->
+  <line x1="1665" y1="350" x2="1730" y2="350" class="edge"/>
+  <text x="1697" y="340" class="edge-label">w</text>
+  
+  <!-- Legend Section -->
+  <text x="100" y="600" class="legend-title">Process Flow Legend (Left to Right Traversal):</text>
+  
+  <!-- Legend Items -->
+  <text x="50" y="630" class="legend-text">START: US Interstate Telemedicine Coordinator</text>
+  <text x="50" y="650" class="legend-text">a: Patient Registration Agent - PRIVATE: Patient registration with location verification</text>
+  <text x="50" y="670" class="legend-text">b: State Jurisdiction Detection Agent - REGULATORY: Auto-detect patient and provider state jurisdictions</text>
+  <text x="50" y="690" class="legend-text">c: Licensure Framework Router - ZK PROOF: Route to IMLC or individual state licensing</text>
+  <text x="50" y="710" class="legend-text">d: IMLC Compact Verification - REGULATORY: Interstate Medical Licensure Compact verification</text>
+  <text x="50" y="730" class="legend-text">e: Individual State Registration - REGULATORY: State-specific medical license verification</text>
+  <text x="50" y="750" class="legend-text">f: License Verification Join - ZK PROOF: Unified license verification completion</text>
+  <text x="50" y="770" class="legend-text">g: Rural Critical Access Hospital - PRIVATE: Rural hospital credentialing by proxy</text>
+  <text x="50" y="790" class="legend-text">h: Urban Medical Center - PRIVATE: Urban medical center standard credentialing</text>
+  <text x="50" y="810" class="legend-text">i: Specialty Clinic Network - PRIVATE: Specialty network multi-state credentialing</text>
+  <text x="50" y="830" class="legend-text">j: Credentialing Verification - REGULATORY: Hospital credentialing and privilege verification</text>
+  <text x="50" y="850" class="legend-text">k: DEA Controlled Substance Verification - REGULATORY: Federal DEA registration verification</text>
+  
+  <text x="1100" y="630" class="legend-text">l: Controlled Substance Authorization - REGULATORY: Schedule II/III prescription authorization</text>
+  <text x="1100" y="650" class="legend-text">m: Non-Controlled Prescription Only - REGULATORY: Standard prescription authorization</text>
+  <text x="1100" y="670" class="legend-text">n: Prescription Authorization Join - ZK PROOF: Unified prescription authority verification</text>
+  <text x="1100" y="690" class="legend-text">o: Live Video Consultation - PRIVATE: Real-time HIPAA-compliant video</text>
+  <text x="1100" y="710" class="legend-text">p: Store-and-Forward Technology - PRIVATE: Asynchronous medical data transmission</text>
+  <text x="1100" y="730" class="legend-text">q: Remote Patient Monitoring - PRIVATE: Continuous patient monitoring systems</text>
+  <text x="1100" y="750" class="legend-text">r: Consultation Delivery Join - ZK PROOF: Unified telemedicine delivery completion</text>
+  <text x="1100" y="770" class="legend-text">s: HIPAA Privacy Compliance - REGULATORY: Federal HIPAA privacy rule compliance</text>
+  <text x="1100" y="790" class="legend-text">t: Treatment Documentation - PRIVATE: Medical record documentation and storage</text>
+  <text x="1100" y="810" class="legend-text">u: Insurance and Billing Verification - REGULATORY: Multi-state insurance and billing compliance</text>
+  <text x="1100" y="830" class="legend-text">v: State Medical Board Audit Trail - REGULATORY: Complete multi-state audit trail</text>
+  <text x="1100" y="850" class="legend-text">w: Final Interstate Verification - ZK PROOF: Complete interstate process integrity</text>
+  
+  <text x="900" y="880" class="legend-text">END: US Interstate Telemedicine Consultation Complete</text>
+  
+</svg>

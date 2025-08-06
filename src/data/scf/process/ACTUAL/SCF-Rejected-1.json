@@ -1,0 +1,190 @@
+{
+  "processId": "SCF_Rejected1_Process",
+  "processName": "Supply Chain Finance - Rejected Path 1",
+  "description": "Invalid SCF workflow - premature termination after cross-connection",
+  "processType": "SCF",
+  "subType": "SUPPLY_CHAIN_FINANCE",
+  "status": "REJECTED",
+  "version": "1.0",
+  "expectedPattern": "a(b|c)(c|b)d(e|f)fg",
+  "actualPath": "abcd",
+  "pathValidation": {
+    "isValid": false,
+    "matchesExpected": false,
+    "complianceScore": 40,
+    "rejectionReason": "Premature termination - missing second branch and final processing steps"
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "Event_1e6mvux",
+      "name": "0",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "Event_0d8ci30", 
+      "name": "8",
+      "type": "endEvent",
+      "note": "Reached prematurely without completing required pattern"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_0ckb2yy",
+        "name": "1",
+        "description": "Initial Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0orj063",
+        "name": "2", 
+        "description": "Branch B Processing (EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": true
+      },
+      {
+        "id": "Event_0s7vpsv",
+        "name": "3",
+        "description": "Branch C Processing (NOT EXECUTED)",
+        "type": "intermediateThrowEvent",
+        "executed": false
+      },
+      {
+        "id": "Event_09jlpil",
+        "name": "4",
+        "description": "Truncation Point - Should have led to second branch",
+        "type": "intermediateThrowEvent",
+        "executed": true,
+        "note": "Process terminated here instead of continuing"
+      },
+      {
+        "id": "Event_1ooatwj",
+        "name": "5",
+        "description": "Second Processing Gateway (MISSING)",
+        "type": "intermediateThrowEvent",
+        "executed": false,
+        "required": true
+      },
+      {
+        "id": "Event_0zmkq57",
+        "name": "6",
+        "description": "Branch E Processing (MISSING)",
+        "type": "intermediateThrowEvent",
+        "executed": false,
+        "required": true
+      },
+      {
+        "id": "Event_024ls17",
+        "name": "7",
+        "description": "Final Join Point (MISSING)",
+        "type": "intermediateThrowEvent",
+        "executed": false,
+        "required": true
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_1e1jt09",
+        "name": "a",
+        "sourceRef": "Event_1e6mvux",
+        "targetRef": "Event_0ckb2yy",
+        "executed": true
+      },
+      {
+        "id": "Flow_1mcdovg",
+        "name": "b",
+        "sourceRef": "Event_0ckb2yy",
+        "targetRef": "Event_0orj063",
+        "executed": true
+      },
+      {
+        "id": "Flow_0uxr7s1",
+        "name": "c",
+        "sourceRef": "Event_0orj063",
+        "targetRef": "Event_09jlpil",
+        "executed": true
+      },
+      {
+        "id": "Flow_1xwaia7",
+        "name": "d",
+        "sourceRef": "Event_09jlpil",
+        "targetRef": "Event_0d8ci30",
+        "executed": true,
+        "note": "INVALID - Should not connect directly to end"
+      }
+    ],
+    "missingFlows": [
+      {
+        "requiredFlow": "Flow_16doo4t",
+        "name": "d",
+        "description": "Should connect Event_09jlpil to Event_1ooatwj",
+        "reason": "Required for continuation to second branch"
+      },
+      {
+        "requiredFlow": "Flow_0u2xuqs or Flow_0wslkb9",
+        "name": "e or f",
+        "description": "Second branch selection missing",
+        "reason": "Pattern requires (e|f) choice"
+      },
+      {
+        "requiredFlow": "Flow_0564sbo or direct f",
+        "name": "f",
+        "description": "Final processing step missing",
+        "reason": "Required for pattern completion"
+      },
+      {
+        "requiredFlow": "Flow_01qx9za",
+        "name": "g",
+        "description": "Final sequential step missing",
+        "reason": "Required for proper termination"
+      }
+    ],
+    "pathChoices": {
+      "firstBranch": {
+        "selected": "b",
+        "alternative": "c",
+        "description": "Selected Branch B processing - VALID"
+      },
+      "crossConnection": {
+        "selected": "c",
+        "description": "Cross-connected to C as required by pattern (b→c) - VALID"
+      },
+      "secondBranch": {
+        "selected": "NONE",
+        "alternative": "e|f",
+        "description": "MISSING - Process terminated before second branch",
+        "error": "Required second branch selection not executed"
+      }
+    }
+  },
+  "complianceViolations": [
+    {
+      "violationType": "INCOMPLETE_PATTERN",
+      "severity": "CRITICAL",
+      "description": "Process terminated after 'abcd' instead of completing full pattern 'a(b|c)(c|b)d(e|f)fg'"
+    },
+    {
+      "violationType": "MISSING_REQUIRED_STEPS",
+      "severity": "HIGH",
+      "description": "Second branch processing (e|f) and final steps (fg) not executed"
+    },
+    {
+      "violationType": "INVALID_TERMINATION",
+      "severity": "HIGH",
+      "description": "Direct connection from node 4 to end event bypasses required processing"
+    }
+  ],
+  "businessRules": {
+    "crossConnectionFollowed": true,
+    "branchingChoicesValid": false,
+    "patternCompliance": false,
+    "allRequiredStepsExecuted": false,
+    "prematureTermination": true
+  },
+  "metadata": {
+    "createdDate": "2025-07-09",
+    "lastModified": "2025-07-09",
+    "version": "1.0",
+    "author": "SCF Process Validator",
+    "tags": ["scf", "supply-chain", "finance", "rejected", "incomplete", "truncated"]
+  }
+}

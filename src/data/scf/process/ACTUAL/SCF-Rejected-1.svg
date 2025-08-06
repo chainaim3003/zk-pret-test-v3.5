@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500">
+  <!-- Background -->
+  <rect width="1200" height="500" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#dc2626">
+    SCF: Supply Chain Finance Process (Rejected-1)
+  </text>
+  <text x="600" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#64748b">
+    Actual Path: abcd (TRUNCATED - Missing required processing steps)
+  </text>
+  
+  <!-- Start Event -->
+  <circle cx="80" cy="200" r="18" fill="#10b981" stroke="#059669" stroke-width="2"/>
+  <text x="80" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">S</text>
+  <text x="80" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Start</text>
+  
+  <!-- Node 1: Active path -->
+  <circle cx="180" cy="200" r="15" fill="#10b981" stroke="#059669" stroke-width="3"/>
+  <text x="180" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">1</text>
+  <text x="180" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#374151">Process</text>
+  
+  <!-- Node 2: Active path (Branch B taken) -->
+  <circle cx="280" cy="160" r="15" fill="#10b981" stroke="#059669" stroke-width="3"/>
+  <text x="280" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">2</text>
+  <text x="280" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Branch B</text>
+  
+  <!-- Node 3: Not taken (greyed out) -->
+  <circle cx="280" cy="240" r="15" fill="#d1d5db" stroke="#9ca3af" stroke-width="1" opacity="0.5"/>
+  <text x="280" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6b7280">3</text>
+  <text x="280" y="265" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#6b7280">Branch C</text>
+  
+  <!-- Node 4: Active path (Premature end point) -->
+  <circle cx="380" cy="200" r="15" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="380" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">4</text>
+  <text x="380" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#374151">Truncated</text>
+  
+  <!-- Missing nodes (greyed out with warning) -->
+  <circle cx="480" cy="200" r="15" fill="#fca5a5" stroke="#dc2626" stroke-width="2" opacity="0.7" stroke-dasharray="3,3"/>
+  <text x="480" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">5</text>
+  <text x="480" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">Missing</text>
+  
+  <circle cx="580" cy="160" r="15" fill="#fca5a5" stroke="#dc2626" stroke-width="2" opacity="0.7" stroke-dasharray="3,3"/>
+  <text x="580" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">6</text>
+  <text x="580" y="185" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">Missing</text>
+  
+  <circle cx="680" cy="200" r="15" fill="#fca5a5" stroke="#dc2626" stroke-width="2" opacity="0.7" stroke-dasharray="3,3"/>
+  <text x="680" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">7</text>
+  <text x="680" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#dc2626">Missing</text>
+  
+  <!-- End Event (premature) -->
+  <circle cx="480" cy="280" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="2"/>
+  <text x="480" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">E</text>
+  <text x="480" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Early End</text>
+  
+  <!-- Actual execution path (executed steps in green) -->
+  <line x1="98" y1="200" x2="162" y2="200" stroke="#059669" stroke-width="3" marker-end="url(#greenArrowhead)"/>
+  <text x="130" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">a</text>
+  
+  <line x1="195" y1="190" x2="265" y2="170" stroke="#059669" stroke-width="3" marker-end="url(#greenArrowhead)"/>
+  <text x="225" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">b</text>
+  
+  <line x1="295" y1="170" x2="365" y2="190" stroke="#059669" stroke-width="3" marker-end="url(#greenArrowhead)"/>
+  <text x="325" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#059669">c</text>
+  
+  <!-- Premature termination (red line) -->
+  <line x1="395" y1="210" x2="462" y2="270" stroke="#dc2626" stroke-width="3" marker-end="url(#redArrowhead)"/>
+  <text x="425" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#dc2626">d</text>
+  
+  <!-- Missing paths (red dashed) -->
+  <line x1="395" y1="200" x2="462" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,5" opacity="0.7"/>
+  <text x="428" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#dc2626">MISSING</text>
+  
+  <!-- Non-taken paths (grey, dotted) -->
+  <line x1="195" y1="210" x2="265" y2="230" stroke="#9ca3af" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <text x="225" y="225" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9ca3af">c</text>
+  
+  <!-- Arrow marker definitions -->
+  <defs>
+    <marker id="greenArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#059669"/>
+    </marker>
+    <marker id="redArrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626"/>
+    </marker>
+  </defs>
+  
+  <!-- Legend positioned below the diagram -->
+  <rect x="100" y="350" width="1000" height="120" fill="white" stroke="#e5e7eb" stroke-width="1" rx="5"/>
+  <text x="600" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#374151">SCF Rejected-1 Execution Path</text>
+  
+  <!-- Legend items -->
+  <circle cx="150" cy="395" r="10" fill="#10b981"/>
+  <text x="170" y="400" font-family="Arial, sans-serif" font-size="12" fill="#374151">Executed Steps: Successfully completed process steps</text>
+  
+  <circle cx="150" cy="415" r="10" fill="#dc2626"/>
+  <text x="170" y="420" font-family="Arial, sans-serif" font-size="12" fill="#374151">Truncation Point: Process terminated prematurely</text>
+  
+  <circle cx="500" cy="395" r="10" fill="#fca5a5" stroke="#dc2626" stroke-dasharray="3,3"/>
+  <text x="520" y="400" font-family="Arial, sans-serif" font-size="12" fill="#374151">Missing Steps: Required but not executed</text>
+  
+  <text x="150" y="445" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#dc2626">REJECTION REASON: Incomplete pattern execution</text>
+  <text x="150" y="465" font-family="Arial, sans-serif" font-size="11" fill="#374151">Expected: a(b|c)(c|b)d(e|f)fg | Actual: abcd (missing second branch and final steps)</text>
+</svg>

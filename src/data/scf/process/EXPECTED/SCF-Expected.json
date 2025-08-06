@@ -1,0 +1,211 @@
+{
+  "processId": "SCF_Expected_Process",
+  "processName": "Supply Chain Finance - Expected Pattern",
+  "description": "Complete SCF workflow with cross-connected branching patterns",
+  "processType": "SCF",
+  "subType": "SUPPLY_CHAIN_FINANCE",
+  "status": "EXPECTED",
+  "version": "1.0",
+  "expectedPattern": "a(b|c)(c|b)d(e|f)fg",
+  "actualPath": "ALL_PATHS",
+  "pathValidation": {
+    "isValid": true,
+    "matchesExpected": true,
+    "complianceScore": 100,
+    "possiblePaths": 4
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "Event_1e6mvux",
+      "name": "0",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "Event_0d8ci30", 
+      "name": "8",
+      "type": "endEvent"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_0ckb2yy",
+        "name": "1",
+        "description": "Initial Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "branches": ["Flow_1mcdovg", "Flow_0xad9v9"]
+      },
+      {
+        "id": "Event_0orj063",
+        "name": "2", 
+        "description": "Branch B Processing",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_0s7vpsv",
+        "name": "3",
+        "description": "Branch C Processing",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_09jlpil",
+        "name": "4",
+        "description": "First Join Point",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_1ooatwj",
+        "name": "5",
+        "description": "Second Processing Gateway",
+        "type": "intermediateThrowEvent",
+        "branches": ["Flow_0u2xuqs", "Flow_0wslkb9"]
+      },
+      {
+        "id": "Event_0zmkq57",
+        "name": "6",
+        "description": "Branch E Processing",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_024ls17",
+        "name": "7",
+        "description": "Final Join Point",
+        "type": "intermediateThrowEvent"
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_1e1jt09",
+        "name": "a",
+        "sourceRef": "Event_1e6mvux",
+        "targetRef": "Event_0ckb2yy"
+      },
+      {
+        "id": "Flow_1mcdovg",
+        "name": "b",
+        "sourceRef": "Event_0ckb2yy",
+        "targetRef": "Event_0orj063"
+      },
+      {
+        "id": "Flow_0xad9v9",
+        "name": "c",
+        "sourceRef": "Event_0ckb2yy",
+        "targetRef": "Event_0s7vpsv"
+      },
+      {
+        "id": "Flow_0uxr7s1",
+        "name": "c",
+        "sourceRef": "Event_0orj063",
+        "targetRef": "Event_09jlpil"
+      },
+      {
+        "id": "Flow_0q6gb9b",
+        "name": "b",
+        "sourceRef": "Event_0s7vpsv",
+        "targetRef": "Event_09jlpil"
+      },
+      {
+        "id": "Flow_16doo4t",
+        "name": "d",
+        "sourceRef": "Event_09jlpil",
+        "targetRef": "Event_1ooatwj"
+      },
+      {
+        "id": "Flow_0u2xuqs",
+        "name": "e",
+        "sourceRef": "Event_1ooatwj",
+        "targetRef": "Event_0zmkq57"
+      },
+      {
+        "id": "Flow_0wslkb9",
+        "name": "f",
+        "sourceRef": "Event_1ooatwj",
+        "targetRef": "Event_024ls17"
+      },
+      {
+        "id": "Flow_0564sbo",
+        "name": "f",
+        "sourceRef": "Event_0zmkq57",
+        "targetRef": "Event_024ls17"
+      },
+      {
+        "id": "Flow_01qx9za",
+        "name": "g",
+        "sourceRef": "Event_024ls17",
+        "targetRef": "Event_0d8ci30"
+      }
+    ],
+    "branches": [
+      {
+        "name": "First Branch",
+        "pattern": "(b|c)",
+        "description": "Initial routing choice",
+        "options": [
+          {
+            "path": "b",
+            "description": "Route through Event_0orj063 (Node 2)"
+          },
+          {
+            "path": "c", 
+            "description": "Route through Event_0s7vpsv (Node 3)"
+          }
+        ]
+      },
+      {
+        "name": "Cross Connection",
+        "pattern": "(c|b)",
+        "description": "Cross-connected routing to join point",
+        "logic": "If first choice was 'b', then use 'c'; if first choice was 'c', then use 'b'"
+      },
+      {
+        "name": "Second Branch",
+        "pattern": "(e|f)",
+        "description": "Final routing choice",
+        "options": [
+          {
+            "path": "e",
+            "description": "Route through Event_0zmkq57 (Node 6) then 'f' to join"
+          },
+          {
+            "path": "f",
+            "description": "Direct route to Event_024ls17 (Node 7)"
+          }
+        ]
+      }
+    ],
+    "possiblePaths": [
+      {
+        "pathId": 1,
+        "sequence": "abcdefg",
+        "description": "b→c cross-connection, then e→f processing"
+      },
+      {
+        "pathId": 2,
+        "sequence": "abcdfg",
+        "description": "b→c cross-connection, then direct f"
+      },
+      {
+        "pathId": 3,
+        "sequence": "acbefg",
+        "description": "c→b cross-connection, then e→f processing"
+      },
+      {
+        "pathId": 4,
+        "sequence": "acbfg",
+        "description": "c→b cross-connection, then direct f"
+      }
+    ]
+  },
+  "businessRules": {
+    "crossConnectionRequired": true,
+    "branchingOptionsAvailable": true,
+    "joinPointsRequired": true,
+    "sequentialFlowMaintained": true,
+    "complianceViolations": []
+  },
+  "metadata": {
+    "createdDate": "2025-07-09",
+    "lastModified": "2025-07-09",
+    "version": "1.0",
+    "author": "SCF Process Validator",
+    "tags": ["scf", "supply-chain", "finance", "expected", "cross-connected", "branching"]
+  }
+}

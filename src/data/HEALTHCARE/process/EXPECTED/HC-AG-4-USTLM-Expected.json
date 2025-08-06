@@ -1,0 +1,963 @@
+{
+  "processId": "HC-AG-4-USTLM",
+  "processName": "US Interstate Telemedicine with Multi-State Licensing Compliance",
+  "version": "4.0.0",
+  "description": "Zero-knowledge proof enabled US interstate telemedicine workflow with IMLC compliance, multi-state medical licensing, DEA controlled substance authorization, and HIPAA privacy protection",
+  "created": "2025-01-06T18:00:00Z",
+  "lastModified": "2025-01-06T18:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC4_USTLM_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 25,
+    "totalFlows": 27,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 24,
+    "minPathLength": 24
+  },
+  
+  "entities": [
+    {
+      "name": "Interstate Medical Licensure Compact (IMLC)",
+      "role": "Multi-State Medical Licensing Authority",
+      "jurisdiction": "US - 40+ Participating States",
+      "privacyLevel": "Regulatory"
+    },
+    {
+      "name": "Individual State Medical Boards", 
+      "role": "State-Specific Licensing Authority",
+      "jurisdiction": "US - Non-IMLC States",
+      "privacyLevel": "State Regulatory"
+    },
+    {
+      "name": "Rural Critical Access Hospitals",
+      "role": "Healthcare Provider - Rural",
+      "jurisdiction": "US - Rural Areas",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "Urban Medical Centers",
+      "role": "Healthcare Provider - Urban",
+      "jurisdiction": "US - Metropolitan Areas",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "Specialty Clinic Networks",
+      "role": "Specialized Healthcare Provider",
+      "jurisdiction": "US - Multi-State",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "DEA (Drug Enforcement Administration)",
+      "role": "Controlled Substance Authority",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Federal Regulatory"
+    },
+    {
+      "name": "State Insurance Commissions",
+      "role": "Insurance Regulation",
+      "jurisdiction": "US - State Level",
+      "privacyLevel": "Financial Regulatory"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-4-USTLM-Expected.bpmn",
+    "svg": "HC-AG-4-USTLM-Expected.svg", 
+    "json": "HC-AG-4-USTLM-Expected.json",
+    "backup": "HC-AG-4-USTLM-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-4-USTLM-Accepted-1.bpmn",
+      "HC-AG-4-USTLM-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-4-USTLM-Rejected-1.bpmn",
+      "HC-AG-4-USTLM-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "abc(d|e)f(g|h|i)jk(l|m)n(o|p|q)rstuv",
+  "regexExplanation": {
+    "pattern": "abc(d|e)f(g|h|i)jk(l|m)n(o|p|q)rstuv",
+    "meaning": "Complex multi-branch US interstate telemedicine flow with licensing, facility type, prescription authority, and delivery method variations",
+    "branchPoints": ["After 'c' (d|e) - Licensing Framework", "After 'f' (g|h|i) - Facility Type", "After 'k' (l|m) - Prescription Authority", "After 'n' (o|p|q) - Delivery Method"],
+    "joinPoints": ["At 'f' from licensing", "At 'j' from facility type", "At 'n' from prescription authority", "At 'r' from delivery method"],
+    "totalPossiblePaths": 36
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→d→f→g→j→k→l→n→o→r→s→t→u→v→w",
+        "description": "IMLC + Rural Hospital + Controlled Substances + Video Consultation",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "7", "10", "11", "12", "14", "15", "18", "19", "20", "21", "22", "End"],
+        "regexMatch": "abcdfgjklnorstuvw"
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→c→e→f→h→j→k→m→n→p→r→s→t→u→v→w",
+        "description": "Individual State + Urban Center + Non-Controlled + Store-and-Forward",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "6", "8", "10", "11", "13", "14", "16", "18", "19", "20", "21", "22", "End"],
+        "regexMatch": "abcefhjkmnprstuvw"
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→d→f→i→j→k→l→n→q→r→s→t→u→v→w",
+        "description": "IMLC + Specialty Clinic + Controlled Substances + Remote Monitoring",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "9", "10", "11", "12", "14", "17", "18", "19", "20", "21", "22", "End"],
+        "regexMatch": "abcdfijklnqrstuvw"
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "a→c→d→...",
+        "violation": "Skip patient registration - COMPLIANCE VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→d→f→...",
+        "violation": "Skip state jurisdiction detection - LICENSING VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→g→j→...",
+        "violation": "Skip license verification - REGULATORY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→f→(g|h|i)→k→(l|m)→...",
+        "violation": "Skip credentialing verification - MEDICAL VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "...→l→(o|p|q)→...",
+        "violation": "Controlled substance without DEA authorization - DEA VIOLATION",
+        "severity": "Federal Crime"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3"]
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_4", "Flow_3_to_5"],
+        "isBranchPoint": true,
+        "branchType": "Licensing Framework"
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_4"],
+        "outgoing": ["Flow_4_to_6"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5"],
+        "outgoing": ["Flow_5_to_6"]
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_4_to_6", "Flow_5_to_6"],
+        "outgoing": ["Flow_6_to_7", "Flow_6_to_8", "Flow_6_to_9"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Facility Type"
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_7"],
+        "outgoing": ["Flow_7_to_10"]
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_8"],
+        "outgoing": ["Flow_8_to_10"]
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_9"],
+        "outgoing": ["Flow_9_to_10"]
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_7_to_10", "Flow_8_to_10", "Flow_9_to_10"],
+        "outgoing": ["Flow_10_to_11"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_11",
+        "name": "11",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_11"],
+        "outgoing": ["Flow_11_to_12", "Flow_11_to_13"],
+        "isBranchPoint": true,
+        "branchType": "Prescription Authority"
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_11_to_12"],
+        "outgoing": ["Flow_12_to_14"]
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_11_to_13"],
+        "outgoing": ["Flow_13_to_14"]
+      },
+      {
+        "id": "Event_14",
+        "name": "14",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_14", "Flow_13_to_14"],
+        "outgoing": ["Flow_14_to_15", "Flow_14_to_16", "Flow_14_to_17"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Delivery Method"
+      },
+      {
+        "id": "Event_15",
+        "name": "15",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_15"],
+        "outgoing": ["Flow_15_to_18"]
+      },
+      {
+        "id": "Event_16",
+        "name": "16",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_16"],
+        "outgoing": ["Flow_16_to_18"]
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_14_to_17"],
+        "outgoing": ["Flow_17_to_18"]
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_15_to_18", "Flow_16_to_18", "Flow_17_to_18"],
+        "outgoing": ["Flow_18_to_19"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_19"],
+        "outgoing": ["Flow_19_to_20"]
+      },
+      {
+        "id": "Event_20",
+        "name": "20",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_19_to_20"],
+        "outgoing": ["Flow_20_to_21"]
+      },
+      {
+        "id": "Event_21",
+        "name": "21",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_20_to_21"],
+        "outgoing": ["Flow_21_to_22"]
+      },
+      {
+        "id": "Event_22",
+        "name": "22",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_21_to_22"],
+        "outgoing": ["Flow_22_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_22_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3"
+      },
+      {
+        "id": "Flow_3_to_4",
+        "name": "d",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_4",
+        "branchPath": "IMLC Compact States"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5",
+        "branchPath": "Individual State Registration"
+      },
+      {
+        "id": "Flow_4_to_6",
+        "name": "f",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_6_to_7",
+        "name": "g",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_7",
+        "branchPath": "Rural Critical Access Hospital"
+      },
+      {
+        "id": "Flow_6_to_8",
+        "name": "h",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_8",
+        "branchPath": "Urban Medical Center"
+      },
+      {
+        "id": "Flow_6_to_9",
+        "name": "i",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_9",
+        "branchPath": "Specialty Clinic Network"
+      },
+      {
+        "id": "Flow_7_to_10",
+        "name": "j",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_8_to_10",
+        "name": "j",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_9_to_10",
+        "name": "j",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_10"
+      },
+      {
+        "id": "Flow_10_to_11",
+        "name": "k",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_11"
+      },
+      {
+        "id": "Flow_11_to_12",
+        "name": "l",
+        "sourceRef": "Event_11",
+        "targetRef": "Event_12",
+        "branchPath": "Controlled Substance Authorization"
+      },
+      {
+        "id": "Flow_11_to_13",
+        "name": "m",
+        "sourceRef": "Event_11",
+        "targetRef": "Event_13",
+        "branchPath": "Non-Controlled Prescription Only"
+      },
+      {
+        "id": "Flow_12_to_14",
+        "name": "n",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_14"
+      },
+      {
+        "id": "Flow_13_to_14",
+        "name": "n",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_14"
+      },
+      {
+        "id": "Flow_14_to_15",
+        "name": "o",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_15",
+        "branchPath": "Live Video Consultation"
+      },
+      {
+        "id": "Flow_14_to_16",
+        "name": "p",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_16",
+        "branchPath": "Store-and-Forward Technology"
+      },
+      {
+        "id": "Flow_14_to_17",
+        "name": "q",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_17",
+        "branchPath": "Remote Patient Monitoring"
+      },
+      {
+        "id": "Flow_15_to_18",
+        "name": "r",
+        "sourceRef": "Event_15",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_16_to_18",
+        "name": "r",
+        "sourceRef": "Event_16",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "r",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19"
+      },
+      {
+        "id": "Flow_19_to_20",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "Event_20"
+      },
+      {
+        "id": "Flow_20_to_21",
+        "name": "u",
+        "sourceRef": "Event_20",
+        "targetRef": "Event_21"
+      },
+      {
+        "id": "Flow_21_to_22",
+        "name": "v",
+        "sourceRef": "Event_21",
+        "targetRef": "Event_22"
+      },
+      {
+        "id": "Flow_22_to_End",
+        "name": "w",
+        "sourceRef": "Event_22",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "US Interstate Telemedicine Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Patient Registration Agent",
+        "description": "🔒 PRIVATE: Patient registration with location verification",
+        "privacy": "Patient Protected",
+        "stakeholder": "Patient"
+      },
+      "b": {
+        "name": "State Jurisdiction Detection Agent",
+        "description": "🟦 REGULATORY: Auto-detect patient and provider state jurisdictions",
+        "privacy": "Regulatory Required",
+        "stakeholder": "State Medical Boards"
+      },
+      "c": {
+        "name": "Licensure Framework Router",
+        "description": "🔐 ZK PROOF: Route to IMLC or individual state licensing",
+        "privacy": "ZK Protected",
+        "stakeholder": "Medical Licensing Boards"
+      },
+      "d": {
+        "name": "IMLC Compact Verification",
+        "description": "🟦 REGULATORY: Interstate Medical Licensure Compact verification",
+        "privacy": "IMLC Required",
+        "stakeholder": "IMLC Commission"
+      },
+      "e": {
+        "name": "Individual State Registration",
+        "description": "🟦 REGULATORY: State-specific medical license verification",
+        "privacy": "State Required",
+        "stakeholder": "Individual State Medical Boards"
+      },
+      "f": {
+        "name": "License Verification Join",
+        "description": "🔐 ZK PROOF: Unified license verification completion",
+        "privacy": "ZK Protected",
+        "stakeholder": "Medical Licensing System"
+      },
+      "g": {
+        "name": "Rural Critical Access Hospital",
+        "description": "🔒 PRIVATE: Rural hospital credentialing by proxy",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Rural Hospitals"
+      },
+      "h": {
+        "name": "Urban Medical Center",
+        "description": "🔒 PRIVATE: Urban medical center standard credentialing",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Urban Medical Centers"
+      },
+      "i": {
+        "name": "Specialty Clinic Network",
+        "description": "🔒 PRIVATE: Specialty network multi-state credentialing",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Specialty Clinics"
+      },
+      "j": {
+        "name": "Credentialing Verification",
+        "description": "🟦 REGULATORY: Hospital credentialing and privilege verification",
+        "privacy": "Regulatory Required",
+        "stakeholder": "Hospital Systems"
+      },
+      "k": {
+        "name": "DEA Controlled Substance Verification",
+        "description": "🟦 REGULATORY: Federal DEA registration verification",
+        "privacy": "Federal Required",
+        "stakeholder": "DEA"
+      },
+      "l": {
+        "name": "Controlled Substance Authorization",
+        "description": "🟦 REGULATORY: Schedule II/III prescription authorization",
+        "privacy": "DEA Required",
+        "stakeholder": "DEA + State Boards"
+      },
+      "m": {
+        "name": "Non-Controlled Prescription Only",
+        "description": "🟦 REGULATORY: Standard prescription authorization",
+        "privacy": "State Required",
+        "stakeholder": "State Medical Boards"
+      },
+      "n": {
+        "name": "Prescription Authorization Join",
+        "description": "🔐 ZK PROOF: Unified prescription authority verification",
+        "privacy": "ZK Protected",
+        "stakeholder": "Prescription System"
+      },
+      "o": {
+        "name": "Live Video Consultation",
+        "description": "🔒 PRIVATE: Real-time HIPAA-compliant video",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Telemedicine Platform"
+      },
+      "p": {
+        "name": "Store-and-Forward Technology",
+        "description": "🔒 PRIVATE: Asynchronous medical data transmission",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Healthcare Networks"
+      },
+      "q": {
+        "name": "Remote Patient Monitoring",
+        "description": "🔒 PRIVATE: Continuous patient monitoring systems",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "RPM Providers"
+      },
+      "r": {
+        "name": "Consultation Delivery Join",
+        "description": "🔐 ZK PROOF: Unified telemedicine delivery completion",
+        "privacy": "ZK Protected",
+        "stakeholder": "Healthcare System"
+      },
+      "s": {
+        "name": "HIPAA Privacy Compliance",
+        "description": "🟦 REGULATORY: Federal HIPAA privacy rule compliance",
+        "privacy": "HIPAA Required",
+        "stakeholder": "HHS OCR"
+      },
+      "t": {
+        "name": "Treatment Documentation",
+        "description": "🔒 PRIVATE: Medical record documentation and storage",
+        "privacy": "Medical Protected",
+        "stakeholder": "Healthcare Providers"
+      },
+      "u": {
+        "name": "Insurance & Billing Verification",
+        "description": "🟦 REGULATORY: Multi-state insurance and billing compliance",
+        "privacy": "Financial Required",
+        "stakeholder": "Insurance Commissions"
+      },
+      "v": {
+        "name": "State Medical Board Audit Trail",
+        "description": "🟦 REGULATORY: Complete multi-state audit trail",
+        "privacy": "Regulatory Required",
+        "stakeholder": "All State Medical Boards"
+      },
+      "w": {
+        "name": "Final Interstate Verification",
+        "description": "🔐 ZK PROOF: Complete interstate process integrity",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Patient Registration Processing",
+        "description": "Capture patient information and verify location"
+      },
+      "2": {
+        "name": "State Jurisdiction Detection",
+        "description": "Automatically detect patient and provider state jurisdictions"
+      },
+      "3": {
+        "name": "Licensure Framework Router",
+        "description": "Branch point - route to IMLC or individual state licensing"
+      },
+      "4": {
+        "name": "IMLC Compact Processing",
+        "description": "Interstate Medical Licensure Compact verification"
+      },
+      "5": {
+        "name": "Individual State Processing",
+        "description": "State-specific medical license verification"
+      },
+      "6": {
+        "name": "License Verification Join",
+        "description": "Join licensing paths, then branch to facility types"
+      },
+      "7": {
+        "name": "Rural Hospital Handler",
+        "description": "Handle credentialing for rural critical access hospitals"
+      },
+      "8": {
+        "name": "Urban Medical Center Handler",
+        "description": "Handle credentialing for urban medical centers"
+      },
+      "9": {
+        "name": "Specialty Clinic Handler",
+        "description": "Handle credentialing for specialty clinic networks"
+      },
+      "10": {
+        "name": "Credentialing Verification",
+        "description": "Join facility paths, verify hospital credentialing"
+      },
+      "11": {
+        "name": "DEA Verification",
+        "description": "Branch point - verify DEA registration for prescriptions"
+      },
+      "12": {
+        "name": "Controlled Substance Authorization",
+        "description": "Authorize Schedule II/III controlled substance prescriptions"
+      },
+      "13": {
+        "name": "Non-Controlled Authorization",
+        "description": "Authorize standard non-controlled prescriptions"
+      },
+      "14": {
+        "name": "Prescription Authorization Join",
+        "description": "Join prescription paths, then branch delivery methods"
+      },
+      "15": {
+        "name": "Video Consultation Setup",
+        "description": "Set up live video consultation"
+      },
+      "16": {
+        "name": "Store-and-Forward Setup",
+        "description": "Set up asynchronous store-and-forward technology"
+      },
+      "17": {
+        "name": "Remote Monitoring Setup",
+        "description": "Set up remote patient monitoring systems"
+      },
+      "18": {
+        "name": "Consultation Delivery Join",
+        "description": "Join delivery methods for unified consultation"
+      },
+      "19": {
+        "name": "HIPAA Privacy Compliance",
+        "description": "Ensure federal HIPAA privacy rule compliance"
+      },
+      "20": {
+        "name": "Treatment Documentation",
+        "description": "Document treatment and update medical records"
+      },
+      "21": {
+        "name": "Insurance & Billing",
+        "description": "Process multi-state insurance and billing"
+      },
+      "22": {
+        "name": "Audit Trail Generation",
+        "description": "Generate complete multi-state audit trail"
+      }
+    },
+    "end": {
+      "End": "US Interstate Telemedicine Consultation Complete"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "IMLC + Rural Hospital + Controlled Substances + Video",
+      "sequence": "a→b→c→d→f→g→j→k→l→n→o→r→s→t→u→v→w",
+      "regexMatch": "abcdfgjklnorstuvw"
+    },
+    {
+      "pathId": 2,
+      "description": "Individual State + Urban Center + Non-Controlled + Store-and-Forward",
+      "sequence": "a→b→c→e→f→h→j→k→m→n→p→r→s→t→u→v→w",
+      "regexMatch": "abcefhjkmnprstuvw"
+    },
+    {
+      "pathId": 3,
+      "description": "IMLC + Specialty Clinic + Controlled Substances + Remote Monitoring",
+      "sequence": "a→b→c→d→f→i→j→k→l→n→q→r→s→t→u→v→w",
+      "regexMatch": "abcdfijklnqrstuvw"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "IMLC Commission": {
+      "sees": ["Multi-state license status", "Physician credentials", "Compact compliance"],
+      "hidden": ["Patient data", "Medical records", "State-specific processes"],
+      "zkProofs": ["License validity across states", "Compact compliance verification"]
+    },
+    "Individual State Medical Boards": {
+      "sees": ["State-specific licenses", "Local physician data", "State compliance"],
+      "hidden": ["Other states' data", "Patient information", "Federal processes"],
+      "zkProofs": ["State license validity", "Jurisdiction compliance"]
+    },
+    "Rural Critical Access Hospitals": {
+      "sees": ["Local patient data", "Rural-specific programs", "Credentialing by proxy"],
+      "hidden": ["Urban hospital data", "Other facility data", "Specialty networks"],
+      "zkProofs": ["Rural facility authorization", "Credentialing validity"]
+    },
+    "Urban Medical Centers": {
+      "sees": ["Urban patient data", "Standard credentialing", "Metropolitan networks"],
+      "hidden": ["Rural hospital data", "Other facility data", "Specialty networks"],
+      "zkProofs": ["Urban facility authorization", "Standard credentialing"]
+    },
+    "Specialty Clinic Networks": {
+      "sees": ["Specialty patient data", "Multi-state operations", "Network credentialing"],
+      "hidden": ["General hospital data", "Other specialty data", "Individual practices"],
+      "zkProofs": ["Specialty network authorization", "Multi-state credentialing"]
+    },
+    "DEA": {
+      "sees": ["Controlled substance prescriptions", "DEA registrations", "Federal compliance"],
+      "hidden": ["Patient identities", "Medical details", "State-specific data"],
+      "zkProofs": ["DEA registration validity", "Controlled substance authorization"]
+    },
+    "State Insurance Commissions": {
+      "sees": ["Insurance compliance", "Billing data", "Financial regulations"],
+      "hidden": ["Medical content", "Clinical decisions", "Patient identities"],
+      "zkProofs": ["Insurance compliance", "Billing authorization"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "c",
+      "proof": "Licensure routing without revealing provider details",
+      "mechanism": "Zero-knowledge license framework selection"
+    },
+    {
+      "flow": "f",
+      "proof": "License verification without exposing credentials",
+      "mechanism": "ZK license validity verification"
+    },
+    {
+      "flow": "j",
+      "proof": "Credentialing verification without facility exposure",
+      "mechanism": "Anonymous credentialing verification"
+    },
+    {
+      "flow": "k",
+      "proof": "DEA verification without prescription details",
+      "mechanism": "ZK DEA registration verification"
+    },
+    {
+      "flow": "n",
+      "proof": "Prescription authorization without drug exposure",
+      "mechanism": "ZK prescription authority verification"
+    },
+    {
+      "flow": "r",
+      "proof": "Consultation delivery without method exposure",
+      "mechanism": "ZK delivery method aggregation"
+    },
+    {
+      "flow": "s",
+      "proof": "HIPAA compliance without data exposure",
+      "mechanism": "ZK privacy compliance verification"
+    },
+    {
+      "flow": "w",
+      "proof": "Interstate verification without state boundaries",
+      "mechanism": "ZK multi-state integrity verification"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "Interstate Medical Licensure Compact",
+      "regulation": "IMLC Statutes",
+      "flow": "d",
+      "description": "Multi-state medical license expedited verification"
+    },
+    {
+      "requirement": "State Medical Practice Acts",
+      "regulation": "Individual State Statutes",
+      "flow": "e",
+      "description": "State-specific medical practice requirements"
+    },
+    {
+      "requirement": "Hospital Credentialing Standards",
+      "regulation": "Joint Commission Standards",
+      "flows": ["g", "h", "i"],
+      "description": "Hospital credentialing and privileging requirements"
+    },
+    {
+      "requirement": "DEA Controlled Substances Act",
+      "regulation": "21 USC §801 et seq.",
+      "flow": "l",
+      "description": "Federal controlled substance prescription requirements"
+    },
+    {
+      "requirement": "Ryan Haight Act",
+      "regulation": "21 USC §829(e)",
+      "flow": "l",
+      "description": "Telemedicine controlled substance prescribing"
+    },
+    {
+      "requirement": "HIPAA Privacy Rule",
+      "regulation": "45 CFR §164.502",
+      "flow": "s",
+      "description": "Protected health information privacy"
+    },
+    {
+      "requirement": "State Telemedicine Parity Laws",
+      "regulation": "Various State Laws",
+      "flows": ["o", "p", "q"],
+      "description": "State-specific telemedicine reimbursement requirements"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Interstate license bypass prevention",
+      "constraint": "IF (cross_state_practice) THEN valid_license_in_patient_state = REQUIRED",
+      "enforcement": "Multi-state license verification"
+    },
+    {
+      "rule": "DEA controlled substance violation prevention",
+      "constraint": "IF (schedule_II_or_III_prescription) THEN valid_DEA_registration = REQUIRED",
+      "enforcement": "Federal DEA verification system"
+    },
+    {
+      "rule": "Patient location authentication",
+      "constraint": "Patient_location MUST be verified_before consultation_begins",
+      "enforcement": "Location verification protocols"
+    },
+    {
+      "rule": "Facility credentialing enforcement",
+      "constraint": "Provider MUST have_privileges_at originating_or_distant_site",
+      "enforcement": "Hospital credentialing verification"
+    },
+    {
+      "rule": "State insurance compliance",
+      "constraint": "Insurance_billing MUST comply_with patient_state_laws",
+      "enforcement": "Multi-state insurance verification"
+    },
+    {
+      "rule": "HIPAA multi-state compliance",
+      "constraint": "PHI_transmission MUST meet_strictest_applicable_state_law",
+      "enforcement": "Enhanced HIPAA compliance checking"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 25,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "Maximum",
+    "securityLevel": "Federal + Multi-State",
+    "privacyLevel": "HIPAA + State Laws + ZK",
+    "regulatoryComplexity": "IMLC + DEA + State Boards + Insurance"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'abc(d|e)f(g|h|i)jk(l|m)n(o|p|q)rstuv' --functionName 'verifyProcessHC4USTLM' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC4USTLM",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-4-USTLM-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-4-USTLM-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG4USTLM ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-4-USTLM-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-4-USTLM-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

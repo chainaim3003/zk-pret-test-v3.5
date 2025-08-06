@@ -1,0 +1,241 @@
+{
+  "processId": "HC11_ECLNTL_Rejected1_Process",
+  "processName": "Enhanced Clinical Trial Coordination - Invalid Path (Missing Critical Steps)",
+  "description": "Invalid clinical trial workflow that skips mandatory IRB approval and monitoring steps, but reaches final publication phase representing a serious regulatory violation",
+  "processType": "HEALTHCARE",
+  "subType": "ECLNTL",
+  "status": "REJECTED",
+  "version": "1.0",
+  "expectedPattern": "ab(c|d)e(f|g|h)(i|j)k(l|m|n)opqr",
+  "actualPath": "acefiqrst",
+  "pathValidation": {
+    "isValid": false,
+    "matchesExpected": false,
+    "complianceScore": 35,
+    "violations": [
+      "Missing IRB approval step (b)",
+      "Missing randomization method steps (j,k)",
+      "Missing monitoring and data collection steps (l,m,p)",
+      "Improper sequence flow bypassing critical controls"
+    ]
+  },
+  "processFlow": {
+    "startEvent": {
+      "id": "StartEvent_Start",
+      "name": "Start",
+      "type": "startEvent"
+    },
+    "endEvent": {
+      "id": "EndEvent_End",
+      "name": "End",
+      "type": "endEvent"
+    },
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "description": "Trial Protocol Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "description": "Hospital A Enrollment (Branch C) - VIOLATION: No IRB approval",
+        "type": "intermediateThrowEvent",
+        "violation": true
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "description": "Patient Randomization",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "description": "Mild Cases (Branch F)",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "description": "Drug Distribution Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "description": "Efficacy Analysis Agent - VIOLATION: Skipped monitoring steps",
+        "type": "intermediateThrowEvent",
+        "violation": true
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "description": "Safety Database Agent",
+        "type": "intermediateThrowEvent"
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "description": "Publication Preparation",
+        "type": "intermediateThrowEvent"
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_3",
+        "name": "c",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_3",
+        "violation": true,
+        "violationReason": "Skips required IRB approval (Event_2)"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6"
+      },
+      {
+        "id": "Flow_6_to_9",
+        "name": "i",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_9_to_17",
+        "name": "q",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_17",
+        "violation": true,
+        "violationReason": "Skips required randomization method, monitoring, and data collection steps (Events 10,12,13,16)"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "r",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19"
+      },
+      {
+        "id": "Flow_19_to_End",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "EndEvent_End"
+      }
+    ],
+    "missingEvents": [
+      {
+        "id": "Event_2",
+        "name": "2",
+        "description": "IRB Approval Agent",
+        "importance": "CRITICAL",
+        "violationType": "MANDATORY_STEP_SKIPPED",
+        "position": "between_1_and_3"
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "description": "Simple Randomization (Branch I)",
+        "importance": "HIGH",
+        "violationType": "MONITORING_STEP_SKIPPED",
+        "position": "between_9_and_17"
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "description": "Adverse Event Monitoring",
+        "importance": "CRITICAL",
+        "violationType": "MONITORING_STEP_SKIPPED",
+        "position": "between_9_and_17"
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "description": "Weekly Data Collection (Branch L)",
+        "importance": "HIGH",
+        "violationType": "DATA_COLLECTION_SKIPPED",
+        "position": "between_9_and_17"
+      },
+      {
+        "id": "Event_16",
+        "name": "16",
+        "description": "Data Collection Agent",
+        "importance": "HIGH",
+        "violationType": "DATA_COLLECTION_SKIPPED",
+        "position": "between_9_and_17"
+      }
+    ]
+  },
+  "businessRules": {
+    "irbApprovalRequired": true,
+    "irbApprovalCompleted": false,
+    "siteSelectionValid": true,
+    "patientStratificationValid": true,
+    "randomizationMethodValid": false,
+    "dataCollectionFrequencyValid": false,
+    "adverseEventMonitoringValid": false,
+    "complianceViolations": [
+      {
+        "type": "ETHICS_VIOLATION",
+        "severity": "CRITICAL",
+        "description": "Clinical trial proceeding without IRB approval",
+        "impact": "Patient safety at risk, regulatory non-compliance",
+        "regulatoryCode": "21 CFR 56"
+      },
+      {
+        "type": "MONITORING_VIOLATION",
+        "severity": "CRITICAL",
+        "description": "Skipped mandatory adverse event monitoring and data collection",
+        "impact": "Patient safety cannot be assured, trial integrity compromised",
+        "regulatoryCode": "ICH-GCP E6(R2)"
+      },
+      {
+        "type": "DATA_INTEGRITY_VIOLATION",
+        "severity": "HIGH",
+        "description": "Missing proper data collection and validation steps",
+        "impact": "Trial results unreliable, regulatory submission invalid",
+        "regulatoryCode": "FDA ALCOA+"
+      },
+      {
+        "type": "PROCESS_FLOW_VIOLATION",
+        "severity": "HIGH",
+        "description": "Process bypasses required sequential validation steps",
+        "impact": "Audit failure, potential trial termination",
+        "regulatoryCode": "FDA 21 CFR 211"
+      }
+    ]
+  },
+  "impactAnalysis": {
+    "patientSafety": "HIGH_RISK",
+    "dataIntegrity": "COMPROMISED",
+    "regulatoryCompliance": "NON_COMPLIANT",
+    "trialValidity": "INVALID",
+    "publicationRisk": "RETRACTION_LIKELY"
+  },
+  "metadata": {
+    "createdDate": "2025-07-08",
+    "lastModified": "2025-07-08",
+    "version": "2.0",
+    "author": "Healthcare Process Validator",
+    "tags": ["healthcare", "clinical-trial", "rejected", "invalid-path", "ethics-violation", "monitoring-violation"]
+  }
+}

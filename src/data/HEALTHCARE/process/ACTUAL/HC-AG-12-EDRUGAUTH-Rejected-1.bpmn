@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HC12_EDRUGAUTH_Rejected1" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HC12_EDRUGAUTH_Rejected1_Process" isExecutable="false">
+    <!-- START: Enhanced Drug Authorization - Invalid Path (Missing State Board Verification) -->
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <!-- INVALID PATH: Start→1→2→3→4→7→8→10→11→14→15→18 (skipping State Board verification node 17) -->
+    <!-- Node 1: Patient Identity Verification -->
+    <intermediateThrowEvent id="Event_1" name="1">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 2: Clinical Assessment Agent -->
+    <intermediateThrowEvent id="Event_2" name="2">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 3: Insurance Coverage Agent -->
+    <intermediateThrowEvent id="Event_3" name="3">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_4</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 4: Primary Insurance (Branch D) -->
+    <intermediateThrowEvent id="Event_4" name="4">
+      <incoming>Flow_3_to_4</incoming>
+      <outgoing>Flow_4_to_7</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 7: Prior Authorization Agent -->
+    <intermediateThrowEvent id="Event_7" name="7">
+      <incoming>Flow_4_to_7</incoming>
+      <outgoing>Flow_7_to_8</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 8: On Formulary (Branch G) -->
+    <intermediateThrowEvent id="Event_8" name="8">
+      <incoming>Flow_7_to_8</incoming>
+      <outgoing>Flow_8_to_10</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 10: Drug Interaction Screening -->
+    <intermediateThrowEvent id="Event_10" name="10">
+      <incoming>Flow_8_to_10</incoming>
+      <outgoing>Flow_10_to_11</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 11: Brand Drug (Branch I) -->
+    <intermediateThrowEvent id="Event_11" name="11">
+      <incoming>Flow_10_to_11</incoming>
+      <outgoing>Flow_11_to_14</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 14: Manufacturer Supply Agent -->
+    <intermediateThrowEvent id="Event_14" name="14">
+      <incoming>Flow_11_to_14</incoming>
+      <outgoing>Flow_14_to_15</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 15: In-Network Pharmacy (Branch L) -->
+    <intermediateThrowEvent id="Event_15" name="15">
+      <incoming>Flow_14_to_15</incoming>
+      <outgoing>Flow_15_to_18</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 18: Dispensing Authorization - VIOLATION: No State Board verification -->
+    <intermediateThrowEvent id="Event_18" name="18">
+      <incoming>Flow_15_to_18</incoming>
+      <outgoing>Flow_18_to_End</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- END: Process terminated due to regulatory violation -->
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_18_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows for INVALID path (missing State Board verification) -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Event_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Event_1" targetRef="Event_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Event_2" targetRef="Event_3" />
+    <sequenceFlow id="Flow_3_to_4" name="d" sourceRef="Event_3" targetRef="Event_4" />
+    <sequenceFlow id="Flow_4_to_7" name="g" sourceRef="Event_4" targetRef="Event_7" />
+    <sequenceFlow id="Flow_7_to_8" name="h" sourceRef="Event_7" targetRef="Event_8" />
+    <sequenceFlow id="Flow_8_to_10" name="j" sourceRef="Event_8" targetRef="Event_10" />
+    <sequenceFlow id="Flow_10_to_11" name="k" sourceRef="Event_10" targetRef="Event_11" />
+    <sequenceFlow id="Flow_11_to_14" name="n" sourceRef="Event_11" targetRef="Event_14" />
+    <sequenceFlow id="Flow_14_to_15" name="o" sourceRef="Event_14" targetRef="Event_15" />
+    <sequenceFlow id="Flow_15_to_18" name="VIOLATION" sourceRef="Event_15" targetRef="Event_18" />
+    <sequenceFlow id="Flow_18_to_End" name="END" sourceRef="Event_18" targetRef="EndEvent_End" />
+    
+  </process>
+  
+  <!-- BPMN Diagram Information for BPMN.io visualization -->
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="HC12_EDRUGAUTH_Rejected1_Process">
+      
+      <!-- Start Event Shape -->
+      <bpmndi:BPMNShape id="StartEvent_Start_di" bpmnElement="StartEvent_Start">
+        <omgdc:Bounds x="152" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="158" y="225" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event Shapes -->
+      <bpmndi:BPMNShape id="Event_1_di" bpmnElement="Event_1">
+        <omgdc:Bounds x="242" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="259" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_2_di" bpmnElement="Event_2">
+        <omgdc:Bounds x="332" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="349" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_3_di" bpmnElement="Event_3">
+        <omgdc:Bounds x="422" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="439" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_4_di" bpmnElement="Event_4">
+        <omgdc:Bounds x="512" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="529" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_7_di" bpmnElement="Event_7">
+        <omgdc:Bounds x="602" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="619" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_8_di" bpmnElement="Event_8">
+        <omgdc:Bounds x="692" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="709" y="225" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_10_di" bpmnElement="Event_10">
+        <omgdc:Bounds x="782" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="796" y="225" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_11_di" bpmnElement="Event_11">
+        <omgdc:Bounds x="872" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="886" y="225" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_14_di" bpmnElement="Event_14">
+        <omgdc:Bounds x="962" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="976" y="225" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_15_di" bpmnElement="Event_15">
+        <omgdc:Bounds x="1052" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1066" y="225" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Event_18_di" bpmnElement="Event_18">
+        <omgdc:Bounds x="1142" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1156" y="225" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- End Event Shape -->
+      <bpmndi:BPMNShape id="EndEvent_End_di" bpmnElement="EndEvent_End">
+        <omgdc:Bounds x="1232" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1241" y="225" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flow Edges -->
+      <bpmndi:BPMNEdge id="Flow_Start_to_1_di" bpmnElement="Flow_Start_to_1">
+        <omgdi:waypoint x="188" y="200" />
+        <omgdi:waypoint x="242" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="212" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_1_to_2_di" bpmnElement="Flow_1_to_2">
+        <omgdi:waypoint x="278" y="200" />
+        <omgdi:waypoint x="332" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="302" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_to_3_di" bpmnElement="Flow_2_to_3">
+        <omgdi:waypoint x="368" y="200" />
+        <omgdi:waypoint x="422" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="392" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_to_4_di" bpmnElement="Flow_3_to_4">
+        <omgdi:waypoint x="458" y="200" />
+        <omgdi:waypoint x="512" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="482" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_to_7_di" bpmnElement="Flow_4_to_7">
+        <omgdi:waypoint x="548" y="200" />
+        <omgdi:waypoint x="602" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="572" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_7_to_8_di" bpmnElement="Flow_7_to_8">
+        <omgdi:waypoint x="638" y="200" />
+        <omgdi:waypoint x="692" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="662" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_to_10_di" bpmnElement="Flow_8_to_10">
+        <omgdi:waypoint x="728" y="200" />
+        <omgdi:waypoint x="782" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="752" y="182" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_10_to_11_di" bpmnElement="Flow_10_to_11">
+        <omgdi:waypoint x="818" y="200" />
+        <omgdi:waypoint x="872" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="842" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_to_14_di" bpmnElement="Flow_11_to_14">
+        <omgdi:waypoint x="908" y="200" />
+        <omgdi:waypoint x="962" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="932" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_14_to_15_di" bpmnElement="Flow_14_to_15">
+        <omgdi:waypoint x="998" y="200" />
+        <omgdi:waypoint x="1052" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1022" y="182" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_15_to_18_di" bpmnElement="Flow_15_to_18">
+        <omgdi:waypoint x="1088" y="200" />
+        <omgdi:waypoint x="1142" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1098" y="182" width="58" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_18_to_End_di" bpmnElement="Flow_18_to_End">
+        <omgdi:waypoint x="1178" y="200" />
+        <omgdi:waypoint x="1232" y="200" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1198" y="182" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

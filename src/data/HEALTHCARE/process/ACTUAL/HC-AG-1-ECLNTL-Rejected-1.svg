@@ -1,0 +1,244 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 750">
+  <!-- Background -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f0f0f0" stroke-width="1" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Arrow markers -->
+    <marker id="executedArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#059669" stroke="#059669" stroke-width="1"/>
+    </marker>
+    
+    <marker id="violationArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#dc2626" stroke="#dc2626" stroke-width="1"/>
+    </marker>
+    
+    <marker id="missingArrow" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto" markerUnits="strokeWidth">
+      <polygon points="0 0, 12 4, 0 8" fill="#fca5a5" stroke="#dc2626" stroke-width="1"/>
+    </marker>
+    
+    <!-- Styles -->
+    <style>
+      .title-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; font-weight: bold; fill: #dc2626; }
+      .subtitle-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 16px; fill: #b91c1c; font-weight: bold; }
+      .path-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; fill: #64748b; }
+      .node-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; font-weight: bold; fill: white; text-anchor: middle; }
+      .node-desc { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px; fill: #374151; text-anchor: middle; font-weight: 500; }
+      .flow-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; font-weight: bold; fill: #059669; text-anchor: middle; }
+      .missing-label { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; fill: #dc2626; text-anchor: middle; font-weight: bold; }
+      .violation-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 10px; fill: #dc2626; text-anchor: middle; font-weight: bold; }
+      .legend-title { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 18px; font-weight: bold; fill: #374151; }
+      .legend-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; fill: #374151; }
+      .legend-small { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; fill: #64748b; }
+      .status-badge { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 12px; font-weight: bold; fill: white; }
+      .error-text { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11px; fill: #dc2626; text-anchor: middle; font-weight: bold; }
+    </style>
+  </defs>
+  
+  <!-- Grid background -->
+  <rect width="2000" height="750" fill="url(#grid)"/>
+  <rect width="2000" height="750" fill="#fef7f7" opacity="0.9"/>
+  
+  <!-- Title Section -->
+  <text x="1000" y="40" class="title-text" text-anchor="middle">
+    HC-AG-1-ECLNTL-Rejected-1: Invalid Clinical Trial Execution
+  </text>
+  <text x="1000" y="70" class="subtitle-text" text-anchor="middle">
+    ❌ REJECTED - Critical Process Violations Detected
+  </text>
+  <text x="1000" y="95" class="path-text" text-anchor="middle">
+    Incomplete Path: acefiqrst (Missing: IRB approval, randomization method, monitoring steps)
+  </text>
+  
+  <!-- Status Badge -->
+  <rect x="820" y="110" width="360" height="30" rx="15" fill="#dc2626"/>
+  <text x="1000" y="130" class="status-badge" text-anchor="middle">ZERO-KNOWLEDGE VERIFICATION FAILED ✗</text>
+  
+  <!-- Process Flow - Shows executed vs missing steps -->
+  
+  <!-- Start Event -->
+  <circle cx="120" cy="300" r="22" fill="#10b981" stroke="#059669" stroke-width="4"/>
+  <text x="120" y="306" class="node-label" font-size="16">S</text>
+  <text x="120" y="335" class="node-desc" font-weight="bold">START</text>
+  
+  <!-- Node 1: Trial Protocol Agent (a) - EXECUTED -->
+  <circle cx="240" cy="300" r="18" fill="#059669" stroke="#047857" stroke-width="3"/>
+  <text x="240" y="306" class="node-label">1</text>
+  <text x="240" y="330" class="node-desc" font-weight="bold">Protocol</text>
+  <text x="240" y="343" class="node-desc" font-weight="bold">Agent ✓</text>
+  
+  <!-- Node 2: IRB Approval (b) - MISSING (CRITICAL) -->
+  <circle cx="360" cy="250" r="18" fill="#fca5a5" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,5"/>
+  <text x="360" y="256" class="missing-label">2</text>
+  <text x="360" y="280" class="missing-label">IRB</text>
+  <text x="360" y="293" class="missing-label">MISSING!</text>
+  <text x="360" y="225" class="violation-text">CRITICAL VIOLATION</text>
+  
+  <!-- Direct jump to Node 3 - VIOLATION -->
+  <circle cx="480" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="480" y="306" class="node-label">3</text>
+  <text x="480" y="330" class="error-text">UNAUTHORIZED</text>
+  <text x="480" y="343" class="error-text">Hospital Access</text>
+  
+  <!-- Node 5: Patient Randomization (e) - EXECUTED BUT INVALID -->
+  <circle cx="600" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="600" y="306" class="node-label">5</text>
+  <text x="600" y="330" class="error-text">INVALID</text>
+  <text x="600" y="343" class="error-text">Randomization</text>
+  
+  <!-- Node 6: Mild Cases (f) - EXECUTED BUT UNAUTHORIZED -->
+  <circle cx="720" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="720" y="306" class="node-label">6</text>
+  <text x="720" y="330" class="error-text">UNAUTHORIZED</text>
+  <text x="720" y="343" class="error-text">Patient Access</text>
+  
+  <!-- Node 9: Drug Distribution (i) - EXECUTED BUT INVALID -->
+  <circle cx="840" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="840" y="306" class="node-label">9</text>
+  <text x="840" y="330" class="error-text">INVALID</text>
+  <text x="840" y="343" class="error-text">Drug Access</text>
+  
+  <!-- MAJOR MISSING SECTION - Randomization Method (j|k) -->
+  <rect x="920" y="220" width="120" height="160" fill="#fef2f2" stroke="#dc2626" stroke-width="2" stroke-dasharray="10,5" rx="8"/>
+  <text x="980" y="245" class="missing-label">MISSING SECTION</text>
+  <text x="980" y="265" class="missing-label">Randomization</text>
+  <text x="980" y="280" class="missing-label">Method (j|k)</text>
+  
+  <circle cx="980" cy="320" r="18" fill="#fca5a5" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,5"/>
+  <text x="980" y="326" class="missing-label">10/11</text>
+  <text x="980" y="350" class="missing-label">NOT EXECUTED</text>
+  
+  <!-- MAJOR MISSING SECTION - Monitoring (l) -->
+  <rect x="1080" y="220" width="120" height="160" fill="#fef2f2" stroke="#dc2626" stroke-width="2" stroke-dasharray="10,5" rx="8"/>
+  <text x="1140" y="245" class="missing-label">MISSING SECTION</text>
+  <text x="1140" y="265" class="missing-label">Adverse Event</text>
+  <text x="1140" y="280" class="missing-label">Monitoring (l)</text>
+  
+  <circle cx="1140" cy="320" r="18" fill="#fca5a5" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,5"/>
+  <text x="1140" y="326" class="missing-label">12</text>
+  <text x="1140" y="350" class="missing-label">NOT EXECUTED</text>
+  
+  <!-- MAJOR MISSING SECTION - Data Collection (m|n|o) -->
+  <rect x="1240" y="220" width="120" height="160" fill="#fef2f2" stroke="#dc2626" stroke-width="2" stroke-dasharray="10,5" rx="8"/>
+  <text x="1300" y="245" class="missing-label">MISSING SECTION</text>
+  <text x="1300" y="265" class="missing-label">Data Collection</text>
+  <text x="1300" y="280" class="missing-label">Frequency (m|n|o)</text>
+  
+  <circle cx="1300" cy="320" r="18" fill="#fca5a5" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,5"/>
+  <text x="1300" y="326" class="missing-label">13/14/15</text>
+  <text x="1300" y="350" class="missing-label">NOT EXECUTED</text>
+  
+  <!-- MISSING: Data Collection Join (p) -->
+  <circle cx="1420" cy="300" r="18" fill="#fca5a5" stroke="#dc2626" stroke-width="3" stroke-dasharray="5,5"/>
+  <text x="1420" y="306" class="missing-label">16</text>
+  <text x="1420" y="330" class="missing-label">Data Collection</text>
+  <text x="1420" y="343" class="missing-label">NOT EXECUTED</text>
+  
+  <!-- Jump to Analysis - INVALID -->
+  <circle cx="1540" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="1540" y="306" class="node-label">17</text>
+  <text x="1540" y="330" class="error-text">INVALID</text>
+  <text x="1540" y="343" class="error-text">Analysis</text>
+  
+  <!-- Safety Database - INVALID -->
+  <circle cx="1660" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="1660" y="306" class="node-label">18</text>
+  <text x="1660" y="330" class="error-text">INVALID</text>
+  <text x="1660" y="343" class="error-text">Safety DB</text>
+  
+  <!-- Publication - INVALID -->
+  <circle cx="1780" cy="300" r="18" fill="#dc2626" stroke="#b91c1c" stroke-width="3"/>
+  <text x="1780" y="306" class="node-label">19</text>
+  <text x="1780" y="330" class="error-text">INVALID</text>
+  <text x="1780" y="343" class="error-text">Publication</text>
+  
+  <!-- End Event - INVALID -->
+  <circle cx="1900" cy="300" r="22" fill="#7f1d1d" stroke="#991b1b" stroke-width="4"/>
+  <text x="1900" y="306" class="node-label" font-size="16">E</text>
+  <text x="1900" y="335" class="error-text" font-weight="bold">INVALID END</text>
+  
+  <!-- Flow Lines -->
+  
+  <!-- Valid start -->
+  <line x1="142" y1="300" x2="218" y2="300" stroke="#059669" stroke-width="4" marker-end="url(#executedArrow)"/>
+  <text x="180" y="290" class="flow-label">a</text>
+  
+  <!-- VIOLATION: Skip IRB -->
+  <line x1="258" y1="310" x2="462" y2="310" stroke="#dc2626" stroke-width="4" stroke-dasharray="8,4" marker-end="url(#violationArrow)"/>
+  <text x="360" y="325" class="violation-text">SKIPPED IRB!</text>
+  <text x="360" y="335" class="missing-label">c</text>
+  
+  <!-- Continuing violations -->
+  <line x1="498" y1="300" x2="582" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="540" y="290" class="missing-label">e</text>
+  
+  <line x1="618" y1="300" x2="702" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="660" y="290" class="missing-label">f</text>
+  
+  <line x1="738" y1="300" x2="822" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="780" y="290" class="missing-label">i</text>
+  
+  <!-- Jump over missing sections -->
+  <line x1="858" y1="300" x2="1522" y2="300" stroke="#dc2626" stroke-width="4" stroke-dasharray="12,8" marker-end="url(#violationArrow)"/>
+  <text x="1190" y="290" class="violation-text">MASSIVE SKIP</text>
+  <text x="1190" y="315" class="missing-label">q (INVALID)</text>
+  
+  <!-- Invalid final steps -->
+  <line x1="1558" y1="300" x2="1642" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="1600" y="290" class="missing-label">r</text>
+  
+  <line x1="1678" y1="300" x2="1762" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="1720" y="290" class="missing-label">s</text>
+  
+  <line x1="1798" y1="300" x2="1878" y2="300" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+  <text x="1838" y="290" class="missing-label">t</text>
+  
+  <!-- Missing flow indicators -->
+  <line x1="258" y1="290" x2="342" y2="260" stroke="#fca5a5" stroke-width="3" stroke-dasharray="5,5" marker-end="url(#missingArrow)"/>
+  <text x="295" y="270" class="missing-label">b</text>
+  <text x="295" y="255" class="violation-text">REQUIRED!</text>
+  
+  <!-- Legend Section -->
+  <rect x="120" y="480" width="1760" height="220" fill="white" stroke="#e5e7eb" stroke-width="2" rx="8"/>
+  <text x="1000" y="510" class="legend-title" text-anchor="middle">Process Violation Analysis</text>
+  
+  <!-- Legend Content -->
+  <g transform="translate(150, 540)">
+    <!-- Row 1: Execution Status -->
+    <circle cx="20" cy="0" r="12" fill="#059669"/>
+    <text x="45" y="5" class="legend-text">Valid Steps: Process elements that were correctly executed</text>
+    
+    <circle cx="500" cy="0" r="12" fill="#dc2626"/>
+    <text x="525" y="5" class="legend-text">Violation Steps: Actions taken without proper authorization</text>
+    
+    <circle cx="1000" cy="0" r="12" fill="#fca5a5" stroke="#dc2626" stroke-dasharray="5,5"/>
+    <text x="1025" y="5" class="legend-text">Missing Steps: Required regulatory and safety steps not executed</text>
+    
+    <!-- Row 2: Flow Types -->
+    <line x1="20" y1="30" x2="60" y2="30" stroke="#059669" stroke-width="4" marker-end="url(#executedArrow)"/>
+    <text x="80" y="35" class="legend-text">Valid Flow: Proper process execution</text>
+    
+    <line x1="400" y1="30" x2="440" y2="30" stroke="#dc2626" stroke-width="4" marker-end="url(#violationArrow)"/>
+    <text x="460" y="35" class="legend-text">Violation Flow: Unauthorized or invalid process execution</text>
+    
+    <line x1="800" y1="30" x2="840" y2="30" stroke="#fca5a5" stroke-width="3" stroke-dasharray="5,5"/>
+    <text x="860" y="35" class="legend-text">Missing Flow: Required steps that were skipped</text>
+    
+    <!-- Row 3: Critical Violations -->
+    <rect x="20" y="55" width="16" height="16" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="3,3"/>
+    <text x="50" y="67" class="legend-text">Missing Section: Entire required process segments not executed</text>
+    
+    <!-- Row 4: Specific Violations -->
+    <text x="20" y="95" class="legend-text" font-weight="bold" font-size="14" fill="#dc2626">❌ CRITICAL VIOLATIONS DETECTED:</text>
+    <text x="20" y="115" class="legend-small">• Missing IRB Approval (Step b): Regulatory violation - no authorization for patient enrollment</text>
+    <text x="20" y="135" class="legend-small">• Missing Randomization Method (Steps j|k): Protocol violation - improper patient assignment</text>
+    <text x="20" y="155" class="legend-small">• Missing Adverse Event Monitoring (Step l): Safety violation - no patient safety oversight</text>
+    <text x="20" y="175" class="legend-small">• Missing Data Collection Protocol (Steps m|n|o, p): Quality violation - no systematic data gathering</text>
+    
+    <!-- Row 5: Compliance Status -->
+    <text x="20" y="195" class="legend-text" font-weight="bold" font-size="14" fill="#dc2626">🚫 ZERO-KNOWLEDGE CONSTRAINT FAILURE:</text>
+    <text x="20" y="215" class="legend-small">Expected Pattern: ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst | Actual Pattern: acefiqrst</text>
+    <text x="20" y="235" class="legend-small">Constraint Error: Equal(Var 105594)(Constant 1) → Equal 0 1 (FAILED)</text>
+  </g>
+</svg>

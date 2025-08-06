@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HC11_ECLNTL_Expected" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HC11_ECLNTL_Process" isExecutable="false">
+    <!-- START: Enhanced Clinical Trial Coordination -->
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <!-- Enhanced Clinical Trial workflow: ab(c|d)e(f|g|h)(i|j)k(l|m|n)opqr -->
+    <!-- Node 1: Trial Protocol Agent -->
+    <intermediateThrowEvent id="Event_1" name="1">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 2: IRB Approval Agent -->
+    <intermediateThrowEvent id="Event_2" name="2">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FIRST BRANCH: Site Selection (c|d) -->
+    <!-- Node 3: Hospital A Enrollment (Branch C) -->
+    <intermediateThrowEvent id="Event_3" name="3">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_5</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 4: Hospital B Enrollment (Branch D) -->
+    <intermediateThrowEvent id="Event_4" name="4">
+      <incoming>Flow_2_to_4</incoming>
+      <outgoing>Flow_4_to_5</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 5: Patient Randomization (Join point) -->
+    <intermediateThrowEvent id="Event_5" name="5">
+      <incoming>Flow_3_to_5</incoming>
+      <incoming>Flow_4_to_5</incoming>
+      <outgoing>Flow_5_to_6</outgoing>
+      <outgoing>Flow_5_to_7</outgoing>
+      <outgoing>Flow_5_to_8</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- SECOND BRANCH: Patient Stratification (f|g|h) -->
+    <!-- Node 6: Mild Cases (Branch F) -->
+    <intermediateThrowEvent id="Event_6" name="6">
+      <incoming>Flow_5_to_6</incoming>
+      <outgoing>Flow_6_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 7: Moderate Cases (Branch G) -->
+    <intermediateThrowEvent id="Event_7" name="7">
+      <incoming>Flow_5_to_7</incoming>
+      <outgoing>Flow_7_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 8: Severe Cases (Branch H) -->
+    <intermediateThrowEvent id="Event_8" name="8">
+      <incoming>Flow_5_to_8</incoming>
+      <outgoing>Flow_8_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 9: Drug Distribution Agent (Join point) -->
+    <intermediateThrowEvent id="Event_9" name="9">
+      <incoming>Flow_6_to_9</incoming>
+      <incoming>Flow_7_to_9</incoming>
+      <incoming>Flow_8_to_9</incoming>
+      <outgoing>Flow_9_to_10</outgoing>
+      <outgoing>Flow_9_to_11</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- THIRD BRANCH: Randomization Method (i|j) -->
+    <!-- Node 10: Simple Randomization (Branch I) -->
+    <intermediateThrowEvent id="Event_10" name="10">
+      <incoming>Flow_9_to_10</incoming>
+      <outgoing>Flow_10_to_12</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 11: Block Randomization (Branch J) -->
+    <intermediateThrowEvent id="Event_11" name="11">
+      <incoming>Flow_9_to_11</incoming>
+      <outgoing>Flow_11_to_12</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 12: Adverse Event Monitoring (Join point) -->
+    <intermediateThrowEvent id="Event_12" name="12">
+      <incoming>Flow_10_to_12</incoming>
+      <incoming>Flow_11_to_12</incoming>
+      <outgoing>Flow_12_to_13</outgoing>
+      <outgoing>Flow_12_to_14</outgoing>
+      <outgoing>Flow_12_to_15</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FOURTH BRANCH: Data Collection Frequency (l|m|n) -->
+    <!-- Node 13: Weekly Data Collection (Branch L) -->
+    <intermediateThrowEvent id="Event_13" name="13">
+      <incoming>Flow_12_to_13</incoming>
+      <outgoing>Flow_13_to_16</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 14: Bi-weekly Data Collection (Branch M) -->
+    <intermediateThrowEvent id="Event_14" name="14">
+      <incoming>Flow_12_to_14</incoming>
+      <outgoing>Flow_14_to_16</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 15: Monthly Data Collection (Branch N) -->
+    <intermediateThrowEvent id="Event_15" name="15">
+      <incoming>Flow_12_to_15</incoming>
+      <outgoing>Flow_15_to_16</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 16: Data Collection Agent (Join point) -->
+    <intermediateThrowEvent id="Event_16" name="16">
+      <incoming>Flow_13_to_16</incoming>
+      <incoming>Flow_14_to_16</incoming>
+      <incoming>Flow_15_to_16</incoming>
+      <outgoing>Flow_16_to_17</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 17: Efficacy Analysis Agent -->
+    <intermediateThrowEvent id="Event_17" name="17">
+      <incoming>Flow_16_to_17</incoming>
+      <outgoing>Flow_17_to_18</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 18: Safety Database Agent -->
+    <intermediateThrowEvent id="Event_18" name="18">
+      <incoming>Flow_17_to_18</incoming>
+      <outgoing>Flow_18_to_19</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 19: Publication Preparation -->
+    <intermediateThrowEvent id="Event_19" name="19">
+      <incoming>Flow_18_to_19</incoming>
+      <outgoing>Flow_19_to_End</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- END: Trial Results Verified -->
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_19_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows for Enhanced Clinical Trial: ab(c|d)e(f|g|h)(i|j)k(l|m|n)opqr -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Event_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Event_1" targetRef="Event_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Event_2" targetRef="Event_3" />
+    <sequenceFlow id="Flow_2_to_4" name="d" sourceRef="Event_2" targetRef="Event_4" />
+    <sequenceFlow id="Flow_3_to_5" name="e" sourceRef="Event_3" targetRef="Event_5" />
+    <sequenceFlow id="Flow_4_to_5" name="e" sourceRef="Event_4" targetRef="Event_5" />
+    <sequenceFlow id="Flow_5_to_6" name="f" sourceRef="Event_5" targetRef="Event_6" />
+    <sequenceFlow id="Flow_5_to_7" name="g" sourceRef="Event_5" targetRef="Event_7" />
+    <sequenceFlow id="Flow_5_to_8" name="h" sourceRef="Event_5" targetRef="Event_8" />
+    <sequenceFlow id="Flow_6_to_9" name="i" sourceRef="Event_6" targetRef="Event_9" />
+    <sequenceFlow id="Flow_7_to_9" name="i" sourceRef="Event_7" targetRef="Event_9" />
+    <sequenceFlow id="Flow_8_to_9" name="i" sourceRef="Event_8" targetRef="Event_9" />
+    <sequenceFlow id="Flow_9_to_10" name="j" sourceRef="Event_9" targetRef="Event_10" />
+    <sequenceFlow id="Flow_9_to_11" name="k" sourceRef="Event_9" targetRef="Event_11" />
+    <sequenceFlow id="Flow_10_to_12" name="l" sourceRef="Event_10" targetRef="Event_12" />
+    <sequenceFlow id="Flow_11_to_12" name="l" sourceRef="Event_11" targetRef="Event_12" />
+    <sequenceFlow id="Flow_12_to_13" name="m" sourceRef="Event_12" targetRef="Event_13" />
+    <sequenceFlow id="Flow_12_to_14" name="n" sourceRef="Event_12" targetRef="Event_14" />
+    <sequenceFlow id="Flow_12_to_15" name="o" sourceRef="Event_12" targetRef="Event_15" />
+    <sequenceFlow id="Flow_13_to_16" name="p" sourceRef="Event_13" targetRef="Event_16" />
+    <sequenceFlow id="Flow_14_to_16" name="p" sourceRef="Event_14" targetRef="Event_16" />
+    <sequenceFlow id="Flow_15_to_16" name="p" sourceRef="Event_15" targetRef="Event_16" />
+    <sequenceFlow id="Flow_16_to_17" name="q" sourceRef="Event_16" targetRef="Event_17" />
+    <sequenceFlow id="Flow_17_to_18" name="r" sourceRef="Event_17" targetRef="Event_18" />
+    <sequenceFlow id="Flow_18_to_19" name="s" sourceRef="Event_18" targetRef="Event_19" />
+    <sequenceFlow id="Flow_19_to_End" name="t" sourceRef="Event_19" targetRef="EndEvent_End" />
+    
+  </process>
+  
+  <!-- BPMN Diagram Information for BPMN.io visualization -->
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="HC11_ECLNTL_Process">
+      
+      <!-- Start Event Shape -->
+      <bpmndi:BPMNShape id="StartEvent_Start_di" bpmnElement="StartEvent_Start">
+        <omgdc:Bounds x="152" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="158" y="375" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 1 Shape -->
+      <bpmndi:BPMNShape id="Event_1_di" bpmnElement="Event_1">
+        <omgdc:Bounds x="242" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="259" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 2 Shape -->
+      <bpmndi:BPMNShape id="Event_2_di" bpmnElement="Event_2">
+        <omgdc:Bounds x="332" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="349" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- FIRST BRANCH: Site Selection -->
+      <!-- Event 3 Shape (Hospital A) -->
+      <bpmndi:BPMNShape id="Event_3_di" bpmnElement="Event_3">
+        <omgdc:Bounds x="422" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="439" y="315" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 4 Shape (Hospital B) -->
+      <bpmndi:BPMNShape id="Event_4_di" bpmnElement="Event_4">
+        <omgdc:Bounds x="422" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="439" y="435" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 5 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_5_di" bpmnElement="Event_5">
+        <omgdc:Bounds x="532" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="549" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- SECOND BRANCH: Patient Stratification -->
+      <!-- Event 6 Shape (Mild) -->
+      <bpmndi:BPMNShape id="Event_6_di" bpmnElement="Event_6">
+        <omgdc:Bounds x="622" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="639" y="275" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 7 Shape (Moderate) -->
+      <bpmndi:BPMNShape id="Event_7_di" bpmnElement="Event_7">
+        <omgdc:Bounds x="622" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="639" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 8 Shape (Severe) -->
+      <bpmndi:BPMNShape id="Event_8_di" bpmnElement="Event_8">
+        <omgdc:Bounds x="622" y="432" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="639" y="475" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 9 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_9_di" bpmnElement="Event_9">
+        <omgdc:Bounds x="732" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="749" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- THIRD BRANCH: Randomization Method -->
+      <!-- Event 10 Shape (Simple) -->
+      <bpmndi:BPMNShape id="Event_10_di" bpmnElement="Event_10">
+        <omgdc:Bounds x="822" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="836" y="335" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 11 Shape (Block) -->
+      <bpmndi:BPMNShape id="Event_11_di" bpmnElement="Event_11">
+        <omgdc:Bounds x="822" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="836" y="415" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 12 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_12_di" bpmnElement="Event_12">
+        <omgdc:Bounds x="932" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="946" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- FOURTH BRANCH: Data Collection Frequency -->
+      <!-- Event 13 Shape (Weekly) -->
+      <bpmndi:BPMNShape id="Event_13_di" bpmnElement="Event_13">
+        <omgdc:Bounds x="1022" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1036" y="295" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 14 Shape (Bi-weekly) -->
+      <bpmndi:BPMNShape id="Event_14_di" bpmnElement="Event_14">
+        <omgdc:Bounds x="1022" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1036" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 15 Shape (Monthly) -->
+      <bpmndi:BPMNShape id="Event_15_di" bpmnElement="Event_15">
+        <omgdc:Bounds x="1022" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1036" y="455" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 16 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_16_di" bpmnElement="Event_16">
+        <omgdc:Bounds x="1132" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1146" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 17 Shape -->
+      <bpmndi:BPMNShape id="Event_17_di" bpmnElement="Event_17">
+        <omgdc:Bounds x="1242" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1256" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 18 Shape -->
+      <bpmndi:BPMNShape id="Event_18_di" bpmnElement="Event_18">
+        <omgdc:Bounds x="1352" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1366" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 19 Shape -->
+      <bpmndi:BPMNShape id="Event_19_di" bpmnElement="Event_19">
+        <omgdc:Bounds x="1462" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1476" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- End Event Shape -->
+      <bpmndi:BPMNShape id="EndEvent_End_di" bpmnElement="EndEvent_End">
+        <omgdc:Bounds x="1572" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1581" y="375" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flow Edges -->
+      
+      <!-- Linear flows -->
+      <bpmndi:BPMNEdge id="Flow_Start_to_1_di" bpmnElement="Flow_Start_to_1">
+        <omgdi:waypoint x="188" y="350" />
+        <omgdi:waypoint x="242" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="212" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_1_to_2_di" bpmnElement="Flow_1_to_2">
+        <omgdi:waypoint x="278" y="350" />
+        <omgdi:waypoint x="332" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="302" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- FIRST BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_2_to_3_di" bpmnElement="Flow_2_to_3">
+        <omgdi:waypoint x="360" y="340" />
+        <omgdi:waypoint x="422" y="290" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="388" y="312" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_to_4_di" bpmnElement="Flow_2_to_4">
+        <omgdi:waypoint x="360" y="360" />
+        <omgdi:waypoint x="422" y="410" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="388" y="382" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_to_5_di" bpmnElement="Flow_3_to_5">
+        <omgdi:waypoint x="458" y="290" />
+        <omgdi:waypoint x="540" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="496" y="308" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_to_5_di" bpmnElement="Flow_4_to_5">
+        <omgdi:waypoint x="458" y="410" />
+        <omgdi:waypoint x="540" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="496" y="386" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- SECOND BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_5_to_6_di" bpmnElement="Flow_5_to_6">
+        <omgdi:waypoint x="568" y="340" />
+        <omgdi:waypoint x="622" y="250" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="592" y="292" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_to_7_di" bpmnElement="Flow_5_to_7">
+        <omgdi:waypoint x="568" y="350" />
+        <omgdi:waypoint x="622" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="592" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_to_8_di" bpmnElement="Flow_5_to_8">
+        <omgdi:waypoint x="568" y="360" />
+        <omgdi:waypoint x="622" y="450" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="592" y="402" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_6_to_9_di" bpmnElement="Flow_6_to_9">
+        <omgdi:waypoint x="658" y="250" />
+        <omgdi:waypoint x="740" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="696" y="288" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_7_to_9_di" bpmnElement="Flow_7_to_9">
+        <omgdi:waypoint x="658" y="350" />
+        <omgdi:waypoint x="732" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="692" y="332" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_to_9_di" bpmnElement="Flow_8_to_9">
+        <omgdi:waypoint x="658" y="450" />
+        <omgdi:waypoint x="740" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="696" y="406" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- THIRD BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_9_to_10_di" bpmnElement="Flow_9_to_10">
+        <omgdi:waypoint x="768" y="340" />
+        <omgdi:waypoint x="822" y="310" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="792" y="322" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_9_to_11_di" bpmnElement="Flow_9_to_11">
+        <omgdi:waypoint x="768" y="360" />
+        <omgdi:waypoint x="822" y="390" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="792" y="372" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_10_to_12_di" bpmnElement="Flow_10_to_12">
+        <omgdi:waypoint x="858" y="310" />
+        <omgdi:waypoint x="940" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="896" y="318" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_to_12_di" bpmnElement="Flow_11_to_12">
+        <omgdi:waypoint x="858" y="390" />
+        <omgdi:waypoint x="940" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="896" y="376" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- FOURTH BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_12_to_13_di" bpmnElement="Flow_12_to_13">
+        <omgdi:waypoint x="968" y="340" />
+        <omgdi:waypoint x="1022" y="270" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="992" y="302" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_12_to_14_di" bpmnElement="Flow_12_to_14">
+        <omgdi:waypoint x="968" y="350" />
+        <omgdi:waypoint x="1022" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="992" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_12_to_15_di" bpmnElement="Flow_12_to_15">
+        <omgdi:waypoint x="968" y="360" />
+        <omgdi:waypoint x="1022" y="430" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="992" y="392" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_13_to_16_di" bpmnElement="Flow_13_to_16">
+        <omgdi:waypoint x="1058" y="270" />
+        <omgdi:waypoint x="1140" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1096" y="298" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_14_to_16_di" bpmnElement="Flow_14_to_16">
+        <omgdi:waypoint x="1058" y="350" />
+        <omgdi:waypoint x="1132" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1092" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_15_to_16_di" bpmnElement="Flow_15_to_16">
+        <omgdi:waypoint x="1058" y="430" />
+        <omgdi:waypoint x="1140" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1096" y="396" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Final sequential flows -->
+      <bpmndi:BPMNEdge id="Flow_16_to_17_di" bpmnElement="Flow_16_to_17">
+        <omgdi:waypoint x="1168" y="350" />
+        <omgdi:waypoint x="1242" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1202" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_17_to_18_di" bpmnElement="Flow_17_to_18">
+        <omgdi:waypoint x="1278" y="350" />
+        <omgdi:waypoint x="1352" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1312" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_18_to_19_di" bpmnElement="Flow_18_to_19">
+        <omgdi:waypoint x="1388" y="350" />
+        <omgdi:waypoint x="1462" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1422" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_19_to_End_di" bpmnElement="Flow_19_to_End">
+        <omgdi:waypoint x="1498" y="350" />
+        <omgdi:waypoint x="1572" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1532" y="332" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
