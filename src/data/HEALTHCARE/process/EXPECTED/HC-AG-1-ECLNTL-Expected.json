@@ -1,0 +1,912 @@
+{
+  "processId": "HC-AG-1-ECLNTL",
+  "processName": "Enhanced Multi-Hospital Clinical Trial Coordination with Patient Stratification",
+  "version": "2.1.0",
+  "description": "Zero-knowledge proof enabled enhanced multi-entity clinical trial workflow with patient stratification, adaptive randomization methods, flexible data collection frequencies, and advanced privacy boundaries",
+  "created": "2025-01-04T13:00:00Z",
+  "lastModified": "2025-01-04T16:45:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC11_ECLNTL_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 20,
+    "totalFlows": 24,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 19,
+    "minPathLength": 19
+  },
+  
+  "entities": [
+    {
+      "name": "Hospital A",
+      "role": "Clinical Site A - Enhanced Protocol",
+      "jurisdiction": "US - East Coast",
+      "privacyLevel": "High"
+    },
+    {
+      "name": "Hospital B", 
+      "role": "Clinical Site B - Enhanced Protocol",
+      "jurisdiction": "US - West Coast",
+      "privacyLevel": "High"
+    },
+    {
+      "name": "Pharma Corp",
+      "role": "Sponsor - Advanced Analytics",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Commercial"
+    },
+    {
+      "name": "FDA",
+      "role": "Regulatory Authority - Enhanced Oversight",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Regulatory"
+    },
+    {
+      "name": "IRB Committee",
+      "role": "Ethics Review Board - Stratified Protocols",
+      "jurisdiction": "Multi-site",
+      "privacyLevel": "Ethics"
+    },
+    {
+      "name": "Clinical Data Management Organization",
+      "role": "Enhanced Data Collection and Analysis",
+      "jurisdiction": "US - Multi-State",
+      "privacyLevel": "Clinical Data Protected"
+    },
+    {
+      "name": "Biostatistics Center",
+      "role": "Advanced Randomization and Statistical Analysis",
+      "jurisdiction": "US - Academic",
+      "privacyLevel": "Statistical Protected"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-1-ECLNTL-Expected.bpmn",
+    "svg": "HC-AG-1-ECLNTL-Expected.svg", 
+    "json": "HC-AG-1-ECLNTL-Expected.json",
+    "backup": "HC-AG-1-ECLNTL-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-1-ECLNTL-Accepted-1.bpmn",
+      "HC-AG-1-ECLNTL-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-1-ECLNTL-Rejected-1.bpmn",
+      "HC-AG-1-ECLNTL-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst",
+  "regexExplanation": {
+    "pattern": "ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst",
+    "meaning": "Enhanced clinical trial with site selection, patient stratification, randomization methods, and adaptive data collection",
+    "branchPoints": [
+      "After 'b', at position 3: Site Selection (c|d)",
+      "After 'e', at position 6: Patient Stratification (f|g|h)", 
+      "After 'i', at position 10: Randomization Method (j|k)",
+      "After 'l', at position 13: Data Collection Frequency (m|n|o)"
+    ],
+    "joinPoints": [
+      "At 'e' from site selection",
+      "At 'i' from patient stratification", 
+      "At 'l' from randomization method",
+      "At 'p' from data collection frequency"
+    ],
+    "totalPossiblePaths": 36
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→e→f→i→j→l→m→p→q→r→s→t",
+        "description": "Hospital A + Mild Cases + Simple Randomization + Weekly Data Collection",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "6", "9", "10", "12", "13", "16", "17", "18", "19", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_5", "Flow_5_to_6", "Flow_6_to_9", "Flow_9_to_10", "Flow_10_to_12", "Flow_12_to_13", "Flow_13_to_16", "Flow_16_to_17", "Flow_17_to_18", "Flow_18_to_19", "Flow_19_to_End"]
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→d→e→g→i→k→l→n→p→q→r→s→t",
+        "description": "Hospital B + Moderate Cases + Block Randomization + Bi-weekly Data Collection",
+        "nodeSequence": ["Start", "1", "2", "4", "5", "7", "9", "11", "12", "14", "16", "17", "18", "19", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_4", "Flow_4_to_5", "Flow_5_to_7", "Flow_7_to_9", "Flow_9_to_11", "Flow_11_to_12", "Flow_12_to_14", "Flow_14_to_16", "Flow_16_to_17", "Flow_17_to_18", "Flow_18_to_19", "Flow_19_to_End"]
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→e→h→i→j→l→o→p→q→r→s→t",
+        "description": "Hospital A + Severe Cases + Simple Randomization + Monthly Data Collection",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "8", "9", "10", "12", "15", "16", "17", "18", "19", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_5", "Flow_5_to_8", "Flow_8_to_9", "Flow_9_to_10", "Flow_10_to_12", "Flow_12_to_15", "Flow_15_to_16", "Flow_16_to_17", "Flow_17_to_18", "Flow_18_to_19", "Flow_19_to_End"]
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "b→(c|d)→...",
+        "violation": "Skip IRB approval - REGULATORY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→(c|d)→e→(f|g|h)→j→k→l→...",
+        "violation": "Skip drug distribution after stratification - MEDICAL VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→(c|d)→e→...",
+        "violation": "Skip protocol setup before enrollment - PROTOCOL VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→(c|d)→(f|g|h)→i→...",
+        "violation": "Skip randomization step - STATISTICAL VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "...→(j|k)→(m|n|o)→p→...",
+        "violation": "Skip adverse event monitoring - SAFETY VIOLATION",
+        "severity": "Critical"
+      }
+    ]
+  },
+  
+  "bpmnElements": {
+    "startEvents": [
+      {
+        "id": "StartEvent_Start",
+        "name": "Start",
+        "type": "startEvent",
+        "outgoing": ["Flow_Start_to_1"]
+      }
+    ],
+    "intermediateEvents": [
+      {
+        "id": "Event_1",
+        "name": "1",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_Start_to_1"],
+        "outgoing": ["Flow_1_to_2"]
+      },
+      {
+        "id": "Event_2",
+        "name": "2",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_1_to_2"],
+        "outgoing": ["Flow_2_to_3", "Flow_2_to_4"],
+        "isBranchPoint": true,
+        "branchType": "Site Selection"
+      },
+      {
+        "id": "Event_3",
+        "name": "3",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_3"],
+        "outgoing": ["Flow_3_to_5"]
+      },
+      {
+        "id": "Event_4",
+        "name": "4",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_2_to_4"],
+        "outgoing": ["Flow_4_to_5"]
+      },
+      {
+        "id": "Event_5",
+        "name": "5",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_3_to_5", "Flow_4_to_5"],
+        "outgoing": ["Flow_5_to_6", "Flow_5_to_7", "Flow_5_to_8"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Patient Stratification"
+      },
+      {
+        "id": "Event_6",
+        "name": "6",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_5_to_6"],
+        "outgoing": ["Flow_6_to_9"]
+      },
+      {
+        "id": "Event_7",
+        "name": "7",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_5_to_7"],
+        "outgoing": ["Flow_7_to_9"]
+      },
+      {
+        "id": "Event_8",
+        "name": "8",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_5_to_8"],
+        "outgoing": ["Flow_8_to_9"]
+      },
+      {
+        "id": "Event_9",
+        "name": "9",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_6_to_9", "Flow_7_to_9", "Flow_8_to_9"],
+        "outgoing": ["Flow_9_to_10", "Flow_9_to_11"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Randomization Method"
+      },
+      {
+        "id": "Event_10",
+        "name": "10",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_10"],
+        "outgoing": ["Flow_10_to_12"]
+      },
+      {
+        "id": "Event_11",
+        "name": "11",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_9_to_11"],
+        "outgoing": ["Flow_11_to_12"]
+      },
+      {
+        "id": "Event_12",
+        "name": "12",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_10_to_12", "Flow_11_to_12"],
+        "outgoing": ["Flow_12_to_13", "Flow_12_to_14", "Flow_12_to_15"],
+        "isJoinPoint": true,
+        "isBranchPoint": true,
+        "branchType": "Data Collection Frequency"
+      },
+      {
+        "id": "Event_13",
+        "name": "13",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_13"],
+        "outgoing": ["Flow_13_to_16"]
+      },
+      {
+        "id": "Event_14",
+        "name": "14",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_14"],
+        "outgoing": ["Flow_14_to_16"]
+      },
+      {
+        "id": "Event_15",
+        "name": "15",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_12_to_15"],
+        "outgoing": ["Flow_15_to_16"]
+      },
+      {
+        "id": "Event_16",
+        "name": "16",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_13_to_16", "Flow_14_to_16", "Flow_15_to_16"],
+        "outgoing": ["Flow_16_to_17"],
+        "isJoinPoint": true
+      },
+      {
+        "id": "Event_17",
+        "name": "17",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_16_to_17"],
+        "outgoing": ["Flow_17_to_18"]
+      },
+      {
+        "id": "Event_18",
+        "name": "18",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_17_to_18"],
+        "outgoing": ["Flow_18_to_19"]
+      },
+      {
+        "id": "Event_19",
+        "name": "19",
+        "type": "intermediateThrowEvent",
+        "incoming": ["Flow_18_to_19"],
+        "outgoing": ["Flow_19_to_End"]
+      }
+    ],
+    "endEvents": [
+      {
+        "id": "EndEvent_End",
+        "name": "End",
+        "type": "endEvent",
+        "incoming": ["Flow_19_to_End"]
+      }
+    ],
+    "sequenceFlows": [
+      {
+        "id": "Flow_Start_to_1",
+        "name": "a",
+        "sourceRef": "StartEvent_Start",
+        "targetRef": "Event_1"
+      },
+      {
+        "id": "Flow_1_to_2",
+        "name": "b",
+        "sourceRef": "Event_1",
+        "targetRef": "Event_2"
+      },
+      {
+        "id": "Flow_2_to_3",
+        "name": "c",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_3",
+        "branchPath": "Hospital A"
+      },
+      {
+        "id": "Flow_2_to_4",
+        "name": "d",
+        "sourceRef": "Event_2",
+        "targetRef": "Event_4",
+        "branchPath": "Hospital B"
+      },
+      {
+        "id": "Flow_3_to_5",
+        "name": "e",
+        "sourceRef": "Event_3",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_4_to_5",
+        "name": "e",
+        "sourceRef": "Event_4",
+        "targetRef": "Event_5"
+      },
+      {
+        "id": "Flow_5_to_6",
+        "name": "f",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_6",
+        "branchPath": "Mild Cases"
+      },
+      {
+        "id": "Flow_5_to_7",
+        "name": "g",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_7",
+        "branchPath": "Moderate Cases"
+      },
+      {
+        "id": "Flow_5_to_8",
+        "name": "h",
+        "sourceRef": "Event_5",
+        "targetRef": "Event_8",
+        "branchPath": "Severe Cases"
+      },
+      {
+        "id": "Flow_6_to_9",
+        "name": "i",
+        "sourceRef": "Event_6",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_7_to_9",
+        "name": "i",
+        "sourceRef": "Event_7",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_8_to_9",
+        "name": "i",
+        "sourceRef": "Event_8",
+        "targetRef": "Event_9"
+      },
+      {
+        "id": "Flow_9_to_10",
+        "name": "j",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_10",
+        "branchPath": "Simple Randomization"
+      },
+      {
+        "id": "Flow_9_to_11",
+        "name": "k",
+        "sourceRef": "Event_9",
+        "targetRef": "Event_11",
+        "branchPath": "Block Randomization"
+      },
+      {
+        "id": "Flow_10_to_12",
+        "name": "l",
+        "sourceRef": "Event_10",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_11_to_12",
+        "name": "l",
+        "sourceRef": "Event_11",
+        "targetRef": "Event_12"
+      },
+      {
+        "id": "Flow_12_to_13",
+        "name": "m",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_13",
+        "branchPath": "Weekly Data Collection"
+      },
+      {
+        "id": "Flow_12_to_14",
+        "name": "n",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_14",
+        "branchPath": "Bi-weekly Data Collection"
+      },
+      {
+        "id": "Flow_12_to_15",
+        "name": "o",
+        "sourceRef": "Event_12",
+        "targetRef": "Event_15",
+        "branchPath": "Monthly Data Collection"
+      },
+      {
+        "id": "Flow_13_to_16",
+        "name": "p",
+        "sourceRef": "Event_13",
+        "targetRef": "Event_16"
+      },
+      {
+        "id": "Flow_14_to_16",
+        "name": "p",
+        "sourceRef": "Event_14",
+        "targetRef": "Event_16"
+      },
+      {
+        "id": "Flow_15_to_16",
+        "name": "p",
+        "sourceRef": "Event_15",
+        "targetRef": "Event_16"
+      },
+      {
+        "id": "Flow_16_to_17",
+        "name": "q",
+        "sourceRef": "Event_16",
+        "targetRef": "Event_17"
+      },
+      {
+        "id": "Flow_17_to_18",
+        "name": "r",
+        "sourceRef": "Event_17",
+        "targetRef": "Event_18"
+      },
+      {
+        "id": "Flow_18_to_19",
+        "name": "s",
+        "sourceRef": "Event_18",
+        "targetRef": "Event_19"
+      },
+      {
+        "id": "Flow_19_to_End",
+        "name": "t",
+        "sourceRef": "Event_19",
+        "targetRef": "EndEvent_End"
+      }
+    ]
+  },
+  
+  "legend": {
+    "start": {
+      "Start": "Enhanced Multi-Site Clinical Trial Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Enhanced Trial Protocol Agent",
+        "description": "🔒 PRIVATE: Advanced protocol specification with stratification parameters",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Pharma Corp"
+      },
+      "b": {
+        "name": "Enhanced IRB Approval Agent",
+        "description": "🟦 REGULATORY: Enhanced ethics compliance for stratified protocols, 🔐 ZK PROOF: Stratification ethics verification",
+        "privacy": "Regulatory Required",
+        "stakeholder": "IRB Committee"
+      },
+      "c": {
+        "name": "Hospital A Enhanced Enrollment",
+        "description": "🔒 PRIVATE: Hospital A patients with stratification capability",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital A"
+      },
+      "d": {
+        "name": "Hospital B Enhanced Enrollment",
+        "description": "🔒 PRIVATE: Hospital B patients with stratification capability",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Hospital B"
+      },
+      "e": {
+        "name": "Enhanced Patient Randomization",
+        "description": "🔐 ZK PROOF: Advanced randomization with site balancing",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites"
+      },
+      "f": {
+        "name": "Mild Case Stratification Agent",
+        "description": "🔒 PRIVATE: Mild severity patient handling protocols",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Sites"
+      },
+      "g": {
+        "name": "Moderate Case Stratification Agent",
+        "description": "🔒 PRIVATE: Moderate severity patient handling protocols",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Sites"
+      },
+      "h": {
+        "name": "Severe Case Stratification Agent",
+        "description": "🔒 PRIVATE: Severe severity patient handling protocols with enhanced monitoring",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Sites"
+      },
+      "i": {
+        "name": "Enhanced Drug Distribution Agent",
+        "description": "🔒 PRIVATE: Stratification-aware drug distribution with dosing modifications",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Pharma Corp"
+      },
+      "j": {
+        "name": "Simple Randomization Agent",
+        "description": "🔐 ZK PROOF: Basic random assignment with privacy preservation",
+        "privacy": "ZK Protected",
+        "stakeholder": "Biostatistics Center"
+      },
+      "k": {
+        "name": "Block Randomization Agent",
+        "description": "🔐 ZK PROOF: Advanced block randomization for balanced allocation",
+        "privacy": "ZK Protected",
+        "stakeholder": "Biostatistics Center"
+      },
+      "l": {
+        "name": "Enhanced Adverse Event Monitoring",
+        "description": "🔐 ZK PROOF: Stratified safety monitoring with severity-based thresholds",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites + FDA"
+      },
+      "m": {
+        "name": "Weekly Data Collection Agent",
+        "description": "🔒 PRIVATE: Intensive weekly data collection for high-risk patients",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Data Management"
+      },
+      "n": {
+        "name": "Bi-weekly Data Collection Agent",
+        "description": "🔒 PRIVATE: Standard bi-weekly data collection for moderate monitoring",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Data Management"
+      },
+      "o": {
+        "name": "Monthly Data Collection Agent",
+        "description": "🔒 PRIVATE: Reduced monthly data collection for stable patients",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Clinical Data Management"
+      },
+      "p": {
+        "name": "Adaptive Data Collection Join",
+        "description": "🔐 ZK PROOF: Unified data aggregation across collection frequencies",
+        "privacy": "ZK Protected",
+        "stakeholder": "Clinical Data Management"
+      },
+      "q": {
+        "name": "Enhanced Efficacy Analysis Agent",
+        "description": "🔐 ZK PROOF: Stratified efficacy analysis with subgroup comparisons",
+        "privacy": "ZK Protected",
+        "stakeholder": "Biostatistics Center"
+      },
+      "r": {
+        "name": "Stratified Safety Database Agent",
+        "description": "🟦 REGULATORY: FDA FAERS compliance with stratification reporting",
+        "privacy": "Regulatory Required",
+        "stakeholder": "FDA"
+      },
+      "s": {
+        "name": "Enhanced Publication Preparation",
+        "description": "🔐 ZK PROOF: Subgroup analysis publication without individual exposure",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Sites + Pharma"
+      },
+      "t": {
+        "name": "Enhanced Final Verification Step",
+        "description": "🔐 ZK PROOF: Complete stratified process integrity validation",
+        "privacy": "ZK Protected",
+        "stakeholder": "All Parties"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Enhanced Trial Protocol Processing",
+        "description": "Advanced protocol validation with stratification and adaptive parameters"
+      },
+      "2": {
+        "name": "Enhanced IRB Approval Gateway",
+        "description": "Ethics review branch point - enhanced for stratified protocols"
+      },
+      "3": {
+        "name": "Hospital A Enhanced Enrollment",
+        "description": "Enhanced patient enrollment at Hospital A with stratification capability"
+      },
+      "4": {
+        "name": "Hospital B Enhanced Enrollment", 
+        "description": "Enhanced patient enrollment at Hospital B with stratification capability"
+      },
+      "5": {
+        "name": "Enhanced Patient Randomization",
+        "description": "Join point with branching to patient stratification by severity"
+      },
+      "6": {
+        "name": "Mild Case Processing",
+        "description": "Mild severity patient stratification and protocol adaptation"
+      },
+      "7": {
+        "name": "Moderate Case Processing",
+        "description": "Moderate severity patient stratification and protocol adaptation"
+      },
+      "8": {
+        "name": "Severe Case Processing",
+        "description": "Severe case patient stratification with enhanced monitoring protocols"
+      },
+      "9": {
+        "name": "Enhanced Drug Distribution",
+        "description": "Join stratification paths, branch to randomization methods"
+      },
+      "10": {
+        "name": "Simple Randomization Processing",
+        "description": "Basic randomization method implementation"
+      },
+      "11": {
+        "name": "Block Randomization Processing",
+        "description": "Advanced block randomization for balanced group allocation"
+      },
+      "12": {
+        "name": "Enhanced Adverse Event Monitoring",
+        "description": "Join randomization paths, branch to adaptive data collection"
+      },
+      "13": {
+        "name": "Weekly Data Collection",
+        "description": "Intensive weekly data collection for high-risk monitoring"
+      },
+      "14": {
+        "name": "Bi-weekly Data Collection",
+        "description": "Standard bi-weekly data collection for moderate monitoring"
+      },
+      "15": {
+        "name": "Monthly Data Collection",
+        "description": "Reduced monthly data collection for stable patient populations"
+      },
+      "16": {
+        "name": "Adaptive Data Collection Join",
+        "description": "Join data collection frequencies for unified analysis"
+      },
+      "17": {
+        "name": "Enhanced Efficacy Analysis",
+        "description": "Stratified efficacy analysis with subgroup comparisons"
+      },
+      "18": {
+        "name": "Stratified Safety Database",
+        "description": "Enhanced safety database with stratification-aware reporting"
+      },
+      "19": {
+        "name": "Enhanced Publication Preparation",
+        "description": "Advanced publication preparation with subgroup analysis"
+      }
+    },
+    "end": {
+      "End": "Enhanced Trial Results Verified and Published with Stratification Analysis"
+    }
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "Hospital A + Mild Cases + Simple Randomization + Weekly Data",
+      "sequence": "a→b→c→e→f→i→j→l→m→p→q→r→s→t",
+      "regexMatch": "abcefiijlmpqrst"
+    },
+    {
+      "pathId": 2,  
+      "description": "Hospital B + Moderate Cases + Block Randomization + Bi-weekly Data",
+      "sequence": "a→b→d→e→g→i→k→l→n→p→q→r→s→t",
+      "regexMatch": "abdegiiklnpqrst"
+    },
+    {
+      "pathId": 3,
+      "description": "Hospital A + Severe Cases + Simple Randomization + Monthly Data",
+      "sequence": "a→b→c→e→h→i→j→l→o→p→q→r→s→t",
+      "regexMatch": "abcehijlopqrst"
+    }
+  ],
+  
+  "privacyBoundaries": {
+    "Hospital A": {
+      "sees": ["Own patients only", "Own site stratification data", "Aggregate results by stratum"],
+      "hidden": ["Hospital B patient data", "Pharma stratification algorithms", "Patient identities in other sites", "Other sites' collection frequencies"],
+      "zkProofs": ["Patient stratification accuracy", "Fair randomization within strata", "Stratified safety signals"]
+    },
+    "Hospital B": {
+      "sees": ["Own patients only", "Own site stratification data", "Aggregate results by stratum"],
+      "hidden": ["Hospital A patient data", "Pharma stratification algorithms", "Patient identities in other sites", "Other sites' collection frequencies"],
+      "zkProofs": ["Patient stratification accuracy", "Fair randomization within strata", "Stratified safety signals"]
+    },
+    "Pharma Corp": {
+      "sees": ["Protocol stratification parameters", "Aggregate stratified results", "Supply chain by stratum", "Commercial stratification data"],
+      "hidden": ["Patient identities", "Site-specific stratification details", "Individual patient records", "Randomization sequence"],
+      "zkProofs": ["Stratification protocol compliance", "Statistical validity across strata", "Stratified results integrity"]
+    },
+    "FDA": {
+      "sees": ["Aggregate stratified safety data", "Compliance status by stratum", "Stratified regulatory submissions"],
+      "hidden": ["Patient identities", "Proprietary stratification methods", "Site-specific details", "Commercial stratification terms"],
+      "zkProofs": ["Stratified safety signal detection", "Compliance verification by stratum"]
+    },
+    "IRB Committee": {
+      "sees": ["Ethics compliance for stratification", "Stratified protocol approval status", "Stratified safety overview"],
+      "hidden": ["Drug formulation details", "Patient identities", "Commercial data", "Competitive stratification intelligence"],
+      "zkProofs": ["Stratification ethics compliance verification"]
+    },
+    "Clinical Data Management Organization": {
+      "sees": ["Data collection schedules", "Data quality metrics", "Collection frequency optimization", "Site data coordination"],
+      "hidden": ["Patient identities", "Drug formulation details", "Commercial terms", "Competitive data strategies"],
+      "zkProofs": ["Data quality verification", "Collection frequency optimization", "Cross-site data harmonization"]
+    },
+    "Biostatistics Center": {
+      "sees": ["Randomization algorithms", "Statistical analysis plans", "Stratified sample size calculations", "Subgroup analysis parameters"],
+      "hidden": ["Patient identities", "Site-specific operations", "Commercial objectives", "Proprietary drug information"],
+      "zkProofs": ["Randomization integrity", "Statistical validity", "Subgroup analysis accuracy"]
+    }
+  },
+  
+  "zkProofPoints": [
+    {
+      "flow": "b",
+      "proof": "Enhanced ethics compliance for stratified protocols without revealing stratification details",
+      "mechanism": "Zero-knowledge stratification protocol verification"
+    },
+    {
+      "flow": "e",
+      "proof": "Fair allocation with site balancing without revealing patient identities",
+      "mechanism": "ZK randomization with stratified commitment schemes"
+    },
+    {
+      "flow": "f",
+      "proof": "Mild case stratification without patient re-identification",
+      "mechanism": "Privacy-preserving severity classification"
+    },
+    {
+      "flow": "g", 
+      "proof": "Moderate case stratification without patient re-identification",
+      "mechanism": "Privacy-preserving severity classification"
+    },
+    {
+      "flow": "h",
+      "proof": "Severe case stratification without patient re-identification",
+      "mechanism": "Privacy-preserving severity classification"
+    },
+    {
+      "flow": "j",
+      "proof": "Simple randomization integrity without revealing assignment sequence",
+      "mechanism": "ZK randomization verification"
+    },
+    {
+      "flow": "k",
+      "proof": "Block randomization integrity without revealing block structure",
+      "mechanism": "ZK block randomization verification"
+    },
+    {
+      "flow": "l",
+      "proof": "Stratified safety monitoring without patient re-identification",
+      "mechanism": "Privacy-preserving stratified aggregate statistics"
+    },
+    {
+      "flow": "p",
+      "proof": "Data collection frequency optimization without revealing individual schedules",
+      "mechanism": "ZK adaptive collection verification"
+    },
+    {
+      "flow": "q",
+      "proof": "Stratified statistical significance without patient exposure",
+      "mechanism": "ZK stratified statistical analysis"
+    },
+    {
+      "flow": "r",
+      "proof": "Stratified safety profile without patient re-identification",
+      "mechanism": "Anonymous stratified adverse event reporting"
+    },
+    {
+      "flow": "s",
+      "proof": "Subgroup results validity without competitive intelligence",
+      "mechanism": "ZK stratified publication verification"
+    }
+  ],
+  
+  "regulatoryCompliance": [
+    {
+      "requirement": "Enhanced IRB Ethics Approval for Stratified Protocols",
+      "regulation": "45 CFR §46.109, 45 CFR §46.111",
+      "flow": "b",
+      "description": "IRB approval required for stratified research protocols"
+    },
+    {
+      "requirement": "FDA FAERS Stratified Reporting",
+      "regulation": "21 CFR §314.80, 21 CFR §312.32",
+      "flow": "r",
+      "description": "Stratified adverse event reporting to FDA"
+    },
+    {
+      "requirement": "HIPAA Privacy Rule for Stratified Data",
+      "regulation": "45 CFR §164.502, 45 CFR §164.514",
+      "flows": ["c", "d", "f", "g", "h", "m", "n", "o"],
+      "description": "Enhanced privacy protection for stratified health information"
+    },
+    {
+      "requirement": "ICH E9 Statistical Principles for Clinical Trials",
+      "regulation": "ICH E9 Guidelines",
+      "flows": ["j", "k", "q"],
+      "description": "Statistical methodology compliance for stratified analysis"
+    },
+    {
+      "requirement": "Enhanced GCP Guidelines for Stratified Trials",
+      "regulation": "ICH E6(R2)",
+      "flows": ["all"],
+      "description": "Good Clinical Practice compliance for complex stratified protocols"
+    }
+  ],
+  
+  "emergentBehaviorGuardrails": [
+    {
+      "rule": "Cross-site stratified data leakage prevention",
+      "constraint": "Hospital_A_stratification_data ∩ Hospital_B_stratification_data = ∅",
+      "enforcement": "ZK proof verification with stratification boundaries"
+    },
+    {
+      "rule": "Stratification bias prevention",
+      "constraint": "IF (patient_stratification) THEN randomization_within_strata = REQUIRED",
+      "enforcement": "Stratified randomization verification"
+    },
+    {
+      "rule": "FDA stratified reporting bypass prevention",
+      "constraint": "IF (stratified_publication_attempted) THEN FDA_stratified_safety_review = REQUIRED",
+      "enforcement": "Stratified regulatory compliance check"
+    },
+    {
+      "rule": "Patient stratification identity protection",
+      "constraint": "Patient_identities CANNOT leave source_sites AND stratification_categories CANNOT reveal_identities",
+      "enforcement": "Enhanced privacy boundary enforcement with stratification masking"
+    },
+    {
+      "rule": "Stratified protocol integrity maintenance",
+      "constraint": "Stratification_protocol_modifications REQUIRE IRB_re_approval",
+      "enforcement": "Enhanced ethics compliance verification"
+    },
+    {
+      "rule": "Data collection frequency optimization integrity",
+      "constraint": "Collection_frequency_changes MUST maintain_statistical_power",
+      "enforcement": "Adaptive design statistical verification"
+    }
+  ],
+  
+  "metrics": {
+    "stepCount": 20,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "Maximum",
+    "securityLevel": "Maximum",
+    "privacyLevel": "HIPAA + ZK + Stratification Protected",
+    "regulatoryComplexity": "FDA + IRB + GCP + ICH Guidelines"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'ab(c|d)e(f|g|h)i(j|k)l(m|n|o)pqrst' --functionName 'verifyProcessHC1ECLNTL' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC1ECLNTL",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-1-ECLNTL-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-1-ECLNTL-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HCAG1ECLNTL ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-1-ECLNTL-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-1-ECLNTL-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

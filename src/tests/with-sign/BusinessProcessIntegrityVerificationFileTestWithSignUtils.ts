@@ -181,6 +181,19 @@ export async function getBPIVerificationFileTestWithSign(businessProcessType:str
    else if (businessProcessType === 'DVP'){
       proof = await BusinessProcessIntegrityZKProgram.proveComplianceDVP(Field(0), bpComplianceData, oracleSignature);
    }
+// 🔥 ADD THESE MISSING HEALTHCARE CASES:
+else if (businessProcessType === 'HCAg1ECLNTL') {
+    console.log("/************************Business Process Type is HCAg1ECLNTL (Healthcare)********************************************/");
+    proof = await BusinessProcessIntegrityZKProgram.proveComplianceHcAg1ECLNTL(Field(0), bpComplianceData, oracleSignature);
+}
+else if (businessProcessType === 'HCAg3TLMED') {
+    console.log("/************************Business Process Type is HCAg3TLMED (Healthcare)********************************************/");
+    proof = await BusinessProcessIntegrityZKProgram.proveComplianceHcAg3TLMED(Field(0), bpComplianceData, oracleSignature);
+}
+else if (businessProcessType === 'HCAg4USTLM') {
+    console.log("/************************Business Process Type is HCAg4USTLM (Healthcare)********************************************/");
+    proof = await BusinessProcessIntegrityZKProgram.proveComplianceHcAg4USTLM(Field(0), bpComplianceData, oracleSignature);
+}
    else{
       proof = await BusinessProcessIntegrityZKProgram.proveComplianceSCF(Field(0), bpComplianceData, oracleSignature);
    }

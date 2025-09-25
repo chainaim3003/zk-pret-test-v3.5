@@ -6,7 +6,7 @@
       <outgoing>Flow_Start_to_1</outgoing>
     </startEvent>
     
-    <!-- Linear path: follows the 'c' branch -->
+    <!-- Linear path: follows the 'c' brclearanch -->
     <intermediateThrowEvent id="Event_1" name="1">
       <incoming>Flow_Start_to_1</incoming>
       <outgoing>Flow_1_to_2</outgoing>

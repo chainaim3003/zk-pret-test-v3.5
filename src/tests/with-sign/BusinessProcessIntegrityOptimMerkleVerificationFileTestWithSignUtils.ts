@@ -310,14 +310,14 @@ export class BusinessProcessIntegrityOptimMerkleTestUtils {
       });
 
       // ===== STEP 8: GENERATE ORACLE SIGNATURE (OPTIMIZED) =====
-      console.log('✍️ Generating oracle signature...');
+      console.log('✍️ ****** Generating oracle signature... bpType ',businessProcessType);
       
       // Use hierarchical hashing for large data structures
       const dataFields = BusinessProcessIntegrityOptimMerkleData.toFields(finalOptimMerkleData);
       const complianceDataHash = this.hierarchicalHash(dataFields);
       
       const { signature: oracleSignature } = this.createOracleSignature(complianceDataHash);
-      console.log('✍️ Oracle signature generated');
+      console.log('✍️ Oracle signature generated   biz process type ',businessProcessType);
 
       // ===== STEP 9: GENERATE MERKLE WITNESS =====
       console.log('🧾 Generating Merkle witness...');
@@ -329,7 +329,7 @@ export class BusinessProcessIntegrityOptimMerkleTestUtils {
       console.log('✅ ZK program compiled successfully');
 
       // ===== STEP 11: GENERATE PROOF (SAME PATTERN AS WORKING) =====
-      console.log('🔮 Generating OptimMerkle proof...');
+      console.log('🔮 ************** Generating OptimMerkle proof...  businessProcessType', businessProcessType);
       let proof: BusinessProcessIntegrityOptimMerkleProof;
       
       if (businessProcessType === 'STABLECOIN') {
@@ -347,12 +347,28 @@ export class BusinessProcessIntegrityOptimMerkleTestUtils {
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceDVP(
           Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
         );
-      } else if (businessProcessType === 'HC1CLNTL') {
+      } /*else if (businessProcessType === 'HC1CLNTL') {
         console.log('🏥 Using HC1CLNTL verification circuit');
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHC1CLNTL(
           Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
         );
-      } else {
+      } */ else if (businessProcessType === 'HcAg1ECLNTL') {
+        console.log('🏥 Using HcAg1ECLNTL verification circuit   ', businessProcessType );
+        proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHcAg1ECLNTL(
+          Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
+        );
+      } else if (businessProcessType === 'HcAg3TLMED') {
+        console.log('🏥 Using HcAg3TLMED verification circuit   ', businessProcessType );
+        proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHcAg3TLMED(
+          Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
+        );
+      } else if (businessProcessType === 'HcAg4USTLM') {
+        console.log('🏥 Using HcAg4USTLM verification circuit   ', businessProcessType );
+        proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHcAg4USTLM(
+          Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
+        );
+      }  
+      else {
         console.log('🔄 Using default SCF verification circuit');
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceSCF(
           Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
