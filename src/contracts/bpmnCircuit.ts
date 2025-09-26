@@ -34,6 +34,12 @@ export class bpmnCircuit extends SmartContract {
     this.accepted.set(out)
   }
 
+    @method async verifyProcessHcAg7HCPROC(trace : Bytes50) {
+	// console.log("calling verifiyTrace for, ")
+    let out = verifyProcessHcAg7HCPROC(trace.bytes);
+    this.accepted.set(out)
+  }
+
 }
 
 // Command used: 'a(cb|bc)d(ef|f)g' '--functionName' 'verifyProcess' '--filePath' './src/bpmnCircuit.ts'
@@ -598,4 +604,125 @@ export function verifyProcessHcAg3TLMED(input: UInt8[]) {
 
 export function verifyProcessHcAg4USTLM(input: UInt8[]) {
 	return new Bool(true);
+}
+
+
+// Command used: 'abc(d|e)f(g|h)j(k|l)m(n|o)pq' '--functionName' 'verifyProcessHcAg7HCPROC' '--filePath' './src/contracts/bpmnCircuit.ts'
+export function verifyProcessHcAg7HCPROC(input: UInt8[]) {
+	Provable.asProver(() => {
+		console.log( 'in verifyProcessHcAg7HCPROC in' );
+	});
+
+	const num_bytes = input.length;
+	let states: Bool[][] = Array.from({ length: num_bytes + 1 }, () => []);
+	let state_changed: Bool[] = Array.from({ length: num_bytes }, () => Bool(false));
+	
+	states[0][0] = Bool(true);
+	for (let i = 1; i < 13; i++) {
+		states[0][i] = Bool(false);
+	}
+	
+	for (let i = 0; i < num_bytes; i++) {
+		// a (97)
+		const eq0 = input[i].value.equals(97);
+		const and0 = states[i][0].and(eq0);
+		states[i+1][1] = and0;
+		state_changed[i] = state_changed[i].or(states[i+1][1]);
+		
+		// b (98)
+		const eq1 = input[i].value.equals(98);
+		const and1 = states[i][1].and(eq1);
+		states[i+1][2] = and1;
+		state_changed[i] = state_changed[i].or(states[i+1][2]);
+		
+		// c (99)
+		const eq2 = input[i].value.equals(99);
+		const and2 = states[i][2].and(eq2);
+		states[i+1][3] = and2;
+		state_changed[i] = state_changed[i].or(states[i+1][3]);
+		
+		// (d|e) - d=100, e=101
+		const eq3 = input[i].value.equals(100); // d
+		const eq4 = input[i].value.equals(101); // e
+		let multi_or0 = Bool(false);
+		multi_or0 = multi_or0.or(eq3);
+		multi_or0 = multi_or0.or(eq4);
+		const and3 = states[i][3].and(multi_or0);
+		states[i+1][4] = and3;
+		state_changed[i] = state_changed[i].or(states[i+1][4]);
+		
+		// f (102)
+		const eq5 = input[i].value.equals(102);
+		const and4 = states[i][4].and(eq5);
+		states[i+1][5] = and4;
+		state_changed[i] = state_changed[i].or(states[i+1][5]);
+		
+		// (g|h) - g=103, h=104
+		const eq6 = input[i].value.equals(103); // g
+		const eq7 = input[i].value.equals(104); // h
+		let multi_or1 = Bool(false);
+		multi_or1 = multi_or1.or(eq6);
+		multi_or1 = multi_or1.or(eq7);
+		const and5 = states[i][5].and(multi_or1);
+		states[i+1][6] = and5;
+		state_changed[i] = state_changed[i].or(states[i+1][6]);
+		
+		// j (106)
+		const eq8 = input[i].value.equals(106);
+		const and6 = states[i][6].and(eq8);
+		states[i+1][7] = and6;
+		state_changed[i] = state_changed[i].or(states[i+1][7]);
+		
+		// (k|l) - k=107, l=108
+		const eq9 = input[i].value.equals(107); // k
+		const eq10 = input[i].value.equals(108); // l
+		let multi_or2 = Bool(false);
+		multi_or2 = multi_or2.or(eq9);
+		multi_or2 = multi_or2.or(eq10);
+		const and7 = states[i][7].and(multi_or2);
+		states[i+1][8] = and7;
+		state_changed[i] = state_changed[i].or(states[i+1][8]);
+		
+		// m (109)
+		const eq11 = input[i].value.equals(109);
+		const and8 = states[i][8].and(eq11);
+		states[i+1][9] = and8;
+		state_changed[i] = state_changed[i].or(states[i+1][9]);
+		
+		// (n|o) - n=110, o=111
+		const eq12 = input[i].value.equals(110); // n
+		const eq13 = input[i].value.equals(111); // o
+		let multi_or3 = Bool(false);
+		multi_or3 = multi_or3.or(eq12);
+		multi_or3 = multi_or3.or(eq13);
+		const and9 = states[i][9].and(multi_or3);
+		states[i+1][10] = and9;
+		state_changed[i] = state_changed[i].or(states[i+1][10]);
+		
+		// p (112)
+		const eq14 = input[i].value.equals(112);
+		const and10 = states[i][10].and(eq14);
+		states[i+1][11] = and10;
+		state_changed[i] = state_changed[i].or(states[i+1][11]);
+		
+		// q (113) - final letter
+		const eq15 = input[i].value.equals(113);
+		const and11 = states[i][11].and(eq15);
+		states[i+1][12] = and11;
+		state_changed[i] = state_changed[i].or(states[i+1][12]);
+		
+		states[i+1][0] = state_changed[i].not();
+	}
+	
+	let final_state_result = Bool(false);
+	for (let i = 0; i <= num_bytes; i++) {
+		final_state_result = final_state_result.or(states[i][12]);
+	}
+	const out = final_state_result;
+
+	Provable.asProver(() => {
+		console.log( 'in verifyProcessHcAg7HCPROC out ', out );
+	});
+
+	return out;
 }

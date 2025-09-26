@@ -1,0 +1,354 @@
+{
+  "processId": "HC-AG-7-HCPROC",
+  "processName": "Hospital Drug Procurement with Multi-Entity Coordination",
+  "version": "1.0.0",
+  "description": "Multi-entity hospital procurement process ensuring medication delivery with payment integrity verification and regulatory compliance",
+  "created": "2025-01-04T17:00:00Z",
+  "lastModified": "2025-01-04T17:30:00Z",
+  "author": "ChainAim Healthcare Team",
+  
+  "bpmnMetadata": {
+    "processElementId": "HC_AG_7_HCPROC_Process",
+    "startEventId": "StartEvent_Start",
+    "endEventId": "EndEvent_End",
+    "totalElements": 16,
+    "totalFlows": 19,
+    "branchPoints": 4,
+    "joinPoints": 4,
+    "maxPathLength": 15,
+    "minPathLength": 15
+  },
+  
+  "entities": [
+    {
+      "name": "Seattle Children's Hospital",
+      "role": "Healthcare Provider - Medication Requester",
+      "jurisdiction": "US - Washington State",
+      "privacyLevel": "HIPAA Protected"
+    },
+    {
+      "name": "Vizient GPO",
+      "role": "Group Purchasing Organization - Contract Manager",
+      "jurisdiction": "US - National",
+      "privacyLevel": "Commercial"
+    },
+    {
+      "name": "GHX Exchange Platform",
+      "role": "Technology Hub - EDI Standardization",
+      "jurisdiction": "US - Multi-State",
+      "privacyLevel": "Transaction Protected"
+    },
+    {
+      "name": "McKesson Pharmaceutical",
+      "role": "Pharmaceutical Supplier - Drug Distribution",
+      "jurisdiction": "US - National",
+      "privacyLevel": "Commercial"
+    },
+    {
+      "name": "FDA",
+      "role": "Regulatory Authority - Compliance Oversight",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Regulatory"
+    },
+    {
+      "name": "DEA",
+      "role": "Controlled Substances Authority",
+      "jurisdiction": "US - Federal",
+      "privacyLevel": "Regulatory"
+    }
+  ],
+  
+  "files": {
+    "expected": "HC-AG-7-HCPROC-Expected.bpmn",
+    "svg": "HC-AG-7-HCPROC-Expected.svg", 
+    "json": "HC-AG-7-HCPROC-Expected.json",
+    "backup": "HC-AG-7-HCPROC-Expected.bpmn.backup",
+    "accepted": [
+      "HC-AG-7-HCPROC-Accepted-1.bpmn",
+      "HC-AG-7-HCPROC-Accepted-2.bpmn"
+    ],
+    "rejected": [
+      "HC-AG-7-HCPROC-Rejected-1.bpmn",
+      "HC-AG-7-HCPROC-Rejected-2.bpmn"
+    ]
+  },
+  
+  "regexPattern": "abc(d|e)f(g|h)j(k|l)m(n|o)pq",
+  "regexExplanation": {
+    "pattern": "abc(d|e)f(g|h)j(k|l)m(n|o)pq",
+    "meaning": "Healthcare procurement with contract validation, EDI standardization, supplier coordination, compliance verification, logistics coordination, and approval management",
+    "branchPoints": [
+      "After 'c', at position 4: Contract Status (d|e)",
+      "After 'f', at position 7: Supplier Status (g|h)", 
+      "After 'j', at position 10: Compliance Status (k|l)",
+      "After 'm', at position 13: Approval Status (n|o)"
+    ],
+    "joinPoints": [
+      "At 'f' from contract resolution",
+      "At 'j' from supplier coordination", 
+      "At 'm' from compliance verification",
+      "At 'p' from approval coordination"
+    ],
+    "totalPossiblePaths": 16
+  },
+  
+  "pathway": {
+    "start": "Start",
+    "end": "End",
+    "startNode": "StartEvent_Start",
+    "endNode": "EndEvent_End",
+    "validPaths": [
+      {
+        "pathId": 1,
+        "sequence": "a→b→c→d→f→g→j→k→m→n→p",
+        "description": "Standard Automated Path: Automated pricing + Standard inventory + Standard compliance + Standard approval",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "7", "9", "10", "12", "13", "15", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_4", "Flow_4_to_6", "Flow_6_to_7", "Flow_7_to_9", "Flow_9_to_10", "Flow_10_to_12", "Flow_12_to_13", "Flow_13_to_15", "Flow_15_to_End"]
+      },
+      {
+        "pathId": 2,
+        "sequence": "a→b→c→e→f→h→j→l→m→o→p",
+        "description": "Complex Manual Path: Manual resolution + Inventory exception + Enhanced compliance + Executive approval",
+        "nodeSequence": ["Start", "1", "2", "3", "5", "6", "8", "9", "11", "12", "14", "15", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_5", "Flow_5_to_6", "Flow_6_to_8", "Flow_8_to_9", "Flow_9_to_11", "Flow_11_to_12", "Flow_12_to_14", "Flow_14_to_15", "Flow_15_to_End"]
+      },
+      {
+        "pathId": 3,
+        "sequence": "a→b→c→d→f→h→j→k→m→o→p",
+        "description": "Mixed Standard Path: Automated pricing + Inventory exception + Standard compliance + Executive approval",
+        "nodeSequence": ["Start", "1", "2", "3", "4", "6", "8", "9", "10", "12", "14", "15", "End"],
+        "flowSequence": ["Flow_Start_to_1", "Flow_1_to_2", "Flow_2_to_3", "Flow_3_to_4", "Flow_4_to_6", "Flow_6_to_8", "Flow_8_to_9", "Flow_9_to_10", "Flow_10_to_12", "Flow_12_to_14", "Flow_14_to_15", "Flow_15_to_End"]
+      }
+    ],
+    "invalidPaths": [
+      {
+        "sequence": "a→b→d→f→...",
+        "violation": "Skip GPO contract validation - PROCUREMENT VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→g→j→...",
+        "violation": "Skip EDI standardization - COMMUNICATION VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→f→(g|h)→k→m→...",
+        "violation": "Skip compliance synchronization - REGULATORY VIOLATION",
+        "severity": "Critical"
+      },
+      {
+        "sequence": "a→b→c→(d|e)→f→(g|h)→j→(k|l)→n→p→...",
+        "violation": "Skip logistics coordination - SUPPLY CHAIN VIOLATION",
+        "severity": "Critical"
+      }
+    ]
+  },
+  
+  "expectedFlows": [
+    {
+      "pathId": 1,
+      "description": "Standard Automated Path",
+      "sequence": "a→b→c→d→f→g→j→k→m→n→p",
+      "regexMatch": "abcdfgjkmnp"
+    },
+    {
+      "pathId": 2,  
+      "description": "Complex Manual Path",
+      "sequence": "a→b→c→e→f→h→j→l→m→o→p",
+      "regexMatch": "abcefhjlmop"
+    },
+    {
+      "pathId": 3,
+      "description": "Mixed Standard Path", 
+      "sequence": "a→b→c→d→f→h→j→k→m→o→p",
+      "regexMatch": "abcdfhjkmop"
+    }
+  ],
+
+  "legend": {
+    "start": {
+      "Start": "Healthcare Procurement Coordinator"
+    },
+    "sequenceFlows": {
+      "a": {
+        "name": "Clinical Demand Agent",
+        "description": "Hospital analyzes patient treatment schedules and identifies medication needs",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Seattle Children's Hospital"
+      },
+      "b": {
+        "name": "Inventory Intelligence Agent",
+        "description": "Hospital checks current stock levels and safety margins for required medications",
+        "privacy": "HIPAA Protected",
+        "stakeholder": "Seattle Children's Hospital"
+      },
+      "c": {
+        "name": "GPO Contract Validation",
+        "description": "Query group purchasing organization for contract pricing and eligibility verification",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Vizient GPO"
+      },
+      "d": {
+        "name": "Automated Pricing Agent",
+        "description": "Valid contract found with automated pricing calculation and discount application",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Vizient GPO"
+      },
+      "e": {
+        "name": "Manual Contract Resolution",
+        "description": "Contract issues require manual intervention and pricing negotiation",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "Vizient GPO + Hospital"
+      },
+      "f": {
+        "name": "EDI Transaction Routing Agent",
+        "description": "CRITICAL: Convert all orders to standard EDI format for supplier processing",
+        "privacy": "Transaction Protected",
+        "stakeholder": "GHX Platform"
+      },
+      "g": {
+        "name": "Standard Inventory Agent",
+        "description": "Supplier has standard inventory availability for requested medications",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "McKesson Pharmaceutical"
+      },
+      "h": {
+        "name": "Inventory Exception Agent",
+        "description": "Supplier has inventory issues requiring special handling or backorders",
+        "privacy": "Commercial Confidential",
+        "stakeholder": "McKesson Pharmaceutical"
+      },
+      "j": {
+        "name": "Multi-Entity Compliance Sync",
+        "description": "CRITICAL: All entities synchronize compliance agents for regulatory verification",
+        "privacy": "Regulatory Required",
+        "stakeholder": "All Entities"
+      },
+      "k": {
+        "name": "Standard Compliance Agent",
+        "description": "Standard FDA/DEA/DSCSA validation with normal processing",
+        "privacy": "Regulatory Required",
+        "stakeholder": "McKesson + Regulatory"
+      },
+      "l": {
+        "name": "Enhanced Compliance Agent",
+        "description": "Enhanced compliance for controlled substances or cold chain requirements",
+        "privacy": "Regulatory Required",
+        "stakeholder": "McKesson + FDA + DEA"
+      },
+      "m": {
+        "name": "Logistics Coordination Agent",
+        "description": "CRITICAL: Specialized shipping coordination for controlled substances",
+        "privacy": "Transaction Protected",
+        "stakeholder": "McKesson + Hospital"
+      },
+      "n": {
+        "name": "Standard Approval Agent",
+        "description": "Automated approval for orders under financial threshold",
+        "privacy": "Hospital Internal",
+        "stakeholder": "Hospital Finance"
+      },
+      "o": {
+        "name": "Executive Approval Agent",
+        "description": "CFO approval required for high-value orders over threshold",
+        "privacy": "Hospital Internal",
+        "stakeholder": "Hospital Executive"
+      },
+      "p": {
+        "name": "Process Completion Agent",
+        "description": "Multi-entity process completion with audit trail and delivery confirmation",
+        "privacy": "Transaction Protected",
+        "stakeholder": "All Entities"
+      }
+    },
+    "nodes": {
+      "1": {
+        "name": "Clinical Demand Analysis",
+        "description": "Hospital analyzes patient treatment schedules for cancer medications"
+      },
+      "2": {
+        "name": "Inventory Intelligence Processing",
+        "description": "Hospital checks current stock levels and calculates reorder requirements"
+      },
+      "3": {
+        "name": "GPO Contract Gateway",
+        "description": "Branch point for contract validation and pricing determination"
+      },
+      "4": {
+        "name": "Automated Pricing Processing",
+        "description": "Contract validation successful with automated pricing"
+      },
+      "5": {
+        "name": "Manual Resolution Processing", 
+        "description": "Contract issues require manual intervention and negotiation"
+      },
+      "6": {
+        "name": "EDI Standardization Gateway",
+        "description": "MANDATORY: Join contract paths, branch to supplier inventory status"
+      },
+      "7": {
+        "name": "Standard Inventory Processing",
+        "description": "Supplier confirms standard inventory availability"
+      },
+      "8": {
+        "name": "Inventory Exception Processing",
+        "description": "Supplier inventory issues require special handling"
+      },
+      "9": {
+        "name": "Compliance Synchronization Gateway",
+        "description": "MANDATORY: Join supplier paths, branch to compliance verification"
+      },
+      "10": {
+        "name": "Standard Compliance Processing",
+        "description": "Standard regulatory compliance verification"
+      },
+      "11": {
+        "name": "Enhanced Compliance Processing",
+        "description": "Enhanced compliance for controlled substances or special requirements"
+      },
+      "12": {
+        "name": "Logistics Coordination Gateway",
+        "description": "MANDATORY: Join compliance paths, branch to approval processing"
+      },
+      "13": {
+        "name": "Standard Approval Processing",
+        "description": "Automated approval for standard value orders"
+      },
+      "14": {
+        "name": "Executive Approval Processing",
+        "description": "Executive approval required for high-value orders"
+      },
+      "15": {
+        "name": "Process Completion",
+        "description": "Final multi-entity process completion with audit trail"
+      }
+    },
+    "end": {
+      "End": "Healthcare Procurement Complete with Regulatory Compliance"
+    }
+  },
+  
+  "metrics": {
+    "stepCount": 16,
+    "branchCount": 4,
+    "joinCount": 4,
+    "complexityLevel": "High",
+    "securityLevel": "High",
+    "privacyLevel": "HIPAA + Commercial Protected",
+    "regulatoryComplexity": "FDA + DEA + DSCSA Compliance"
+  },
+  
+  "circuitGeneration": {
+    "zkRegexCommand": "npx zk-regex 'abc(d|e)f(g|h)j(k|l)m(n|o)p' --functionName 'verifyProcessHC7HCPROC' --filePath './src/contracts/bpmnCircuit.ts'",
+    "generatedFunction": "verifyProcessHC7HCPROC",
+    "circuitPath": "./src/contracts/bpmnCircuit.ts",
+    "status": "Generated Successfully"
+  },
+  
+  "testingMetadata": {
+    "expectedBpmn": "./src/data/HEALTHCARE/process/EXPECTED/HC-AG-7-HCPROC-Expected.bpmn",
+    "actualBpmn": "./src/data/HEALTHCARE/process/ACTUAL/HC-AG-7-HCPROC-Accepted-1.bpmn",
+    "testCommand": "node ./build/tests/with-sign/BusinessProcessIntegrityOptimMerkleVerificationFileTestWithSign.js HcAg7HCPROC ./src/data/HEALTHCARE/process/EXPECTED/HC-AG-7-HCPROC-Expected.bpmn ./src/data/HEALTHCARE/process/ACTUAL/HC-AG-7-HCPROC-Accepted-1.bpmn",
+    "expectedResult": "PASS - OptimMerkle Process Verification"
+  }
+}

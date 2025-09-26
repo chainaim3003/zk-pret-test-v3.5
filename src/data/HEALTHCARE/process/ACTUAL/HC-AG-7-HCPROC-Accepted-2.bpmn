@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HC_AG_7_HCPROC_Accepted_2" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HC_AG_7_HCPROC_Accepted_2_Process" isExecutable="false">
+    <!-- ACCEPTED VARIANT 2: Complex path with manual resolution but proper convergence -->
+    <!-- Path: abcefhjlmop - Manual contract + exception handling + cold chain + executive approval -->
+    
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <serviceTask id="Task_1" name="Clinical Demand Agent">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </serviceTask>
+    
+    <serviceTask id="Task_2" name="Inventory Intelligence Agent">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </serviceTask>
+    
+    <serviceTask id="Task_3" name="GPO Contract Validation">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_5</outgoing>
+    </serviceTask>
+    
+    <!-- Manual resolution path -->
+    <userTask id="Task_5" name="Manual Contract Resolution">
+      <incoming>Flow_3_to_5</incoming>
+      <outgoing>Flow_5_to_6</outgoing>
+    </userTask>
+    
+    <serviceTask id="Task_6" name="EDI Transaction Routing Agent">
+      <incoming>Flow_5_to_6</incoming>
+      <outgoing>Flow_6_to_8</outgoing>
+    </serviceTask>
+    
+    <!-- Exception handling path -->
+    <serviceTask id="Task_8" name="Exception Management Agent">
+      <incoming>Flow_6_to_8</incoming>
+      <outgoing>Flow_8_to_9</outgoing>
+    </serviceTask>
+    
+    <parallelGateway id="Gateway_9" name="Multi-Entity Compliance Sync">
+      <incoming>Flow_8_to_9</incoming>
+      <outgoing>Flow_9_to_11</outgoing>
+    </parallelGateway>
+    
+    <!-- Cold chain compliance path -->
+    <serviceTask id="Task_11" name="Cold Chain Compliance Agent">
+      <incoming>Flow_9_to_11</incoming>
+      <outgoing>Flow_11_to_12</outgoing>
+    </serviceTask>
+    
+    <parallelGateway id="Gateway_12" name="Logistics Coordination">
+      <incoming>Flow_11_to_12</incoming>
+      <outgoing>Flow_12_to_14</outgoing>
+    </parallelGateway>
+    
+    <!-- Executive approval path -->
+    <userTask id="Task_14" name="Executive Approval">
+      <incoming>Flow_12_to_14</incoming>
+      <outgoing>Flow_14_to_15</outgoing>
+    </userTask>
+    
+    <serviceTask id="Task_15" name="Multi-Entity Process Completion">
+      <incoming>Flow_14_to_15</incoming>
+      <outgoing>Flow_15_to_End</outgoing>
+    </serviceTask>
+    
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_15_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Task_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Task_1" targetRef="Task_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Task_2" targetRef="Task_3" />
+    <sequenceFlow id="Flow_3_to_5" name="e" sourceRef="Task_3" targetRef="Task_5" />
+    <sequenceFlow id="Flow_5_to_6" name="f" sourceRef="Task_5" targetRef="Task_6" />
+    <sequenceFlow id="Flow_6_to_8" name="h" sourceRef="Task_6" targetRef="Task_8" />
+    <sequenceFlow id="Flow_8_to_9" name="j" sourceRef="Task_8" targetRef="Gateway_9" />
+    <sequenceFlow id="Flow_9_to_11" name="l" sourceRef="Gateway_9" targetRef="Task_11" />
+    <sequenceFlow id="Flow_11_to_12" name="m" sourceRef="Task_11" targetRef="Gateway_12" />
+    <sequenceFlow id="Flow_12_to_14" name="o" sourceRef="Gateway_12" targetRef="Task_14" />
+    <sequenceFlow id="Flow_14_to_15" name="p" sourceRef="Task_14" targetRef="Task_15" />
+    <sequenceFlow id="Flow_15_to_End" name="end" sourceRef="Task_15" targetRef="EndEvent_End" />
+    
+  </process>
+  
+  <!-- BPMN Diagram Information -->
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="HC_AG_7_HCPROC_Accepted_2_Process">
+      
+      <bpmndi:BPMNShape id="StartEvent_Start_di" bpmnElement="StartEvent_Start">
+        <omgdc:Bounds x="152" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="158" y="375" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
+        <omgdc:Bounds x="240" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
+        <omgdc:Bounds x="390" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_3_di" bpmnElement="Task_3">
+        <omgdc:Bounds x="540" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_5_di" bpmnElement="Task_5">
+        <omgdc:Bounds x="690" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_6_di" bpmnElement="Task_6">
+        <omgdc:Bounds x="840" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_8_di" bpmnElement="Task_8">
+        <omgdc:Bounds x="990" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_9_di" bpmnElement="Gateway_9">
+        <omgdc:Bounds x="1165" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1148" y="385" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_11_di" bpmnElement="Task_11">
+        <omgdc:Bounds x="1290" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_12_di" bpmnElement="Gateway_12">
+        <omgdc:Bounds x="1465" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1457" y="385" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_14_di" bpmnElement="Task_14">
+        <omgdc:Bounds x="1590" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_15_di" bpmnElement="Task_15">
+        <omgdc:Bounds x="1740" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_End_di" bpmnElement="EndEvent_End">
+        <omgdc:Bounds x="1892" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1901" y="375" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flow Edges -->
+      <bpmndi:BPMNEdge id="Flow_Start_to_1_di" bpmnElement="Flow_Start_to_1">
+        <omgdi:waypoint x="188" y="350" />
+        <omgdi:waypoint x="240" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="212" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_1_to_2_di" bpmnElement="Flow_1_to_2">
+        <omgdi:waypoint x="340" y="350" />
+        <omgdi:waypoint x="390" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="362" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_to_3_di" bpmnElement="Flow_2_to_3">
+        <omgdi:waypoint x="490" y="350" />
+        <omgdi:waypoint x="540" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="512" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_to_5_di" bpmnElement="Flow_3_to_5">
+        <omgdi:waypoint x="640" y="350" />
+        <omgdi:waypoint x="690" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="662" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_to_6_di" bpmnElement="Flow_5_to_6">
+        <omgdi:waypoint x="790" y="350" />
+        <omgdi:waypoint x="840" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="812" y="332" width="6" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_6_to_8_di" bpmnElement="Flow_6_to_8">
+        <omgdi:waypoint x="940" y="350" />
+        <omgdi:waypoint x="990" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="962" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_to_9_di" bpmnElement="Flow_8_to_9">
+        <omgdi:waypoint x="1090" y="350" />
+        <omgdi:waypoint x="1165" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1125" y="332" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_9_to_11_di" bpmnElement="Flow_9_to_11">
+        <omgdi:waypoint x="1215" y="350" />
+        <omgdi:waypoint x="1290" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1250" y="332" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_to_12_di" bpmnElement="Flow_11_to_12">
+        <omgdi:waypoint x="1390" y="350" />
+        <omgdi:waypoint x="1465" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1425" y="332" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_12_to_14_di" bpmnElement="Flow_12_to_14">
+        <omgdi:waypoint x="1515" y="350" />
+        <omgdi:waypoint x="1590" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1550" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_14_to_15_di" bpmnElement="Flow_14_to_15">
+        <omgdi:waypoint x="1690" y="350" />
+        <omgdi:waypoint x="1740" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1712" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_15_to_End_di" bpmnElement="Flow_15_to_End">
+        <omgdi:waypoint x="1840" y="350" />
+        <omgdi:waypoint x="1892" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1862" y="332" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

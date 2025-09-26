@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="HC_AG_7_HCPROC_Expected" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js" exporterVersion="18.0.0">
+  <process id="HC_AG_7_HCPROC_Process" isExecutable="false">
+    <!-- START: Healthcare Procurement Process -->
+    <startEvent id="StartEvent_Start" name="Start">
+      <outgoing>Flow_Start_to_1</outgoing>
+    </startEvent>
+    
+    <!-- Healthcare Procurement workflow: abc(d|e)f(g|h)j(k|l)m(n|o)p -->
+    <!-- Node 1: Clinical Demand Agent -->
+    <intermediateThrowEvent id="Event_1" name="1">
+      <incoming>Flow_Start_to_1</incoming>
+      <outgoing>Flow_1_to_2</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 2: Inventory Intelligence Agent -->
+    <intermediateThrowEvent id="Event_2" name="2">
+      <incoming>Flow_1_to_2</incoming>
+      <outgoing>Flow_2_to_3</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 3: GPO Contract Validation -->
+    <intermediateThrowEvent id="Event_3" name="3">
+      <incoming>Flow_2_to_3</incoming>
+      <outgoing>Flow_3_to_4</outgoing>
+      <outgoing>Flow_3_to_5</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FIRST BRANCH: Contract Status (d|e) -->
+    <!-- Node 4: Automated Pricing (Branch D) -->
+    <intermediateThrowEvent id="Event_4" name="4">
+      <incoming>Flow_3_to_4</incoming>
+      <outgoing>Flow_4_to_6</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 5: Manual Contract Resolution (Branch E) -->
+    <intermediateThrowEvent id="Event_5" name="5">
+      <incoming>Flow_3_to_5</incoming>
+      <outgoing>Flow_5_to_6</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 6: EDI Standardization (Join point) -->
+    <intermediateThrowEvent id="Event_6" name="6">
+      <incoming>Flow_4_to_6</incoming>
+      <incoming>Flow_5_to_6</incoming>
+      <outgoing>Flow_6_to_7</outgoing>
+      <outgoing>Flow_6_to_8</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- SECOND BRANCH: Supplier Status (g|h) -->
+    <!-- Node 7: Standard Inventory (Branch G) -->
+    <intermediateThrowEvent id="Event_7" name="7">
+      <incoming>Flow_6_to_7</incoming>
+      <outgoing>Flow_7_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 8: Inventory Exception (Branch H) -->
+    <intermediateThrowEvent id="Event_8" name="8">
+      <incoming>Flow_6_to_8</incoming>
+      <outgoing>Flow_8_to_9</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 9: Compliance Sync (Join point) -->
+    <intermediateThrowEvent id="Event_9" name="9">
+      <incoming>Flow_7_to_9</incoming>
+      <incoming>Flow_8_to_9</incoming>
+      <outgoing>Flow_9_to_10</outgoing>
+      <outgoing>Flow_9_to_11</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- THIRD BRANCH: Compliance Status (k|l) -->
+    <!-- Node 10: Standard Compliance (Branch K) -->
+    <intermediateThrowEvent id="Event_10" name="10">
+      <incoming>Flow_9_to_10</incoming>
+      <outgoing>Flow_10_to_12</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 11: Enhanced Compliance (Branch L) -->
+    <intermediateThrowEvent id="Event_11" name="11">
+      <incoming>Flow_9_to_11</incoming>
+      <outgoing>Flow_11_to_12</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 12: Logistics Coordination (Join point) -->
+    <intermediateThrowEvent id="Event_12" name="12">
+      <incoming>Flow_10_to_12</incoming>
+      <incoming>Flow_11_to_12</incoming>
+      <outgoing>Flow_12_to_13</outgoing>
+      <outgoing>Flow_12_to_14</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- FOURTH BRANCH: Approval Status (n|o) -->
+    <!-- Node 13: Standard Approval (Branch N) -->
+    <intermediateThrowEvent id="Event_13" name="13">
+      <incoming>Flow_12_to_13</incoming>
+      <outgoing>Flow_13_to_15</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 14: Executive Approval (Branch O) -->
+    <intermediateThrowEvent id="Event_14" name="14">
+      <incoming>Flow_12_to_14</incoming>
+      <outgoing>Flow_14_to_15</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- Node 15: Process Complete -->
+    <intermediateThrowEvent id="Event_15" name="15">
+      <incoming>Flow_13_to_15</incoming>
+      <incoming>Flow_14_to_15</incoming>
+      <outgoing>Flow_15_to_End</outgoing>
+    </intermediateThrowEvent>
+    
+    <!-- END: Procurement Complete -->
+    <endEvent id="EndEvent_End" name="End">
+      <incoming>Flow_15_to_End</incoming>
+    </endEvent>
+    
+    <!-- Sequence Flows for Healthcare Procurement: abc(d|e)f(g|h)j(k|l)m(n|o)p -->
+    <sequenceFlow id="Flow_Start_to_1" name="a" sourceRef="StartEvent_Start" targetRef="Event_1" />
+    <sequenceFlow id="Flow_1_to_2" name="b" sourceRef="Event_1" targetRef="Event_2" />
+    <sequenceFlow id="Flow_2_to_3" name="c" sourceRef="Event_2" targetRef="Event_3" />
+    <sequenceFlow id="Flow_3_to_4" name="d" sourceRef="Event_3" targetRef="Event_4" />
+    <sequenceFlow id="Flow_3_to_5" name="e" sourceRef="Event_3" targetRef="Event_5" />
+    <sequenceFlow id="Flow_4_to_6" name="f" sourceRef="Event_4" targetRef="Event_6" />
+    <sequenceFlow id="Flow_5_to_6" name="f" sourceRef="Event_5" targetRef="Event_6" />
+    <sequenceFlow id="Flow_6_to_7" name="g" sourceRef="Event_6" targetRef="Event_7" />
+    <sequenceFlow id="Flow_6_to_8" name="h" sourceRef="Event_6" targetRef="Event_8" />
+    <sequenceFlow id="Flow_7_to_9" name="j" sourceRef="Event_7" targetRef="Event_9" />
+    <sequenceFlow id="Flow_8_to_9" name="j" sourceRef="Event_8" targetRef="Event_9" />
+    <sequenceFlow id="Flow_9_to_10" name="k" sourceRef="Event_9" targetRef="Event_10" />
+    <sequenceFlow id="Flow_9_to_11" name="l" sourceRef="Event_9" targetRef="Event_11" />
+    <sequenceFlow id="Flow_10_to_12" name="m" sourceRef="Event_10" targetRef="Event_12" />
+    <sequenceFlow id="Flow_11_to_12" name="m" sourceRef="Event_11" targetRef="Event_12" />
+    <sequenceFlow id="Flow_12_to_13" name="n" sourceRef="Event_12" targetRef="Event_13" />
+    <sequenceFlow id="Flow_12_to_14" name="o" sourceRef="Event_12" targetRef="Event_14" />
+    <sequenceFlow id="Flow_13_to_15" name="p" sourceRef="Event_13" targetRef="Event_15" />
+    <sequenceFlow id="Flow_14_to_15" name="p" sourceRef="Event_14" targetRef="Event_15" />
+    <sequenceFlow id="Flow_15_to_End" name="q" sourceRef="Event_15" targetRef="EndEvent_End" />
+    
+  </process>
+  
+  <!-- BPMN Diagram Information for BPMN.io visualization -->
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="HC_AG_7_HCPROC_Process">
+      
+      <!-- Start Event Shape -->
+      <bpmndi:BPMNShape id="StartEvent_Start_di" bpmnElement="StartEvent_Start">
+        <omgdc:Bounds x="152" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="158" y="375" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 1 Shape -->
+      <bpmndi:BPMNShape id="Event_1_di" bpmnElement="Event_1">
+        <omgdc:Bounds x="242" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="259" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 2 Shape -->
+      <bpmndi:BPMNShape id="Event_2_di" bpmnElement="Event_2">
+        <omgdc:Bounds x="332" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="349" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 3 Shape -->
+      <bpmndi:BPMNShape id="Event_3_di" bpmnElement="Event_3">
+        <omgdc:Bounds x="422" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="439" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- FIRST BRANCH: Contract Status -->
+      <!-- Event 4 Shape (Automated) -->
+      <bpmndi:BPMNShape id="Event_4_di" bpmnElement="Event_4">
+        <omgdc:Bounds x="512" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="529" y="315" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 5 Shape (Manual) -->
+      <bpmndi:BPMNShape id="Event_5_di" bpmnElement="Event_5">
+        <omgdc:Bounds x="512" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="529" y="435" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 6 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_6_di" bpmnElement="Event_6">
+        <omgdc:Bounds x="622" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="639" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- SECOND BRANCH: Supplier Status -->
+      <!-- Event 7 Shape (Standard) -->
+      <bpmndi:BPMNShape id="Event_7_di" bpmnElement="Event_7">
+        <omgdc:Bounds x="712" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="729" y="325" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 8 Shape (Exception) -->
+      <bpmndi:BPMNShape id="Event_8_di" bpmnElement="Event_8">
+        <omgdc:Bounds x="712" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="729" y="425" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 9 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_9_di" bpmnElement="Event_9">
+        <omgdc:Bounds x="822" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="839" y="375" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- THIRD BRANCH: Compliance Status -->
+      <!-- Event 10 Shape (Standard) -->
+      <bpmndi:BPMNShape id="Event_10_di" bpmnElement="Event_10">
+        <omgdc:Bounds x="912" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="926" y="325" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 11 Shape (Enhanced) -->
+      <bpmndi:BPMNShape id="Event_11_di" bpmnElement="Event_11">
+        <omgdc:Bounds x="912" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="926" y="425" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 12 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_12_di" bpmnElement="Event_12">
+        <omgdc:Bounds x="1022" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1036" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- FOURTH BRANCH: Approval Status -->
+      <!-- Event 13 Shape (Standard) -->
+      <bpmndi:BPMNShape id="Event_13_di" bpmnElement="Event_13">
+        <omgdc:Bounds x="1112" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1126" y="325" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 14 Shape (Executive) -->
+      <bpmndi:BPMNShape id="Event_14_di" bpmnElement="Event_14">
+        <omgdc:Bounds x="1112" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1126" y="425" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Event 15 Shape (Join Point) -->
+      <bpmndi:BPMNShape id="Event_15_di" bpmnElement="Event_15">
+        <omgdc:Bounds x="1222" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1236" y="375" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- End Event Shape -->
+      <bpmndi:BPMNShape id="EndEvent_End_di" bpmnElement="EndEvent_End">
+        <omgdc:Bounds x="1332" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1341" y="375" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Flow Edges -->
+      
+      <!-- Linear flows -->
+      <bpmndi:BPMNEdge id="Flow_Start_to_1_di" bpmnElement="Flow_Start_to_1">
+        <omgdi:waypoint x="188" y="350" />
+        <omgdi:waypoint x="242" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="212" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_1_to_2_di" bpmnElement="Flow_1_to_2">
+        <omgdi:waypoint x="278" y="350" />
+        <omgdi:waypoint x="332" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="302" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_to_3_di" bpmnElement="Flow_2_to_3">
+        <omgdi:waypoint x="368" y="350" />
+        <omgdi:waypoint x="422" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="392" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- FIRST BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_3_to_4_di" bpmnElement="Flow_3_to_4">
+        <omgdi:waypoint x="450" y="340" />
+        <omgdi:waypoint x="512" y="290" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="478" y="312" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_to_5_di" bpmnElement="Flow_3_to_5">
+        <omgdi:waypoint x="450" y="360" />
+        <omgdi:waypoint x="512" y="410" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="478" y="382" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_to_6_di" bpmnElement="Flow_4_to_6">
+        <omgdi:waypoint x="548" y="290" />
+        <omgdi:waypoint x="630" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="586" y="308" width="6" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_to_6_di" bpmnElement="Flow_5_to_6">
+        <omgdi:waypoint x="548" y="410" />
+        <omgdi:waypoint x="630" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="586" y="386" width="6" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- SECOND BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_6_to_7_di" bpmnElement="Flow_6_to_7">
+        <omgdi:waypoint x="658" y="340" />
+        <omgdi:waypoint x="712" y="300" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="682" y="317" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_6_to_8_di" bpmnElement="Flow_6_to_8">
+        <omgdi:waypoint x="658" y="360" />
+        <omgdi:waypoint x="712" y="400" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="682" y="377" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_7_to_9_di" bpmnElement="Flow_7_to_9">
+        <omgdi:waypoint x="748" y="300" />
+        <omgdi:waypoint x="830" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="786" y="313" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_to_9_di" bpmnElement="Flow_8_to_9">
+        <omgdi:waypoint x="748" y="400" />
+        <omgdi:waypoint x="830" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="786" y="381" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- THIRD BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_9_to_10_di" bpmnElement="Flow_9_to_10">
+        <omgdi:waypoint x="858" y="340" />
+        <omgdi:waypoint x="912" y="300" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="882" y="317" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_9_to_11_di" bpmnElement="Flow_9_to_11">
+        <omgdi:waypoint x="858" y="360" />
+        <omgdi:waypoint x="912" y="400" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="882" y="377" width="4" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_10_to_12_di" bpmnElement="Flow_10_to_12">
+        <omgdi:waypoint x="948" y="300" />
+        <omgdi:waypoint x="1030" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="986" y="313" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_to_12_di" bpmnElement="Flow_11_to_12">
+        <omgdi:waypoint x="948" y="400" />
+        <omgdi:waypoint x="1030" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="986" y="381" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- FOURTH BRANCH -->
+      <bpmndi:BPMNEdge id="Flow_12_to_13_di" bpmnElement="Flow_12_to_13">
+        <omgdi:waypoint x="1058" y="340" />
+        <omgdi:waypoint x="1112" y="300" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1082" y="317" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_12_to_14_di" bpmnElement="Flow_12_to_14">
+        <omgdi:waypoint x="1058" y="360" />
+        <omgdi:waypoint x="1112" y="400" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1082" y="377" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_13_to_15_di" bpmnElement="Flow_13_to_15">
+        <omgdi:waypoint x="1148" y="300" />
+        <omgdi:waypoint x="1230" y="332" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1186" y="313" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_14_to_15_di" bpmnElement="Flow_14_to_15">
+        <omgdi:waypoint x="1148" y="400" />
+        <omgdi:waypoint x="1230" y="368" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1186" y="381" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <!-- Final flow -->
+      <bpmndi:BPMNEdge id="Flow_15_to_End_di" bpmnElement="Flow_15_to_End">
+        <omgdi:waypoint x="1258" y="350" />
+        <omgdi:waypoint x="1332" y="350" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1292" y="332" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

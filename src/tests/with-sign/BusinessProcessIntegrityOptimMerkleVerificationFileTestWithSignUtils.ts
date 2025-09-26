@@ -368,6 +368,12 @@ export class BusinessProcessIntegrityOptimMerkleTestUtils {
           Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
         );
       }  
+      else if (businessProcessType === 'HcAg7HCPROC') {
+        console.log('🏥 Using HcAg7HCPROC verification circuit   ', businessProcessType );
+        proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceHcAg7HCPROC(
+          Field(0), finalOptimMerkleData, oracleSignature, merkleWitness
+        );
+      }  
       else {
         console.log('🔄 Using default SCF verification circuit');
         proof = await BusinessProcessIntegrityOptimMerkleZKProgram.proveComplianceSCF(
